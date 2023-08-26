@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: auth
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      server-addr: 192.168.88.150:8848
+      discovery:
+        namespace: a59587c5-fef5-4f75-b1b7-98080c3aeb43
+        group: thinktank-project
+      config:
+        namespace: a59587c5-fef5-4f75-b1b7-98080c3aeb43
+        group: thinktank-project
+        file-extension: yaml # 文件后缀名
