@@ -13,6 +13,9 @@
         <module>thinktank-common</module>
         <module>thinktank-post</module>
         <module>thinktank-admin</module>
+        <module>thinktank-generator</module>
+        <module>thinktank-validatecode</module>
+        <module>thinktank-api</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -22,11 +25,14 @@
         <spring.boot.version>2.3.7.RELEASE</spring.boot.version>
         <spring.cloud.version>Hoxton.SR9</spring.cloud.version>
         <alibaba.cloud.version>2.2.6.RELEASE</alibaba.cloud.version>
-        <mysql.version>8.0.19</mysql.version>
+        <mysql.connect.version>8.0.31</mysql.connect.version>
         <mybatisplus.version>3.5.3.2</mybatisplus.version>
-        <swagger-version>2.0.2.RELEASE</swagger-version>
+        <druid.version>1.2.19</druid.version>
+        <swagger.version>3.0.0</swagger.version>
         <elasticsearch.version>7.12.1</elasticsearch.version>
-        <commons-lang3.version>3.13.0</commons-lang3.version>
+        <commons.lang3.version>3.13.0</commons.lang3.version>
+        <sa.token.all.version>1.35.0.RC</sa.token.all.version>
+        <okhttp.version>4.10.0</okhttp.version>
     </properties>
 
     <dependencyManagement>
@@ -59,7 +65,7 @@
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
-                <version>${mysql.version}</version>
+                <version>${mysql.connect.version}</version>
             </dependency>
             <!--mybatis-plus-->
             <dependency>
@@ -69,9 +75,9 @@
             </dependency>
             <!--接口文档生成工具-->
             <dependency>
-                <groupId>com.spring4all</groupId>
-                <artifactId>swagger-spring-boot-starter</artifactId>
-                <version>${swagger-version}</version>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-boot-starter</artifactId>
+                <version>${swagger.version}</version>
             </dependency>
             <!--elasticsearch-->
             <dependency>
@@ -84,15 +90,49 @@
                 <artifactId>elasticsearch</artifactId>
                 <version>${elasticsearch.version}</version>
             </dependency>
-            <!---->
+            <!--commons-lang3-->
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>${commons-lang3.version}</version>
+                <version>${commons.lang3.version}</version>
+            </dependency>
+            <!--连接池-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+            <!-- Sa-Token权限认证 -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-spring-boot-starter</artifactId>
+                <version>${sa.token.all.version}</version>
+            </dependency>
+            <!-- Sa-Token 整合 jwt -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-jwt</artifactId>
+                <version>${sa.token.all.version}</version>
+            </dependency>
+            <!-- Sa-Token 权限认证（Reactor响应式集成）, -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-reactor-spring-boot-starter</artifactId>
+                <version>${sa.token.all.version}</version>
+            </dependency>
+            <!-- Sa-Token 整合 Redis （使用 jackson 序列化方式） -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-redis-jackson</artifactId>
+                <version>${sa.token.all.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
-
 
     <build>
         <plugins>

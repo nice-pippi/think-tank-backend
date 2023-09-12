@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @Description: 网关服务
  * @Version: 1.0
  */
-
 @SpringBootApplication
 public class ThinkTankGatewayApplication {
     public static void main(String[] args) {
