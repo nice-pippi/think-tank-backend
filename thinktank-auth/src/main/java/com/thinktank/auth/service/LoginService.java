@@ -1,5 +1,9 @@
 package com.thinktank.auth.service;
 
+import cn.dev33.satoken.stp.SaTokenInfo;
+import com.thinktank.common.utils.R;
+import com.thinktank.generator.entity.SysUser;
+
 /**
  * @Author: 弘
  * @CreateTime: 2023年09⽉08⽇ 15:07
@@ -9,9 +13,18 @@ package com.thinktank.auth.service;
 public interface LoginService {
     /**
      * 微信登录
-     * @param code 微信返回的code
+     *
+     * @param code  微信返回的code
      * @param state 微信返回的state
      * @return
      */
     String wxLogin(String code, String state);
+
+    /**
+     * 账号密码登录
+     *
+     * @param sysUser
+     * @return
+     */
+    R<SaTokenInfo> passwordLogin(SysUser sysUser);
 }

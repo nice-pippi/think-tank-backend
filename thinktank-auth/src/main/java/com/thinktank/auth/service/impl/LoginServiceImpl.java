@@ -1,12 +1,18 @@
 package com.thinktank.auth.service.impl;
 
+import cn.dev33.satoken.secure.BCrypt;
+import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thinktank.auth.service.LoginService;
 import com.thinktank.auth.service.UserService;
+import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.ObjectMapperUtil;
+import com.thinktank.common.utils.R;
 import com.thinktank.generator.entity.SysUser;
+import com.thinktank.generator.mapper.SysUserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +41,7 @@ public class LoginServiceImpl implements LoginService {
     private UserService userService;
 
     @Autowired
-    private LoginServiceImpl loginServiceProxy;
+    private SysUserMapper sysUserMapper;
 
     @Value("${weixin.appid}")
     private String appid;
@@ -60,6 +66,27 @@ public class LoginServiceImpl implements LoginService {
 
         // 返回token给用户
         return StpUtil.getTokenValue();
+    }
+
+    @Override
+    public R<SaTokenInfo> passwordLogin(SysUser sysUser) {
+        // 查询该邮箱是否已存在
+        LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysUser::getEmail, sysUser.getEmail());
+        SysUser user = sysUserMapper.selectOne(wrapper);
+        if (user == null) {
+            throw new ThinkTankException("该邮箱未注册！");
+        }
+
+        // 将查询到的密码与用户提交的密码做匹配
+        boolean result = BCrypt.checkpw(sysUser.getPassword(), user.getPassword());
+
+        // 如果密码匹配，为该用户创建会话登录，并且返回token给用户
+        if (!result) {
+            throw new ThinkTankException("账号或密码错误！");
+        }
+        StpUtil.login(user.getId());
+        return R.success(StpUtil.getTokenInfo());
     }
 
 
@@ -89,7 +116,6 @@ public class LoginServiceImpl implements LoginService {
         String result = restTemplate.exchange(wxUrl, HttpMethod.POST, null, String.class).getBody();
 
         log.info("调用微信接口申请access_token: 返回值:{}", result);
-        ObjectMapper mapper = new ObjectMapper();
 
         Map<String, String> map = ObjectMapperUtil.toObject(result, Map.class);
         return map;

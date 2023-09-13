@@ -23,5 +23,5 @@ public interface UserService {
      * 获取用户信息
      * @return
      */
-    R<SysUser> getUserInfo();
+    R<SysUser> getUserInfo(Long id);
 }

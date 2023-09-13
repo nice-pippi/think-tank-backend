@@ -1,14 +1,18 @@
 package com.thinktank.auth.controller;
 
+import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.thinktank.api.clients.ValidateCodeClient;
 import com.thinktank.auth.service.LoginService;
 import com.thinktank.common.utils.R;
+import com.thinktank.common.validationgroups.QueryValidation;
 import com.thinktank.generator.entity.SysUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,12 +36,9 @@ public class LoginController {
     private ValidateCodeClient validatecodeClient;
 
     @ApiOperation("账号密码登录")
-    @GetMapping("passwordLogin")
-    public R<String> passwordLogin(@RequestBody SysUser sysUser) {
-        StpUtil.login(1001);
-        // 获取Token
-        String tokenInfo = StpUtil.getTokenInfo().getTokenValue();
-        return R.success(tokenInfo);
+    @PostMapping("passwordLogin")
+    public R<SaTokenInfo> passwordLogin(@RequestBody @Validated({QueryValidation.class}) SysUser sysUser) {
+        return loginService.passwordLogin(sysUser);
     }
 
     @ApiOperation("微信扫码登录")
@@ -46,7 +47,7 @@ public class LoginController {
         String code = request.getParameter("code");
         String state = request.getParameter("state");
         String token = loginService.wxLogin(code, state);
-        response.sendRedirect("http://localhost:8585/Result?token=" + token);
+        response.sendRedirect("http://localhost:8585/Result?token=" + token + "&id=" + StpUtil.getLoginId());
     }
 
     @ApiOperation("验证登录状态")

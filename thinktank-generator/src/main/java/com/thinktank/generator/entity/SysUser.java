@@ -2,6 +2,7 @@ package com.thinktank.generator.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.thinktank.common.validationgroups.InsertValidation;
+import com.thinktank.common.validationgroups.QueryValidation;
 import com.thinktank.common.validationgroups.UpdateValidation;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -39,11 +40,11 @@ public class SysUser implements Serializable {
     @ApiModelProperty("账号")
     private String account;
 
-    @Email(groups = {InsertValidation.class, UpdateValidation.class}, message = "邮箱格式有误")
+    @Email(groups = {InsertValidation.class, UpdateValidation.class, QueryValidation.class}, message = "邮箱格式有误")
     @ApiModelProperty("邮箱")
     private String email;
 
-    @NotEmpty(groups = {InsertValidation.class}, message = "密码不能为空")
+    @NotEmpty(groups = {InsertValidation.class, QueryValidation.class}, message = "密码不能为空")
     @ApiModelProperty("密码")
     private String password;
 

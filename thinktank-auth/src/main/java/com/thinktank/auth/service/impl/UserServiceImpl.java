@@ -1,6 +1,5 @@
 package com.thinktank.auth.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.thinktank.auth.service.UserService;
 import com.thinktank.common.exception.ThinkTankException;
@@ -60,14 +59,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public R<SysUser> getUserInfo() {
-        // 获取当前用户id
-        long id = StpUtil.getLoginIdAsLong();
-
-        // 查询用户并且密码
+    public R<SysUser> getUserInfo(Long id) {
+        // 查询用户
         SysUser sysUser = sysUserMapper.selectById(id);
 
-        if(sysUser == null){
+        if (sysUser == null) {
             throw new ThinkTankException("用户不存在！");
         }
 
