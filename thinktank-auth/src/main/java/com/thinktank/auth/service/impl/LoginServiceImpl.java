@@ -1,6 +1,7 @@
 package com.thinktank.auth.service.impl;
 
 import cn.dev33.satoken.secure.BCrypt;
+import cn.dev33.satoken.stp.SaLoginConfig;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -62,14 +63,14 @@ public class LoginServiceImpl implements LoginService {
         SysUser sysUser = userService.addUser(userinfo);
 
         // 会话登录
-        StpUtil.login(sysUser.getId());
+        StpUtil.login(sysUser.getId().toString());
 
         // 返回token给用户
         return StpUtil.getTokenValue();
     }
 
     @Override
-    public R<SaTokenInfo> passwordLogin(SysUser sysUser) {
+    public R<String> passwordLogin(SysUser sysUser) {
         // 查询该邮箱是否已存在
         LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SysUser::getEmail, sysUser.getEmail());
@@ -81,12 +82,19 @@ public class LoginServiceImpl implements LoginService {
         // 将查询到的密码与用户提交的密码做匹配
         boolean result = BCrypt.checkpw(sysUser.getPassword(), user.getPassword());
 
-        // 如果密码匹配，为该用户创建会话登录，并且返回token给用户
+        // 如果为false，抛出异常提示用户账号或密码错误
         if (!result) {
             throw new ThinkTankException("账号或密码错误！");
         }
-        StpUtil.login(user.getId());
-        return R.success(StpUtil.getTokenInfo());
+
+        // 密码置空
+        user.setPassword(null);
+
+        // 为该用户创建会话登录，并且返回token给用户
+        StpUtil.login(user.getId().toString(), SaLoginConfig
+                .setExtra("permissions", null) // 用户权限
+        );
+        return R.success(StpUtil.getTokenValue());
     }
 
 

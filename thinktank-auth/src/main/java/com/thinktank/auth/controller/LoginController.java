@@ -38,7 +38,7 @@ public class LoginController {
 
     @ApiOperation("账号密码登录")
     @PostMapping("passwordLogin")
-    public R<SaTokenInfo> passwordLogin(@RequestBody @Validated({QueryValidation.class}) SysUser sysUser) {
+    public R<String> passwordLogin(@RequestBody @Validated({QueryValidation.class}) SysUser sysUser) {
         return loginService.passwordLogin(sysUser);
     }
 
@@ -48,7 +48,7 @@ public class LoginController {
         String code = request.getParameter("code");
         String state = request.getParameter("state");
         String token = loginService.wxLogin(code, state);
-        response.sendRedirect("http://localhost:8585/Result?token=" + token + "&id=" + StpUtil.getLoginId());
+        response.sendRedirect("http://localhost:8585/Result?token=" + token);
     }
 
     @ApiOperation("验证登录状态")

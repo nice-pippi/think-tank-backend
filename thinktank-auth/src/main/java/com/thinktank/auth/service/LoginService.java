@@ -26,5 +26,5 @@ public interface LoginService {
      * @param sysUser
      * @return
      */
-    R<SaTokenInfo> passwordLogin(SysUser sysUser);
+    R<String> passwordLogin(SysUser sysUser);
 }

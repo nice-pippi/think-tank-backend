@@ -40,6 +40,7 @@ public class SysUser implements Serializable {
     @ApiModelProperty("账号")
     private String account;
 
+    @NotEmpty(groups = {InsertValidation.class, UpdateValidation.class, QueryValidation.class}, message = "邮箱不能为空")
     @Email(groups = {InsertValidation.class, UpdateValidation.class, QueryValidation.class}, message = "邮箱格式有误")
     @ApiModelProperty("邮箱")
     private String email;
