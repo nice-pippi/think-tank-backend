@@ -16,13 +16,17 @@ spring:
 
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 logging:
   config: classpath:log4j2.xml
 
 feign:
   hystrix:
-    enabled: true
+    enabled: true # 开启熔断降级
 
+sa-token:
+  jwt-secret-key: ppnb
 
 

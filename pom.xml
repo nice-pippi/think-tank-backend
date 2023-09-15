@@ -16,6 +16,7 @@
         <module>thinktank-generator</module>
         <module>thinktank-validatecode</module>
         <module>thinktank-api</module>
+        <module>thinktank-file</module>
     </modules>
     <packaging>pom</packaging>
 

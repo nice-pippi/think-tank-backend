@@ -13,3 +13,6 @@ spring:
         namespace: a59587c5-fef5-4f75-b1b7-98080c3aeb43
         group: thinktank-project
         file-extension: yaml # 文件后缀名
+
+sa-token:
+  jwt-secret-key: ppnb

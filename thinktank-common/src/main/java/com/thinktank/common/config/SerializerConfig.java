@@ -45,6 +45,7 @@ public class SerializerConfig {
 
     /**
      * Long转String避免精度损失
+     *
      * @param builder
      * @return
      */
@@ -61,6 +62,7 @@ public class SerializerConfig {
 
     /**
      * 序列化和反序列化采用localDateTimeSerializer和localDateTimeDeserializer
+     *
      * @return
      */
     @Bean
