@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * @Author: 弘
  * @CreateTime: 2023年09⽉06⽇ 14:41
- * @Description: 类描述
+ * @Description: 代码生成器
  * @Version: 1.0
  */
 public class Generator {

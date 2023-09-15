@@ -1,6 +1,5 @@
 package com.thinktank.post;
 
-import cn.dev33.satoken.SaManager;
 import com.thinktank.common.config.SaTokenConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,7 +8,7 @@ import org.springframework.context.annotation.Import;
 /**
  * @Author: 弘
  * @CreateTime: 2023年08⽉18⽇ 15:55
- * @Description: 帖子管理服务
+ * @Description: 帖子服务
  * @Version: 1.0
  */
 @Import(SaTokenConfig.class)

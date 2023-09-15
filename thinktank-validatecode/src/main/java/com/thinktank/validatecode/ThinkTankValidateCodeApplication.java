@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Import;
 /**
  * @Author: 弘
  * @CreateTime: 2023年09⽉10⽇ 16:48
- * @Description: 验证码启动类
+ * @Description: 验证码服务
  * @Version: 1.0
  */
 @Import(SaTokenConfig.class)
