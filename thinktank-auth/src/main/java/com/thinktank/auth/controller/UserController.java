@@ -32,6 +32,7 @@ public class UserController {
         return userService.getUserInfo(id);
     }
 
+    @SaCheckLogin
     @ApiOperation("更改用户信息")
     @PostMapping
     public R<SysUser> updateUser(@RequestBody SysUserDto sysUserDto) {

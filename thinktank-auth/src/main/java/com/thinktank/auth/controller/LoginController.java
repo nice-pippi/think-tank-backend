@@ -1,5 +1,6 @@
 package com.thinktank.auth.controller;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
 import com.thinktank.api.clients.ValidateCodeClient;
 import com.thinktank.auth.service.LoginService;
@@ -55,6 +56,7 @@ public class LoginController {
         return R.success(StpUtil.isLogin());
     }
 
+    @SaCheckLogin
     @ApiOperation("注销登录")
     @GetMapping("logout")
     public R<String> logout() {
