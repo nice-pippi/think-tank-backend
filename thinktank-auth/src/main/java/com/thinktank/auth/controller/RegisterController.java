@@ -1,6 +1,6 @@
 package com.thinktank.auth.controller;
 
-import com.thinktank.auth.dto.RegisterOrUpdateSysUserDto;
+import com.thinktank.auth.dto.SysUserDto;
 import com.thinktank.auth.service.RegisterService;
 import com.thinktank.common.utils.R;
 import com.thinktank.common.validationgroups.InsertValidation;
@@ -26,7 +26,7 @@ public class RegisterController {
 
     @ApiOperation("用户邮箱密码注册")
     @PostMapping("register")
-    public R<String> register(@RequestBody @Validated(InsertValidation.class) RegisterOrUpdateSysUserDto registerOrUpdateSysUserDto) {
-        return registerService.register(registerOrUpdateSysUserDto);
+    public R<String> register(@RequestBody @Validated(InsertValidation.class) SysUserDto sysUserDto) {
+        return registerService.register(sysUserDto);
     }
 }

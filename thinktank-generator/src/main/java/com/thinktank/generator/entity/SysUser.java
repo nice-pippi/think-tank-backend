@@ -1,6 +1,15 @@
 package com.thinktank.generator.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 import com.thinktank.common.validationgroups.InsertValidation;
 import com.thinktank.common.validationgroups.QueryValidation;
 import com.thinktank.common.validationgroups.UpdateValidation;
@@ -9,8 +18,6 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -18,7 +25,7 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author pippi
- * @since 2023-09-11
+ * @since 2023-09-16
  */
 @TableName("sys_user")
 @ApiModel(value = "SysUser对象", description = "")
@@ -33,9 +40,12 @@ public class SysUser implements Serializable {
     @ApiModelProperty("头像")
     private String avatar;
 
-    @NotEmpty(groups = {InsertValidation.class}, message = "用户名不能为空")
+    @NotEmpty(groups = {InsertValidation.class,UpdateValidation.class}, message = "用户名不能为空")
     @ApiModelProperty("用户名")
     private String username;
+
+    @ApiModelProperty("登录类型（0:密码登录 1:微信登录）")
+    private Integer loginType;
 
     @ApiModelProperty("账号")
     private String account;
@@ -92,6 +102,14 @@ public class SysUser implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public Integer getLoginType() {
+        return loginType;
+    }
+
+    public void setLoginType(Integer loginType) {
+        this.loginType = loginType;
     }
 
     public String getAccount() {
@@ -172,6 +190,7 @@ public class SysUser implements Serializable {
                 "id = " + id +
                 ", avatar = " + avatar +
                 ", username = " + username +
+                ", loginType = " + loginType +
                 ", account = " + account +
                 ", email = " + email +
                 ", password = " + password +

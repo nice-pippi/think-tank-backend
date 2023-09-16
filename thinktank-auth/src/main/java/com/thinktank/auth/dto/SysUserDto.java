@@ -13,7 +13,7 @@ import javax.validation.constraints.NotEmpty;
  * @Version: 1.0
  */
 @Data
-public class RegisterOrUpdateSysUserDto extends SysUser {
+public class SysUserDto extends SysUser {
     @NotEmpty(groups = {InsertValidation.class}, message = "验证码不能为空")
     private String validateCode;
 }

@@ -1,5 +1,6 @@
 package com.thinktank.api.config;
 
+import com.thinktank.api.fallbackfactories.UserClientFallBackFactory;
 import com.thinktank.api.fallbackfactories.ValidateCodeClientFallBackFactory;
 import feign.Logger;
 import org.springframework.context.annotation.Bean;
@@ -23,5 +24,10 @@ public class DefaultFeignConfiguration {
     @Bean
     public ValidateCodeClientFallBackFactory validateCodeClientFallBackFactory() {
         return new ValidateCodeClientFallBackFactory();
+    }
+
+    @Bean
+    public UserClientFallBackFactory userClientFallBackFactory() {
+        return new UserClientFallBackFactory();
     }
 }

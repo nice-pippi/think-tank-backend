@@ -57,7 +57,6 @@ public class LoginController {
         return R.success(StpUtil.isLogin());
     }
 
-    @SaCheckLogin
     @ApiOperation("注销登录")
     @GetMapping("logout")
     public R<String> logout() {

@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * @Author: 弘
  * @CreateTime: 2023年09⽉11⽇ 18:36
- * @Description: 调用验证码降级处理
+ * @Description: 调用验证码服务降级处理
  * @Version: 1.0
  */
 public class ValidateCodeClientFallBackFactory implements FallbackFactory<ValidateCodeClient> {

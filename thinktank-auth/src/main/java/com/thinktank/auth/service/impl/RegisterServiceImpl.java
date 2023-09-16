@@ -1,10 +1,9 @@
 package com.thinktank.auth.service.impl;
 
 import cn.dev33.satoken.secure.BCrypt;
-import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.thinktank.api.clients.ValidateCodeClient;
-import com.thinktank.auth.dto.RegisterOrUpdateSysUserDto;
+import com.thinktank.auth.dto.SysUserDto;
 import com.thinktank.auth.service.RegisterService;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.R;
@@ -43,9 +42,9 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Transactional
     @Override
-    public R<String> register(RegisterOrUpdateSysUserDto registerOrUpdateSysUserDto) {
+    public R<String> register(SysUserDto sysUserDto) {
         // 查询该邮箱是否已被注册
-        String email = registerOrUpdateSysUserDto.getEmail();
+        String email = sysUserDto.getEmail();
         LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SysUser::getEmail, email);
         Long count = sysUserMapper.selectCount(wrapper);
@@ -56,17 +55,17 @@ public class RegisterServiceImpl implements RegisterService {
         }
 
         // 远程调用校验验证码服务
-        R<String> result = validatecodeClient.validate(registerOrUpdateSysUserDto.getEmail(), registerOrUpdateSysUserDto.getValidateCode());
+        R<String> result = validatecodeClient.validate(sysUserDto.getEmail(), sysUserDto.getValidateCode());
 
         // 若状态未200代表验证码校验成功
         if (result.getStatus() == 200) {
             // 将用户信息写入数据库
             SysUser sysUser = new SysUser();
-            BeanUtils.copyProperties(registerOrUpdateSysUserDto, sysUser);
+            BeanUtils.copyProperties(sysUserDto, sysUser);
             sysUser.setLoginType(0);
             sysUser.setAvatar("http://192.168.88.150:9000/avatar/default_avatar.png"); // 用户默认头像
             sysUser.setAccount(UUID.randomUUID().toString());
-            String newPassword = BCrypt.hashpw(registerOrUpdateSysUserDto.getPassword(), BCrypt.gensalt()); // 将密码做BCrypt加密
+            String newPassword = BCrypt.hashpw(sysUserDto.getPassword(), BCrypt.gensalt()); // 将密码做BCrypt加密
             sysUser.setPassword(newPassword);
             sysUserMapper.insert(sysUser);
 
@@ -77,7 +76,7 @@ public class RegisterServiceImpl implements RegisterService {
             sysUserRoleMapper.insert(sysUserRole);
 
             // 删除该邮箱对应的key
-            redisTemplate.delete(registerOrUpdateSysUserDto.getEmail());
+            redisTemplate.delete(sysUserDto.getEmail());
 
             return R.success("注册成功，快去登录吧~");
         }

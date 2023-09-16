@@ -1,6 +1,6 @@
 package com.thinktank.auth.service;
 
-import com.thinktank.auth.dto.RegisterOrUpdateSysUserDto;
+import com.thinktank.auth.dto.SysUserDto;
 import com.thinktank.common.utils.R;
 
 /**
@@ -13,7 +13,7 @@ public interface RegisterService {
     /**
      * 注册
      *
-     * @param registerOrUpdateSysUserDto 用户信息实体类
+     * @param sysUserDto 用户信息实体类
      */
-    R<String> register(RegisterOrUpdateSysUserDto registerOrUpdateSysUserDto);
+    R<String> register(SysUserDto sysUserDto);
 }

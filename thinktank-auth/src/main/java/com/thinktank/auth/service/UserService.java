@@ -1,5 +1,6 @@
 package com.thinktank.auth.service;
 
+import com.thinktank.auth.dto.SysUserDto;
 import com.thinktank.common.utils.R;
 import com.thinktank.generator.entity.SysUser;
 
@@ -14,7 +15,7 @@ import java.util.Map;
 public interface UserService {
     /**
      * 添加用户
-     * @param userinfo 用户信息
+     * @param userinfo
      * @return
      */
     SysUser addUser(Map<String, String> userinfo);
@@ -24,4 +25,11 @@ public interface UserService {
      * @return
      */
     R<SysUser> getUserInfo(Long id);
+
+    /**
+     * 修改用户信息
+     * @param sysUserDto
+     * @return
+     */
+    R<String> update(SysUserDto sysUserDto);
 }
