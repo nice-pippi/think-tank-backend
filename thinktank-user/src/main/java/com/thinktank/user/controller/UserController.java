@@ -1,16 +1,13 @@
-package com.thinktank.auth.controller;
+package com.thinktank.user.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
-import com.thinktank.auth.dto.SysUserDto;
-import com.thinktank.auth.service.UserService;
 import com.thinktank.common.utils.R;
-import com.thinktank.common.validationgroups.QueryValidation;
-import com.thinktank.common.validationgroups.UpdateValidation;
 import com.thinktank.generator.entity.SysUser;
+import com.thinktank.user.dto.SysUserDto;
+import com.thinktank.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
  */
 @Api(tags = "用户信息接口")
 @RestController
-@RequestMapping("/user")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -34,7 +30,7 @@ public class UserController {
 
     @SaCheckLogin
     @ApiOperation("更改用户信息")
-    @PostMapping
+    @PostMapping("/")
     public R<SysUser> updateUser(@RequestBody SysUserDto sysUserDto) {
         return userService.update(sysUserDto);
     }

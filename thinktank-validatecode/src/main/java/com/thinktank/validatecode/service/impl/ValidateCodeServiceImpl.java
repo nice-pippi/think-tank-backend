@@ -1,6 +1,5 @@
 package com.thinktank.validatecode.service.impl;
 
-import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.R;
 import com.thinktank.common.utils.ValidateCodeUtil;
 import com.thinktank.validatecode.service.SendMailService;

@@ -24,7 +24,8 @@ public class SaTokenConfig implements WebMvcConfigurer {
                         "/auth/passwordLogin", // 登录
                         "/auth/wxLogin", // 微信登录
                         "/auth/{id}", // 获取用户信息
-                        "/validatecode/generate" // 发送验证码
+                        "/validatecode/generate", // 发送验证码
+                        "/validatecode/validate"
                 )
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {

@@ -17,4 +17,5 @@ public class ThinkTankValidateCodeApplication {
     public static void main(String[] args) {
         SpringApplication.run(ThinkTankValidateCodeApplication.class, args);
     }
+
 }

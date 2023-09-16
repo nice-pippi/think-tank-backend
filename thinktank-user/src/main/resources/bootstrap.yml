@@ -1,6 +1,6 @@
 spring:
   application:
-    name: validatecode
+    name: user
   profiles:
     active: dev
   cloud:
@@ -14,9 +14,19 @@ spring:
         group: thinktank-project
         file-extension: yaml # 文件后缀名
 
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
 logging:
   config: classpath:log4j2.xml
 
-#sa-token:
-#  jwt-secret-key: ppnb
+feign:
+  hystrix:
+    enabled: true # 开启熔断降级
+
+sa-token:
+  jwt-secret-key: ppnb
+
 

@@ -24,7 +24,7 @@ public class ValidateCodeClientFallBackFactory implements FallbackFactory<Valida
 
             @Override
             public R<String> validate(String email, String validateCode) {
-                return R.error("服务器出现问题暂时无法注册，请稍后再试。");
+                return R.error("验证码服务出现问题暂时无法注册，请稍后再试。");
             }
         };
     }

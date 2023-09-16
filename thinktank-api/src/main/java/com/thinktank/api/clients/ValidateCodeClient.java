@@ -1,5 +1,6 @@
 package com.thinktank.api.clients;
 
+import com.thinktank.api.config.FeignInterceptor;
 import com.thinktank.api.fallbackfactories.ValidateCodeClientFallBackFactory;
 import com.thinktank.common.utils.R;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -13,7 +14,7 @@ import java.util.Map;
  * @Description: validatecode的Feign客户端
  * @Version: 1.0
  */
-@FeignClient(value = "validatecode", fallbackFactory = ValidateCodeClientFallBackFactory.class)
+@FeignClient(value = "validatecode", configuration = FeignInterceptor.class, fallbackFactory = ValidateCodeClientFallBackFactory.class)
 @RequestMapping("/validatecode")
 public interface ValidateCodeClient {
     // 生成验证码
@@ -22,5 +23,5 @@ public interface ValidateCodeClient {
 
     // 校验验证码
     @GetMapping("validate")
-    R<String> validate(@RequestParam("email") String email,@RequestParam("validateCode")  String validateCode);
+    R<String> validate(@RequestParam("email") String email, @RequestParam("validateCode") String validateCode);
 }

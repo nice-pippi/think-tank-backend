@@ -1,4 +1,4 @@
-package com.thinktank.auth.config;
+package com.thinktank.user.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,9 +39,9 @@ public class Swagger2Config {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 // 设置页面标题
-                .title("认证模块接口文档")
+                .title("用户模块接口文档")
                 // 设置接口描述
-                .description("用于用户注册登录以及认证管理")
+                .description("用于用户信息操作")
                 // 设置版本
                 .version("1.0")
                 // 构建

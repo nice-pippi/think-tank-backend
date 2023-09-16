@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.*;
  * @Description: User的Feign客户端
  * @Version: 1.0
  */
-@FeignClient(value = "auth", configuration = FeignInterceptor.class, fallbackFactory = UserClientFallBackFactory.class)
-@RequestMapping("/auth/user")
+@FeignClient(value = "user", configuration = FeignInterceptor.class, fallbackFactory = UserClientFallBackFactory.class)
+@RequestMapping("/user")
 public interface UserClient {
     // 获取用户信息
     @GetMapping("{id}")
     R<SysUser> getUserInfo(@PathVariable("id") Long id);
 
     // 修改用户信息
-    @PostMapping
+    @PostMapping("/")
     R<SysUser> updateUser(@RequestBody SysUserDto sysUserDto);
 }

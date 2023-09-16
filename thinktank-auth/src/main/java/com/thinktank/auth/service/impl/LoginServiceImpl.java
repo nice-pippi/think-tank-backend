@@ -2,13 +2,10 @@ package com.thinktank.auth.service.impl;
 
 import cn.dev33.satoken.secure.BCrypt;
 import cn.dev33.satoken.stp.SaLoginConfig;
-import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thinktank.auth.service.LoginService;
-import com.thinktank.auth.service.UserService;
+import com.thinktank.auth.service.AddUserService;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.ObjectMapperUtil;
 import com.thinktank.common.utils.R;
@@ -39,7 +36,7 @@ public class LoginServiceImpl implements LoginService {
     private RestTemplate restTemplate;
 
     @Autowired
-    private UserService userService;
+    private AddUserService addUserService;
 
     @Autowired
     private SysUserMapper sysUserMapper;
@@ -60,7 +57,7 @@ public class LoginServiceImpl implements LoginService {
         Map<String, String> userinfo = getUserinfo(accessToken, openid);
 
         // 添加到数据库
-        SysUser sysUser = userService.addUser(userinfo);
+        SysUser sysUser = addUserService.addUser(userinfo);
 
         // 会话登录
         StpUtil.login(sysUser.getId().toString());
