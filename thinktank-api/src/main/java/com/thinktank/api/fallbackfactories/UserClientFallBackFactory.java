@@ -22,7 +22,7 @@ public class UserClientFallBackFactory implements FallbackFactory<UserClient> {
             }
 
             @Override
-            public R<String> updateUser(SysUserDto sysUserDto) {
+            public R<SysUser> updateUser(SysUserDto sysUserDto) {
                 return R.error("更改用户服务调用过程异常");
             }
         };

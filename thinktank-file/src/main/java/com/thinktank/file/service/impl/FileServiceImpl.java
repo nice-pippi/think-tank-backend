@@ -69,13 +69,14 @@ public class FileServiceImpl implements FileService {
         // 远程调用auth服务的用户更改接口
         SysUserDto sysUserDto = new SysUserDto();
         BeanUtils.copyProperties(sysUser, sysUserDto);
-        R<String> updateResult = userClient.updateUser(sysUserDto);
+        R<SysUser> updateResult = userClient.updateUser(sysUserDto);
 
         if (updateResult.getStatus() != 200) {
             log.error("头像更改失败，用户id:{}", sysUserDto.getId());
             throw new ThinkTankException("头像更改失败");
         }
 
-        return R.success("头像变更成功");
+        // 返回头像地址
+        return R.success(updateResult.getData().getAvatar());
     }
 }

@@ -34,7 +34,7 @@ public class UserController {
 
     @ApiOperation("更改用户信息")
     @PostMapping
-    public R<String> updateUser(@RequestBody SysUserDto sysUserDto) {
+    public R<SysUser> updateUser(@RequestBody SysUserDto sysUserDto) {
         return userService.update(sysUserDto);
     }
 }

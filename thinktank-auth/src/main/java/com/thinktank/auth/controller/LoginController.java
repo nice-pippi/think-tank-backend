@@ -1,7 +1,5 @@
 package com.thinktank.auth.controller;
 
-import cn.dev33.satoken.annotation.SaCheckLogin;
-import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.thinktank.api.clients.ValidateCodeClient;
 import com.thinktank.auth.service.LoginService;

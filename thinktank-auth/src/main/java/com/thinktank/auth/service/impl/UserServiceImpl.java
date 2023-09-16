@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public R<String> update(SysUserDto sysUserDto) {
+    public R<SysUser> update(SysUserDto sysUserDto) {
         // 用户信息拷贝
         SysUser sysUser = new SysUser();
         BeanUtils.copyProperties(sysUserDto, sysUser);
@@ -85,6 +85,6 @@ public class UserServiceImpl implements UserService {
 
         // 更改用户信息
         sysUserMapper.updateById(sysUser);
-        return R.success("用户更改成功！");
+        return R.success(sysUser);
     }
 }

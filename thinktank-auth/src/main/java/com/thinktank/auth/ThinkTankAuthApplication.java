@@ -1,5 +1,7 @@
 package com.thinktank.auth;
 
+import cn.dev33.satoken.jwt.StpLogicJwtForSimple;
+import cn.dev33.satoken.stp.StpLogic;
 import com.thinktank.common.config.SaTokenConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +18,6 @@ import org.springframework.web.client.RestTemplate;
  * @Version: 1.0
  */
 
-@Import(SaTokenConfig.class)
 @EnableFeignClients(basePackages = "com.thinktank.api.clients")
 @SpringBootApplication(scanBasePackages = "com.thinktank")
 public class ThinkTankAuthApplication {
@@ -29,5 +30,11 @@ public class ThinkTankAuthApplication {
     public RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate(new OkHttp3ClientHttpRequestFactory());
         return restTemplate;
+    }
+
+    // 采用简单模式jwt
+    @Bean
+    public StpLogic getStpLogicJwt() {
+        return new StpLogicJwtForSimple();
     }
 }

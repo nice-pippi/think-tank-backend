@@ -23,5 +23,5 @@ public interface UserClient {
 
     // 修改用户信息
     @PostMapping
-    R<String> updateUser(@RequestBody SysUserDto sysUserDto);
+    R<SysUser> updateUser(@RequestBody SysUserDto sysUserDto);
 }

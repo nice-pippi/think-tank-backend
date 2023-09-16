@@ -31,5 +31,5 @@ public interface UserService {
      * @param sysUserDto
      * @return
      */
-    R<String> update(SysUserDto sysUserDto);
+    R<SysUser> update(SysUserDto sysUserDto);
 }
