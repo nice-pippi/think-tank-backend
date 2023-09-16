@@ -50,22 +50,22 @@ public class Generator {
                 })
                 .strategyConfig(builder -> {
                     List<String> list = new ArrayList<>();
-                    list.add("block_big_type");
-                    list.add("block_info");
-                    list.add("block_small_type");
-                    list.add("message_private");
-                    list.add("mq_task");
-                    list.add("post_comment_likes");
-                    list.add("post_comments");
-                    list.add("post_info");
-                    list.add("post_report_type");
-                    list.add("post_reports");
-                    list.add("post_score");
-                    list.add("sys_menu");
-                    list.add("sys_role");
-                    list.add("sys_role_menu");
+//                    list.add("block_big_type");
+//                    list.add("block_info");
+//                    list.add("block_small_type");
+//                    list.add("message_private");
+//                    list.add("mq_task");
+//                    list.add("post_comment_likes");
+//                    list.add("post_comments");
+//                    list.add("post_info");
+//                    list.add("post_report_type");
+//                    list.add("post_reports");
+//                    list.add("post_score");
+//                    list.add("sys_menu");
+//                    list.add("sys_role");
+//                    list.add("sys_role_menu");
                     list.add("sys_user");
-                    list.add("sys_user_role");
+//                    list.add("sys_user_role");
                     builder.addInclude(list) // 设置需要生成的表名
                             .entityBuilder()
                             .idType(IdType.ASSIGN_ID) // id采用雪花算法生成

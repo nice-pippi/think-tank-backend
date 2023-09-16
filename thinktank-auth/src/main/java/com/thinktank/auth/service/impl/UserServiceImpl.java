@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
         }
 
         sysUser = new SysUser();
+        sysUser.setLoginType(1);
         sysUser.setUsername(userinfo.get("nickname"));
         sysUser.setAvatar(userinfo.get("headimgurl"));
         sysUser.setAccount(unionid);

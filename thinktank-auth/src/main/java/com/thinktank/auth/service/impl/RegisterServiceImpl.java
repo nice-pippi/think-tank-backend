@@ -63,7 +63,8 @@ public class RegisterServiceImpl implements RegisterService {
             // 将用户信息写入数据库
             SysUser sysUser = new SysUser();
             BeanUtils.copyProperties(registerOrUpdateSysUserDto, sysUser);
-            sysUser.setAvatar("https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png");
+            sysUser.setLoginType(0);
+            sysUser.setAvatar("http://192.168.88.150:9000/avatar/default_avatar.png"); // 用户默认头像
             sysUser.setAccount(UUID.randomUUID().toString());
             String newPassword = BCrypt.hashpw(registerOrUpdateSysUserDto.getPassword(), BCrypt.gensalt()); // 将密码做BCrypt加密
             sysUser.setPassword(newPassword);

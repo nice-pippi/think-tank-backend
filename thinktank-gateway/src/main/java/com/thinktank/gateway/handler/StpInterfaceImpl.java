@@ -1,6 +1,8 @@
 package com.thinktank.gateway.handler;
 
 import cn.dev33.satoken.stp.StpInterface;
+import com.thinktank.generator.mapper.SysUserMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.List;
  */
 @Component
 public class StpInterfaceImpl implements StpInterface {
+
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
 
