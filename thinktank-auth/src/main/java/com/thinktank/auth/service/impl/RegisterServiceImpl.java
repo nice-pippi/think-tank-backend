@@ -63,7 +63,7 @@ public class RegisterServiceImpl implements RegisterService {
             SysUser sysUser = new SysUser();
             BeanUtils.copyProperties(sysUserDto, sysUser);
             sysUser.setLoginType(0);
-            sysUser.setAvatar("http://192.168.88.150:9000/avatar/default_avatar.png"); // 用户默认头像
+            sysUser.setAvatar("/avatar/default_avatar.png"); // 用户默认头像
             sysUser.setAccount(UUID.randomUUID().toString());
             String newPassword = BCrypt.hashpw(sysUserDto.getPassword(), BCrypt.gensalt()); // 将密码做BCrypt加密
             sysUser.setPassword(newPassword);
