@@ -11,5 +11,5 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface FileService {
 
-    R<String> uploadAvatar(MultipartFile file);
+    R<String> uploadUserAvatar(MultipartFile file);
 }

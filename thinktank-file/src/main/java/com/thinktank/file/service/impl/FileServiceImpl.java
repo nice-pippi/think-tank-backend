@@ -31,7 +31,7 @@ public class FileServiceImpl implements FileService {
     private MinioClient minioClient;
 
     @Override
-    public R<String> uploadAvatar(MultipartFile file) {
+    public R<String> uploadUserAvatar(MultipartFile file) {
         // 根据用户id，远程调用auth服务的用户查询接口
         long id = StpUtil.getLoginIdAsLong();
         R<SysUser> result = userClient.getUserInfo(id);
