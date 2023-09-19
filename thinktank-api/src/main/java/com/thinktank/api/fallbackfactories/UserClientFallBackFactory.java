@@ -15,15 +15,16 @@ import feign.hystrix.FallbackFactory;
 public class UserClientFallBackFactory implements FallbackFactory<UserClient> {
     @Override
     public UserClient create(Throwable throwable) {
+        String message = throwable.getMessage();
         return new UserClient() {
             @Override
             public R<SysUser> getUserInfo(Long id) {
-                return null;
+                return R.error(message);
             }
 
             @Override
             public R<SysUser> updateUser(SysUserDto sysUserDto) {
-                return R.error("更改用户服务调用过程异常");
+                return R.error(message);
             }
         };
     }

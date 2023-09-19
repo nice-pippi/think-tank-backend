@@ -26,5 +26,5 @@ public interface LoginService {
      * @param sysUser
      * @return
      */
-    R<String> passwordLogin(SysUser sysUser);
+    String passwordLogin(SysUser sysUser);
 }

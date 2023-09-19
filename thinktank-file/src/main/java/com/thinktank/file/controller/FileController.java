@@ -24,7 +24,7 @@ public class FileController {
     @ApiOperation(("用户上传头像"))
     @PostMapping("userAvatar")
     public R<String> userAvatar(MultipartFile file) {
-        return fileService.uploadUserAvatar(file);
+        return R.success(fileService.uploadUserAvatar(file));
     }
 
     @ApiOperation(("上传帖子图片"))

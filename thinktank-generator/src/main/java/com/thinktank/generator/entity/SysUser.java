@@ -18,6 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * <p>
@@ -34,13 +35,14 @@ public class SysUser implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty("用户id")
+    @NotNull(groups = {UpdateValidation.class}, message = "用户id不能为空")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
     @ApiModelProperty("头像")
     private String avatar;
 
-    @NotEmpty(groups = {InsertValidation.class,UpdateValidation.class}, message = "用户名不能为空")
+    @NotEmpty(groups = {InsertValidation.class, UpdateValidation.class}, message = "用户名不能为空")
     @ApiModelProperty("用户名")
     private String username;
 
@@ -50,7 +52,7 @@ public class SysUser implements Serializable {
     @ApiModelProperty("账号")
     private String account;
 
-    @NotEmpty(groups = {InsertValidation.class, UpdateValidation.class, QueryValidation.class}, message = "邮箱不能为空")
+    @NotEmpty(groups = {InsertValidation.class, QueryValidation.class}, message = "邮箱不能为空")
     @Email(groups = {InsertValidation.class, UpdateValidation.class, QueryValidation.class}, message = "邮箱格式有误")
     @ApiModelProperty("邮箱")
     private String email;

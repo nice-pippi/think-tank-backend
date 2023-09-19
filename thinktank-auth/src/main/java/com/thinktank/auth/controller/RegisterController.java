@@ -27,6 +27,6 @@ public class RegisterController {
     @ApiOperation("用户邮箱密码注册")
     @PostMapping("register")
     public R<String> register(@RequestBody @Validated(InsertValidation.class) SysUserDto sysUserDto) {
-        return registerService.register(sysUserDto);
+        return R.success(registerService.register(sysUserDto));
     }
 }

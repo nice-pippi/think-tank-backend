@@ -18,7 +18,7 @@ public interface UserService {
      *
      * @return
      */
-    R<SysUser> getUserInfo(Long id);
+    SysUser getUserInfo(Long id);
 
     /**
      * 修改用户信息
@@ -26,5 +26,5 @@ public interface UserService {
      * @param sysUserDto
      * @return
      */
-    R<SysUser> update(SysUserDto sysUserDto);
+    SysUser update(SysUserDto sysUserDto);
 }

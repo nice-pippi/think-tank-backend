@@ -42,7 +42,7 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Transactional
     @Override
-    public R<String> register(SysUserDto sysUserDto) {
+    public String register(SysUserDto sysUserDto) {
         // 查询该邮箱是否已被注册
         String email = sysUserDto.getEmail();
         LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
@@ -63,7 +63,7 @@ public class RegisterServiceImpl implements RegisterService {
             SysUser sysUser = new SysUser();
             BeanUtils.copyProperties(sysUserDto, sysUser);
             sysUser.setLoginType(0);
-            sysUser.setAvatar("/avatar/default_avatar.png"); // 用户默认头像
+            sysUser.setAvatar("/user-avatar/default_avatar.png"); // 用户默认头像
             sysUser.setAccount(UUID.randomUUID().toString());
             String newPassword = BCrypt.hashpw(sysUserDto.getPassword(), BCrypt.gensalt()); // 将密码做BCrypt加密
             sysUser.setPassword(newPassword);
@@ -78,9 +78,9 @@ public class RegisterServiceImpl implements RegisterService {
             // 删除该邮箱对应的key
             redisTemplate.delete(sysUserDto.getEmail());
 
-            return R.success("注册成功，快去登录吧~");
+            return "注册成功，快去登录吧~";
         }
         // 返回校验失败结果
-        return result;
+        return result.getMsg();
     }
 }

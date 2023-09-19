@@ -14,7 +14,7 @@ public interface ValidateCodeService {
      *
      * @param email 邮箱
      */
-    R<String>  generateCode(String email);
+void  generateCode(String email);
 
     /**
      * 校验验证码
@@ -23,5 +23,5 @@ public interface ValidateCodeService {
      * @param validateCode 验证码
      * @return
      */
-    R<String> validateCode(String email, String validateCode);
+    void validateCode(String email, String validateCode);
 }

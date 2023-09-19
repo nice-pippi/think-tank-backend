@@ -1,6 +1,8 @@
 package com.thinktank.validatecode.service.impl;
 
+import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.validatecode.service.SendMailService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
  * @Description: 发送邮箱接口
  * @Version: 1.0
  */
+@Slf4j
 @RefreshScope
 @Service
 public class SendMailServiceImpl implements SendMailService {
@@ -30,6 +33,11 @@ public class SendMailServiceImpl implements SendMailService {
         message.setTo(acceptEmail);  // 接收人电子邮箱
         message.setSubject(title);  // 邮件标题
         message.setText(context);   // 邮件内容
-        javaMailSender.send(message);
+        try {
+            javaMailSender.send(message);
+        } catch (Exception e) {
+            log.error("邮箱不存在:{}", acceptEmail);
+            throw new ThinkTankException("邮箱不存在！");
+        }
     }
 }

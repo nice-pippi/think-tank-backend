@@ -64,6 +64,16 @@
             <artifactId>sa-token-spring-boot-starter</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-spring-webmvc-adapter</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-parameter-flow-control</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>

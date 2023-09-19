@@ -1,13 +1,14 @@
 package com.thinktank.user.controller;
 
-import cn.dev33.satoken.annotation.SaCheckLogin;
 import com.thinktank.common.utils.R;
+import com.thinktank.common.validationgroups.UpdateValidation;
 import com.thinktank.generator.entity.SysUser;
 import com.thinktank.user.dto.SysUserDto;
 import com.thinktank.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -25,13 +26,12 @@ public class UserController {
     @ApiOperation("根据id查询用户信息")
     @GetMapping("{id}")
     public R<SysUser> getUserInfo(@PathVariable("id") Long id) {
-        return userService.getUserInfo(id);
+        return R.success(userService.getUserInfo(id));
     }
 
-    @SaCheckLogin
     @ApiOperation("更改用户信息")
     @PostMapping("/")
-    public R<SysUser> updateUser(@RequestBody SysUserDto sysUserDto) {
-        return userService.update(sysUserDto);
+    public R<SysUser> updateUser(@RequestBody @Validated(UpdateValidation.class) SysUserDto sysUserDto) {
+        return R.success(userService.update(sysUserDto));
     }
 }

@@ -1,6 +1,5 @@
 package com.thinktank.file.service;
 
-import com.thinktank.common.utils.R;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -11,5 +10,5 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface FileService {
 
-    R<String> uploadUserAvatar(MultipartFile file);
+    String uploadUserAvatar(MultipartFile file);
 }

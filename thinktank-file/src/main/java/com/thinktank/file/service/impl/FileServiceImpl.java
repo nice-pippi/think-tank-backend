@@ -31,7 +31,7 @@ public class FileServiceImpl implements FileService {
     private MinioClient minioClient;
 
     @Override
-    public R<String> uploadUserAvatar(MultipartFile file) {
+    public String uploadUserAvatar(MultipartFile file) {
         // 根据用户id，远程调用auth服务的用户查询接口
         long id = StpUtil.getLoginIdAsLong();
         R<SysUser> result = userClient.getUserInfo(id);
@@ -45,7 +45,7 @@ public class FileServiceImpl implements FileService {
         SysUser sysUser = result.getData();
 
         // 桶
-        String bucket = "avatar";
+        String bucket = "user-avatar";
 
         // 文件存储路径
         String object = String.format("/%s/%s", sysUser.getId(), file.getOriginalFilename());
@@ -73,10 +73,10 @@ public class FileServiceImpl implements FileService {
 
         if (updateResult.getStatus() != 200) {
             log.error("头像更改失败，用户id:{}", sysUserDto.getId());
-            throw new ThinkTankException("头像更改失败");
+            throw new ThinkTankException(updateResult.getMsg());
         }
 
         // 返回头像地址
-        return R.success(updateResult.getData().getAvatar());
+        return updateResult.getData().getAvatar();
     }
 }

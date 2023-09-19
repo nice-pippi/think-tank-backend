@@ -13,18 +13,18 @@ import java.util.Map;
  * @Version: 1.0
  */
 public class ValidateCodeClientFallBackFactory implements FallbackFactory<ValidateCodeClient> {
-
     @Override
     public ValidateCodeClient create(Throwable throwable) {
+        String message = throwable.getMessage();
         return new ValidateCodeClient() {
             @Override
             public R<String> generate(Map<String, String> map) {
-                return null;
+                return R.error(message);
             }
 
             @Override
             public R<String> validate(String email, String validateCode) {
-                return R.error("验证码服务出现问题暂时无法注册，请稍后再试。");
+                return R.error(message);
             }
         };
     }

@@ -24,12 +24,14 @@ public class ValidateCodeController {
     @ApiOperation("生成验证码")
     @PostMapping("generate")
     public R<String> generate(@RequestBody Map<String, String> map) {
-        return codeService.generateCode((map.get("email")));
+        codeService.generateCode((map.get("email")));
+        return R.success("已发送验证码到邮箱！");
     }
 
     @ApiOperation("校验验证码")
     @GetMapping("validate")
     public R<String> validate(@RequestParam("email") String email, @RequestParam("validateCode") String validateCode) {
-        return codeService.validateCode(email, validateCode);
+        codeService.validateCode(email, validateCode);
+        return R.success("校验成功！");
     }
 }

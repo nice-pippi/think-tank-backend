@@ -38,7 +38,7 @@ public class LoginController {
     @ApiOperation("账号密码登录")
     @PostMapping("passwordLogin")
     public R<String> passwordLogin(@RequestBody @Validated({QueryValidation.class}) SysUser sysUser) {
-        return loginService.passwordLogin(sysUser);
+        return R.success(loginService.passwordLogin(sysUser));
     }
 
     @ApiOperation("微信扫码登录")

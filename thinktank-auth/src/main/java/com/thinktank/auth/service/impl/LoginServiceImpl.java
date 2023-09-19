@@ -67,7 +67,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public R<String> passwordLogin(SysUser sysUser) {
+    public String passwordLogin(SysUser sysUser) {
         // 查询该邮箱是否已存在
         LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SysUser::getEmail, sysUser.getEmail());
@@ -91,7 +91,7 @@ public class LoginServiceImpl implements LoginService {
         StpUtil.login(user.getId().toString(), SaLoginConfig
                 .setExtra("permissions", null) // 用户权限
         );
-        return R.success(StpUtil.getTokenValue());
+        return StpUtil.getTokenValue();
     }
 
 

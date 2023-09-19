@@ -3,6 +3,7 @@ package com.thinktank.auth;
 import cn.dev33.satoken.jwt.StpLogicJwtForSimple;
 import cn.dev33.satoken.stp.StpLogic;
 import com.thinktank.common.config.SaTokenConfig;
+import com.thinktank.common.exception.SentinelExceptionHandler;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
  * @Description: 认证服务
  * @Version: 1.0
  */
-
+@Import({SentinelExceptionHandler.class})
 @EnableFeignClients(basePackages = "com.thinktank.api.clients")
 @SpringBootApplication(scanBasePackages = "com.thinktank")
 public class ThinkTankAuthApplication {

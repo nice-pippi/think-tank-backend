@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     private SysUserMapper sysUserMapper;
 
     @Override
-    public R<SysUser> getUserInfo(Long id) {
+    public SysUser getUserInfo(Long id) {
         // 查询用户
         SysUser sysUser = sysUserMapper.selectById(id);
 
@@ -38,19 +38,33 @@ public class UserServiceImpl implements UserService {
         }
 
         sysUser.setPassword(null); // 密码是敏感数据，需要做空值处理
-        return R.success(sysUser);
+        return sysUser;
     }
 
     @Transactional
     @Override
-    public R<SysUser> update(SysUserDto sysUserDto) {
+    public SysUser update(SysUserDto sysUserDto) {
+        // 如果用户身份不是管理员身份，则继续判断用户传来的id是否当前登录会话的id
+        if (!StpUtil.hasRole("admin")) {
+            if (sysUserDto.getId() != StpUtil.getLoginIdAsLong()) {
+                throw new ThinkTankException("无法更改他人用户信息!");
+            }
+        }
+
+        // 查询用户信息
+        SysUser userInfo = getUserInfo(sysUserDto.getId());
+
+        // 判断是否修改邮箱
+
+
+        // 判断是否修改密码
+
         // 用户信息拷贝
         SysUser sysUser = new SysUser();
         BeanUtils.copyProperties(sysUserDto, sysUser);
-        sysUser.setId(StpUtil.getLoginIdAsLong()); // 前端不会传用户id，需要设置当前登录会话的id
 
         // 更改用户信息
         sysUserMapper.updateById(sysUser);
-        return R.success(sysUser);
+        return sysUser;
     }
 }
