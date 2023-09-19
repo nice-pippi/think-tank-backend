@@ -14,7 +14,7 @@ import java.util.Map;
  * @Description: validatecode的Feign客户端
  * @Version: 1.0
  */
-@FeignClient(value = "validatecode", configuration = FeignInterceptor.class, fallbackFactory = ValidateCodeClientFallBackFactory.class)
+@FeignClient(value = "validatecode", fallbackFactory = ValidateCodeClientFallBackFactory.class)
 @RequestMapping("/validatecode")
 public interface ValidateCodeClient {
     // 生成验证码

@@ -23,8 +23,8 @@ logging:
   config: classpath:log4j2.xml
 
 feign:
-  hystrix:
-    enabled: true # 开启熔断降级
+  sentinel:
+    enabled: true # 开启feign对sentinel的支持
 
 sa-token:
   jwt-secret-key: ppnb

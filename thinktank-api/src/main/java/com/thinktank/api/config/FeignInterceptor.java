@@ -19,7 +19,7 @@ public class FeignInterceptor implements RequestInterceptor {
     public void apply(RequestTemplate requestTemplate) {
         requestTemplate.header(SaSameUtil.SAME_TOKEN, SaSameUtil.getToken());
 
-        //将satoken添加到请求头中,使被调用方有会话状态
-        requestTemplate.header(StpUtil.getTokenName(), StpUtil.getTokenValue());
+        // 将satoken添加到请求头中,使被调用方有会话状态
+       requestTemplate.header(StpUtil.getTokenName(), StpUtil.getTokenValue());
     }
 }

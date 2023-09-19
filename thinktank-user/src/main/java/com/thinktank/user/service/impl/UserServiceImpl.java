@@ -1,15 +1,19 @@
 package com.thinktank.user.service.impl;
 
+import cn.dev33.satoken.secure.BCrypt;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.thinktank.api.clients.ValidateCodeClient;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.R;
+import com.thinktank.common.utils.ValidateCodeUtil;
 import com.thinktank.generator.entity.SysUser;
 import com.thinktank.generator.entity.SysUserRole;
 import com.thinktank.generator.mapper.SysUserMapper;
 import com.thinktank.generator.mapper.SysUserRoleMapper;
 import com.thinktank.user.dto.SysUserDto;
 import com.thinktank.user.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +31,9 @@ import java.util.Map;
 public class UserServiceImpl implements UserService {
     @Autowired
     private SysUserMapper sysUserMapper;
+
+    @Autowired
+    private ValidateCodeClient validateCodeClient;
 
     @Override
     public SysUser getUserInfo(Long id) {
@@ -54,14 +61,37 @@ public class UserServiceImpl implements UserService {
         // 查询用户信息
         SysUser userInfo = getUserInfo(sysUserDto.getId());
 
-        // 判断是否修改邮箱
-
-
-        // 判断是否修改密码
-
         // 用户信息拷贝
         SysUser sysUser = new SysUser();
         BeanUtils.copyProperties(sysUserDto, sysUser);
+
+        // 判断是否修改邮箱
+        if (!userInfo.getEmail().equals(sysUserDto.getEmail())) {
+            // 判断该邮箱是否已被使用
+            LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(SysUser::getEmail, sysUserDto.getEmail());
+            Long count = sysUserMapper.selectCount(wrapper);
+            if (count > 0) {
+                throw new ThinkTankException("该邮箱已被使用!");
+            }
+
+            // 远程调用校验验证码服务
+            R<String> result = validateCodeClient.validate(sysUserDto.getEmail(), sysUserDto.getValidateCode());
+            if (result.getStatus() != 200) {
+                throw new ThinkTankException(result.getMsg());
+            }
+        }
+
+        // 判断是否修改密码（密码不为空代表修改密码）
+        if (StringUtils.isNotEmpty(sysUserDto.getPassword())) {
+            // 远程调用校验验证码服务
+            R<String> result = validateCodeClient.validate(sysUserDto.getEmail(), sysUserDto.getValidateCode());
+            if (result.getStatus() != 200) {
+                throw new ThinkTankException(result.getMsg());
+            }
+            String password = sysUserDto.getPassword();
+            sysUser.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+        }
 
         // 更改用户信息
         sysUserMapper.updateById(sysUser);
