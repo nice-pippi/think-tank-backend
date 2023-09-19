@@ -15,5 +15,5 @@ public interface RegisterService {
      *
      * @param sysUserDto 用户信息实体类
      */
-    String register(SysUserDto sysUserDto);
+    void register(SysUserDto sysUserDto);
 }

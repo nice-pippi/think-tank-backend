@@ -42,7 +42,7 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Transactional
     @Override
-    public String register(SysUserDto sysUserDto) {
+    public void register(SysUserDto sysUserDto) {
         // 查询该邮箱是否已被注册
         String email = sysUserDto.getEmail();
         LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
@@ -57,30 +57,28 @@ public class RegisterServiceImpl implements RegisterService {
         // 远程调用校验验证码服务
         R<String> result = validatecodeClient.validate(sysUserDto.getEmail(), sysUserDto.getValidateCode());
 
-        // 若状态未200代表验证码校验成功
-        if (result.getStatus() == 200) {
-            // 将用户信息写入数据库
-            SysUser sysUser = new SysUser();
-            BeanUtils.copyProperties(sysUserDto, sysUser);
-            sysUser.setLoginType(0);
-            sysUser.setAvatar("/user-avatar/default_avatar.png"); // 用户默认头像
-            sysUser.setAccount(UUID.randomUUID().toString());
-            String newPassword = BCrypt.hashpw(sysUserDto.getPassword(), BCrypt.gensalt()); // 将密码做BCrypt加密
-            sysUser.setPassword(newPassword);
-            sysUserMapper.insert(sysUser);
-
-            // 为该用户分配普通角色权限
-            SysUserRole sysUserRole = new SysUserRole();
-            sysUserRole.setUserId(sysUser.getId());
-            sysUserRole.setRoleId(104L);
-            sysUserRoleMapper.insert(sysUserRole);
-
-            // 删除该邮箱对应的key
-            redisTemplate.delete(sysUserDto.getEmail());
-
-            return "注册成功，快去登录吧~";
+        // 若状态不为200则抛出异常
+        if (result.getStatus() != 200) {
+            throw new ThinkTankException(result.getMsg());
         }
-        // 返回校验失败结果
-        return result.getMsg();
+
+        // 将用户信息写入数据库
+        SysUser sysUser = new SysUser();
+        BeanUtils.copyProperties(sysUserDto, sysUser);
+        sysUser.setLoginType(0);
+        sysUser.setAvatar("/user-avatar/default_avatar.png"); // 用户默认头像
+        sysUser.setAccount(UUID.randomUUID().toString());
+        String newPassword = BCrypt.hashpw(sysUserDto.getPassword(), BCrypt.gensalt()); // 将密码做BCrypt加密
+        sysUser.setPassword(newPassword);
+        sysUserMapper.insert(sysUser);
+
+        // 为该用户分配普通角色权限
+        SysUserRole sysUserRole = new SysUserRole();
+        sysUserRole.setUserId(sysUser.getId());
+        sysUserRole.setRoleId(104L);
+        sysUserRoleMapper.insert(sysUserRole);
+
+        // 删除该邮箱对应的key
+        redisTemplate.delete(sysUserDto.getEmail());
     }
 }
