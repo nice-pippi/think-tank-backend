@@ -69,5 +69,8 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
         if (!validateCode.equals(redisCode.toString())) {
             throw new ThinkTankException("验证码错误！");
         }
+
+        // 删除redis中该邮箱的记录
+        redisTemplate.delete(email);
     }
 }

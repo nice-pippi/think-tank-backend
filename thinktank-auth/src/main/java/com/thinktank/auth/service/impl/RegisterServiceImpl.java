@@ -77,8 +77,5 @@ public class RegisterServiceImpl implements RegisterService {
         sysUserRole.setUserId(sysUser.getId());
         sysUserRole.setRoleId(104L);
         sysUserRoleMapper.insert(sysUserRole);
-
-        // 删除该邮箱对应的key
-        redisTemplate.delete(sysUserDto.getEmail());
     }
 }
