@@ -8,7 +8,7 @@
         <!-- APP名称 -->
         <property name="APP_NAME" value="ThinkTank"/>
         <!-- 日志储存路径 -->
-        <property name="LOG_HOME" value="D:\Desktop\Log4j2-Logs"/>
+        <property name="LOG_HOME" value="D:\Desktop\Log4j2-Logs\admin"/>
         <!-- 日志储存天数 -->
         <property name="MAX_HISTORY" value="7d"/>
         <!-- 每个日志文件最大值, 单位 = KB, MB, GB -->
