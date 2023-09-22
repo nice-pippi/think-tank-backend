@@ -1,19 +1,17 @@
 package com.thinktank.generator.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author pippi
@@ -35,10 +33,12 @@ public class BlockSmallType implements Serializable {
     @ApiModelProperty("板块小分类名称")
     private String smallTypeName;
 
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @ApiModelProperty("创建时间")
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @ApiModelProperty("更改时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
@@ -99,12 +99,12 @@ public class BlockSmallType implements Serializable {
     @Override
     public String toString() {
         return "BlockSmallType{" +
-            "id = " + id +
-            ", bigTypeId = " + bigTypeId +
-            ", smallTypeName = " + smallTypeName +
-            ", createTime = " + createTime +
-            ", updateTime = " + updateTime +
-            ", delFlag = " + delFlag +
-        "}";
+                "id = " + id +
+                ", bigTypeId = " + bigTypeId +
+                ", smallTypeName = " + smallTypeName +
+                ", createTime = " + createTime +
+                ", updateTime = " + updateTime +
+                ", delFlag = " + delFlag +
+                "}";
     }
 }

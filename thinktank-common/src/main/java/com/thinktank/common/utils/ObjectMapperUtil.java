@@ -2,8 +2,12 @@ package com.thinktank.common.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.thinktank.common.exception.ThinkTankException;
 import org.apache.commons.lang3.StringUtils;
+
+import java.text.SimpleDateFormat;
 
 
 /**
@@ -13,7 +17,10 @@ import org.apache.commons.lang3.StringUtils;
  * @Version: 1.0
  */
 public class ObjectMapperUtil {
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS) // 禁用将日期写入JSON时的时间戳格式
+            .registerModule(new JavaTimeModule()) // 注册JavaTimeModule模块，以便支持Java 8中的日期和时间类型（如LocalDateTime）
+            .setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")); // 设置日期格式为"yyyy-MM-dd HH:mm:ss"，用于序列化和反序列化日期字段
 
     /**
      * 将任意对象转化为JSON
@@ -26,6 +33,7 @@ public class ObjectMapperUtil {
             if (object == null) {
                 throw new ThinkTankException("传递的参数object为null,请认真检查");
             }
+
             return OBJECT_MAPPER.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
