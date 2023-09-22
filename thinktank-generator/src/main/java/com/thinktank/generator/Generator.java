@@ -64,7 +64,7 @@ public class Generator {
 //                    list.add("sys_menu");
 //                    list.add("sys_role");
 //                    list.add("sys_role_menu");
-                    list.add("sys_user");
+//                    list.add("sys_user");
 //                    list.add("sys_user_role");
                     builder.addInclude(list) // 设置需要生成的表名
                             .entityBuilder()
