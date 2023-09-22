@@ -30,7 +30,7 @@ public class BlockBigType implements Serializable {
     private Long id;
 
     @ApiModelProperty("板块大分类名称")
-    private String smallTypeName;
+    private String bigTypeName;
 
     @ApiModelProperty("状态（0:正常 1:停用）")
     private Integer status;
@@ -56,11 +56,11 @@ public class BlockBigType implements Serializable {
     }
 
     public String getSmallTypeName() {
-        return smallTypeName;
+        return bigTypeName;
     }
 
     public void setSmallTypeName(String smallTypeName) {
-        this.smallTypeName = smallTypeName;
+        this.bigTypeName = smallTypeName;
     }
 
     public Integer getStatus() {
@@ -99,7 +99,7 @@ public class BlockBigType implements Serializable {
     public String toString() {
         return "BlockBigType{" +
             "id = " + id +
-            ", smallTypeName = " + smallTypeName +
+            ", bigTypeName = " + bigTypeName +
             ", status = " + status +
             ", createTime = " + createTime +
             ", updateTime = " + updateTime +
