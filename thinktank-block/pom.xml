@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>thinktank-user</artifactId>
+    <artifactId>thinktank-block</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -107,4 +107,5 @@
             <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
         </dependency>
     </dependencies>
+
 </project>

@@ -1,6 +1,5 @@
 package com.thinktank.user;
 
-import com.thinktank.api.config.FeignInterceptor;
 import com.thinktank.common.config.SaTokenConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,7 +9,7 @@ import org.springframework.context.annotation.Import;
 /**
  * @Author: 弘
  * @CreateTime: 2023年09⽉16⽇ 21:40
- * @Description: 类描述
+ * @Description: 用户服务
  * @Version: 1.0
  */
 @Import({SaTokenConfig.class})

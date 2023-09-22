@@ -18,6 +18,7 @@
         <module>thinktank-api</module>
         <module>thinktank-file</module>
         <module>thinktank-user</module>
+        <module>thinktank-block</module>
     </modules>
     <packaging>pom</packaging>
 
