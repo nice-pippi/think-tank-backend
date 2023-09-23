@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author pippi
@@ -120,14 +120,14 @@ public class SysMenu implements Serializable {
     @Override
     public String toString() {
         return "SysMenu{" +
-            "id = " + id +
-            ", menuName = " + menuName +
-            ", permission = " + permission +
-            ", description = " + description +
-            ", status = " + status +
-            ", createTime = " + createTime +
-            ", updateTime = " + updateTime +
-            ", delFlag = " + delFlag +
-        "}";
+                "id = " + id +
+                ", menuName = " + menuName +
+                ", permission = " + permission +
+                ", description = " + description +
+                ", status = " + status +
+                ", createTime = " + createTime +
+                ", updateTime = " + updateTime +
+                ", delFlag = " + delFlag +
+                "}";
     }
 }
