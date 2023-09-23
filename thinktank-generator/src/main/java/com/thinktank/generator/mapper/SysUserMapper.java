@@ -1,11 +1,11 @@
 package com.thinktank.generator.mapper;
 
-import com.thinktank.generator.entity.SysUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.thinktank.generator.entity.SysUser;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author pippi

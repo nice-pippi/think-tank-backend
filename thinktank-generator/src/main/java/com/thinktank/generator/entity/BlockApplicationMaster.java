@@ -41,7 +41,6 @@ public class BlockApplicationMaster implements Serializable {
     @ApiModelProperty("申请板主角色id（102:板主 103:小版主）")
     private Long roleId;
 
-    @NotNull(groups = {InsertValidation.class}, message = "申请用户id不能为空")
     @ApiModelProperty("申请用户id")
     private Long userId;
 
