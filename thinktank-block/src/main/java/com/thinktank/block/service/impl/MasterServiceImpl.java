@@ -32,17 +32,12 @@ public class MasterServiceImpl implements MasterService {
     @Transactional
     @Override
     public String applicationMaster(BlockApplicationMaster blockApplicationMaster) {
-        // 获取当前用户是否存在
+        // 获取当前登录用户id
         long id = StpUtil.getLoginIdAsLong();
-        SysUser sysUser = sysUserMapper.selectById(id);
-        if (sysUser == null) {
-            log.error("用户'{}'不存在", id);
-            throw new ThinkTankException("该用户不存在！");
-        }
 
         // 查询是否已提交过该板块板主申请
         LambdaQueryWrapper<BlockApplicationMaster> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(BlockApplicationMaster::getUserId, sysUser.getId());
+        wrapper.eq(BlockApplicationMaster::getUserId, id);
         wrapper.eq(BlockApplicationMaster::getSmallTypeId, blockApplicationMaster.getSmallTypeId());
         BlockApplicationMaster one = blockApplicationMasterMapper.selectOne(wrapper);
 

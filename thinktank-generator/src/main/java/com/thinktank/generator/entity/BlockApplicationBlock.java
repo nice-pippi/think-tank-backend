@@ -7,8 +7,13 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import com.thinktank.common.validationgroups.InsertValidation;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * <p>
@@ -31,12 +36,15 @@ public class BlockApplicationBlock implements Serializable {
     @ApiModelProperty("申请用户id")
     private Long userId;
 
+    @NotNull(groups = {InsertValidation.class},message = "小分类板块id不能为空")
     @ApiModelProperty("小分类板块id")
     private Long smallTypeId;
 
+    @NotEmpty(groups = {InsertValidation.class},message = "板块名称不能为空")
     @ApiModelProperty("板块名称")
     private String blockName;
 
+    @NotEmpty(groups = {InsertValidation.class},message = "板块介绍不能为空")
     @ApiModelProperty("板块介绍")
     private String description;
 

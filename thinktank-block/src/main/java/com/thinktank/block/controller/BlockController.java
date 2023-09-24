@@ -3,10 +3,12 @@ package com.thinktank.block.controller;
 import com.thinktank.block.dto.BlockClassifyDto;
 import com.thinktank.block.service.BlockService;
 import com.thinktank.common.utils.R;
+import com.thinktank.common.validationgroups.InsertValidation;
 import com.thinktank.generator.entity.BlockApplicationBlock;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,7 +33,7 @@ public class BlockController {
 
     @ApiOperation("申请创建板块")
     @PostMapping("applicationBlock")
-    public R<String> applicationBlock(@RequestBody BlockApplicationBlock blockApplicationBlock) {
+    public R<String> applicationBlock(@RequestBody @Validated(InsertValidation.class) BlockApplicationBlock blockApplicationBlock) {
         blockService.applicationBlock(blockApplicationBlock);
         return R.success("已提交板块创建申请，请耐心等待管理员审核处理。");
     }
