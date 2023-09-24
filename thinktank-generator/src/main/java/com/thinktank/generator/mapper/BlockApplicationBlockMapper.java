@@ -1,6 +1,6 @@
 package com.thinktank.generator.mapper;
 
-import com.thinktank.generator.entity.BlockApplicationMaster;
+import com.thinktank.generator.entity.BlockApplicationBlock;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author pippi
  * @since 2023-09-24
  */
-public interface BlockApplicationMasterMapper extends BaseMapper<BlockApplicationMaster> {
+public interface BlockApplicationBlockMapper extends BaseMapper<BlockApplicationBlock> {
 
 }

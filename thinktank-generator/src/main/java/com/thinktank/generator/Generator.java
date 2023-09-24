@@ -50,8 +50,9 @@ public class Generator {
                 })
                 .strategyConfig(builder -> {
                     List<String> list = new ArrayList<>();
-//                  list.add("block_follow");
-//                  list.add("block_application_master");
+//                    list.add("block_application_block");
+//                    list.add("block_application_master");
+//                    list.add("block_follow");
 //                    list.add("block_big_type");
 //                    list.add("block_info");
 //                    list.add("block_small_type");

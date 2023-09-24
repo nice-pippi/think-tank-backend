@@ -5,27 +5,22 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
-import com.thinktank.common.validationgroups.InsertValidation;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.constraints.*;
-
 /**
  * <p>
- *
+ * 
  * </p>
  *
  * @author pippi
  * @since 2023-09-24
  */
-@TableName("block_application_master")
-@ApiModel(value = "BlockApplicationMaster对象", description = "")
-public class BlockApplicationMaster implements Serializable {
+@TableName("block_application_block")
+@ApiModel(value = "BlockApplicationBlock对象", description = "")
+public class BlockApplicationBlock implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,32 +28,23 @@ public class BlockApplicationMaster implements Serializable {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
-    /**
-     * Min + Max + Positive 结合使用确保板主角色id只能为102或103
-     */
-    @Min(groups = {InsertValidation.class}, value = 102L, message = "板主角色id最小不能低于102")
-    @Max(groups = {InsertValidation.class}, value = 103L, message = "板主角色id最大不能高于103")
-    @Positive
-    @NotNull(groups = {InsertValidation.class}, message = "板主角色id不能为空")
-    @ApiModelProperty("申请板主角色id（102:板主 103:小版主）")
-    private Long roleId;
-
     @ApiModelProperty("申请用户id")
     private Long userId;
 
-    @NotNull(groups = {InsertValidation.class}, message = "小分类板块id不能为空")
     @ApiModelProperty("小分类板块id")
     private Long smallTypeId;
 
-    @NotEmpty(groups = {InsertValidation.class}, message = "申请理由不能为空")
-    @ApiModelProperty("申请理由")
-    private String reason;
+    @ApiModelProperty("板块名称")
+    private String blockName;
 
-    @ApiModelProperty("申请时间")
+    @ApiModelProperty("板块介绍")
+    private String description;
+
+    @ApiModelProperty("申请创建时间")
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @ApiModelProperty("修改时间")
+    @ApiModelProperty("更改时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
@@ -71,14 +57,6 @@ public class BlockApplicationMaster implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
     }
 
     public Long getUserId() {
@@ -97,12 +75,20 @@ public class BlockApplicationMaster implements Serializable {
         this.smallTypeId = smallTypeId;
     }
 
-    public String getReason() {
-        return reason;
+    public String getBlockName() {
+        return blockName;
     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
+    public void setBlockName(String blockName) {
+        this.blockName = blockName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public LocalDateTime getCreateTime() {
@@ -131,15 +117,15 @@ public class BlockApplicationMaster implements Serializable {
 
     @Override
     public String toString() {
-        return "BlockApplicationMaster{" +
-                "id = " + id +
-                ", roleId = " + roleId +
-                ", userId = " + userId +
-                ", smallTypeId = " + smallTypeId +
-                ", reason = " + reason +
-                ", createTime = " + createTime +
-                ", updateTime = " + updateTime +
-                ", status = " + status +
-                "}";
+        return "BlockApplicationBlock{" +
+            "id = " + id +
+            ", userId = " + userId +
+            ", smallTypeId = " + smallTypeId +
+            ", blockName = " + blockName +
+            ", description = " + description +
+            ", createTime = " + createTime +
+            ", updateTime = " + updateTime +
+            ", status = " + status +
+        "}";
     }
 }
