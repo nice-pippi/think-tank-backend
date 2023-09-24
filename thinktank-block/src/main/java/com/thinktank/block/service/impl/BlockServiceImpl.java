@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thinktank.block.dto.BlockClassifyDto;
 import com.thinktank.block.service.BlockService;
 import com.thinktank.common.utils.ObjectMapperUtil;
+import com.thinktank.generator.entity.BlockApplicationBlock;
 import com.thinktank.generator.entity.BlockBigType;
 import com.thinktank.generator.entity.BlockSmallType;
 import com.thinktank.generator.mapper.BlockBigTypeMapper;
@@ -81,5 +82,10 @@ public class BlockServiceImpl implements BlockService {
         // 写入redis
         ops.set("blockClassify",ObjectMapperUtil.toJSON(collect));
         return collect;
+    }
+
+    @Override
+    public void applicationBlock(BlockApplicationBlock blockApplicationBlock) {
+
     }
 }

@@ -3,11 +3,11 @@ package com.thinktank.block.controller;
 import com.thinktank.block.dto.BlockClassifyDto;
 import com.thinktank.block.service.BlockService;
 import com.thinktank.common.utils.R;
+import com.thinktank.generator.entity.BlockApplicationBlock;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +27,12 @@ public class BlockController {
     @GetMapping("getBlockClassify")
     public R<List<BlockClassifyDto>> getBlockClassify() {
         return R.success(blockService.getBlockClassify());
+    }
+
+    @ApiOperation("申请创建板块")
+    @PostMapping("applicationBlock")
+    public R<String> applicationBlock(@RequestBody BlockApplicationBlock blockApplicationBlock) {
+        blockService.applicationBlock(blockApplicationBlock);
+        return R.success("已提交板块创建申请，请耐心等待管理员审核处理。");
     }
 }

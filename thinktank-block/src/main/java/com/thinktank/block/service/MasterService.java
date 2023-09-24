@@ -1,6 +1,5 @@
 package com.thinktank.block.service;
 
-import com.thinktank.common.utils.R;
 import com.thinktank.generator.entity.BlockApplicationMaster;
 
 /**
