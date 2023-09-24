@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * </p>
  *
  * @author pippi
- * @since 2023-09-23
+ * @since 2023-09-24
  */
 @TableName("block_info")
 @ApiModel(value = "BlockInfo对象", description = "")
@@ -40,9 +40,6 @@ public class BlockInfo implements Serializable {
 
     @ApiModelProperty("板块介绍")
     private String description;
-
-    @ApiModelProperty("状态（0:正常 1:停用）")
-    private Integer status;
 
     @ApiModelProperty("创建时间")
     @TableField(fill = FieldFill.INSERT)
@@ -96,14 +93,6 @@ public class BlockInfo implements Serializable {
         this.description = description;
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
     public LocalDateTime getCreateTime() {
         return createTime;
     }
@@ -136,7 +125,6 @@ public class BlockInfo implements Serializable {
             ", avatar = " + avatar +
             ", blockName = " + blockName +
             ", description = " + description +
-            ", status = " + status +
             ", createTime = " + createTime +
             ", updateTime = " + updateTime +
             ", delFlag = " + delFlag +
