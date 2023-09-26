@@ -1,7 +1,10 @@
 package com.thinktank.admin;
 
+import com.thinktank.common.config.SaTokenConfig;
+import com.thinktank.common.exception.SentinelExceptionHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Import;
 
 /**
  * @Author: 弘
@@ -9,9 +12,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @Description: 后台管理服务
  * @Version: 1.0
  */
-@SpringBootApplication
+@Import({SentinelExceptionHandler.class, SaTokenConfig.class})
+@SpringBootApplication(scanBasePackages = "com.thinktank")
 public class ThinkTankAdminApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ThinkTankAdminApplication.class,args);
+        SpringApplication.run(ThinkTankAdminApplication.class, args);
     }
 }

@@ -16,3 +16,10 @@ spring:
 
 logging:
   config: classpath:log4j2.xml
+
+feign:
+  sentinel:
+    enabled: true # 开启feign对sentinel的支持
+
+sa-token:
+  jwt-secret-key: ppnb
