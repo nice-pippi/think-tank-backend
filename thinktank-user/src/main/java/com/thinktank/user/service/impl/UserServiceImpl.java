@@ -6,20 +6,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.thinktank.api.clients.ValidateCodeClient;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.R;
-import com.thinktank.common.utils.ValidateCodeUtil;
+import com.thinktank.generator.dto.SysUserDto;
 import com.thinktank.generator.entity.SysUser;
-import com.thinktank.generator.entity.SysUserRole;
 import com.thinktank.generator.mapper.SysUserMapper;
-import com.thinktank.generator.mapper.SysUserRoleMapper;
-import com.thinktank.user.dto.SysUserDto;
 import com.thinktank.user.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Map;
 
 /**
  * @Author: 弘

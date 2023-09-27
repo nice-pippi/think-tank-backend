@@ -1,10 +1,7 @@
 package com.thinktank.user.service;
 
-import com.thinktank.common.utils.R;
+import com.thinktank.generator.dto.SysUserDto;
 import com.thinktank.generator.entity.SysUser;
-import com.thinktank.user.dto.SysUserDto;
-
-import java.util.Map;
 
 /**
  * @Author: 弘

@@ -1,8 +1,8 @@
 package com.thinktank.api.fallbackfactories;
 
 import com.thinktank.api.clients.UserClient;
-import com.thinktank.api.entity.SysUserDto;
 import com.thinktank.common.utils.R;
+import com.thinktank.generator.dto.SysUserDto;
 import com.thinktank.generator.entity.SysUser;
 import feign.hystrix.FallbackFactory;
 

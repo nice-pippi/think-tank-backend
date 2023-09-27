@@ -1,9 +1,9 @@
 package com.thinktank.api.clients;
 
 import com.thinktank.api.config.FeignInterceptor;
-import com.thinktank.api.entity.SysUserDto;
 import com.thinktank.api.fallbackfactories.UserClientFallBackFactory;
 import com.thinktank.common.utils.R;
+import com.thinktank.generator.dto.SysUserDto;
 import com.thinktank.generator.entity.SysUser;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;

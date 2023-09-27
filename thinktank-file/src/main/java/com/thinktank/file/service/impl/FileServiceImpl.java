@@ -2,10 +2,10 @@ package com.thinktank.file.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.thinktank.api.clients.UserClient;
-import com.thinktank.api.entity.SysUserDto;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.R;
 import com.thinktank.file.service.FileService;
+import com.thinktank.generator.dto.SysUserDto;
 import com.thinktank.generator.entity.SysUser;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;

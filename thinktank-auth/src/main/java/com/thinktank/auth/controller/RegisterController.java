@@ -1,9 +1,9 @@
 package com.thinktank.auth.controller;
 
-import com.thinktank.auth.dto.SysUserDto;
 import com.thinktank.auth.service.RegisterService;
 import com.thinktank.common.utils.R;
 import com.thinktank.common.validationgroups.InsertValidation;
+import com.thinktank.generator.dto.SysUserDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

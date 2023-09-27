@@ -2,8 +2,8 @@ package com.thinktank.user.controller;
 
 import com.thinktank.common.utils.R;
 import com.thinktank.common.validationgroups.UpdateValidation;
+import com.thinktank.generator.dto.SysUserDto;
 import com.thinktank.generator.entity.SysUser;
-import com.thinktank.user.dto.SysUserDto;
 import com.thinktank.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
