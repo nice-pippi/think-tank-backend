@@ -41,7 +41,7 @@ public class Swagger2Config {
                 // 设置页面标题
                 .title("后台管理模块接口文档")
                 // 设置接口描述
-                .description("用于超级管理员管理整个系统运作")
+                .description("用于管理整个系统运作")
                 // 设置版本
                 .version("1.0")
                 // 构建

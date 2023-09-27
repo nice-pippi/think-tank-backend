@@ -69,6 +69,7 @@ public class Generator {
 //                    list.add("sys_role_menu");
 //                    list.add("sys_user");
 //                    list.add("sys_user_role");
+
                     builder.addInclude(list) // 设置需要生成的表名
                             .entityBuilder()
                             .idType(IdType.ASSIGN_ID) // id采用雪花算法生成

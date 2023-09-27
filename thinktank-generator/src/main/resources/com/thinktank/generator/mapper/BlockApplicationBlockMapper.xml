@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinktank.generator.mapper.BlockApplicationBlockMapper">
+
+
+    <select id="getApplicationBlockPage" resultType="com.thinktank.generator.vo.BlockApplicationBlockVo">
+        select block_application_block.id,
+               block_application_block.block_name,
+               block_application_block.description,
+               block_application_block.create_time,
+               block_application_block.status,
+               block_big_type.big_type_name,
+               block_small_type.small_type_name,
+               sys_user.username
+        from block_application_block,
+             block_big_type,
+             block_small_type,
+             sys_user
+        where block_application_block.big_type_id = block_big_type.id
+          and block_application_block.small_type_id = block_small_type.id
+          and block_application_block.user_id = sys_user.id
+    </select>
+</mapper>
