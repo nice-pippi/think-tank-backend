@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
  * @Description: 认证服务
  * @Version: 1.0
  */
+@MapperScan("com.thinktank.generator.mapper")
 @Import({SentinelExceptionHandler.class})
 @EnableFeignClients(basePackages = "com.thinktank.api.clients")
 @SpringBootApplication(scanBasePackages = "com.thinktank")
