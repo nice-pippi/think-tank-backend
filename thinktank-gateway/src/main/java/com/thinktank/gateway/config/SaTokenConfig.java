@@ -21,7 +21,8 @@ public class SaTokenConfig implements WebMvcConfigurer {
                 // 开放地址
                 .addExclude(
                         "/auth/register", // 注册
-                        "/auth/passwordLogin", // 登录
+                        "/auth/passwordLogin", // 密码登录
+                        "/auth/adminLogin", // 管理员登录
                         "/auth/wxLogin", // 微信登录
                         "/auth/{id}", // 获取用户信息
                         "/validatecode/generate", // 发送验证码

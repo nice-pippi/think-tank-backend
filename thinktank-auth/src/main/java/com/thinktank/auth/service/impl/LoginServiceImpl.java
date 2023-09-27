@@ -4,11 +4,10 @@ import cn.dev33.satoken.secure.BCrypt;
 import cn.dev33.satoken.stp.SaLoginConfig;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.thinktank.auth.service.LoginService;
 import com.thinktank.auth.service.AddUserService;
+import com.thinktank.auth.service.LoginService;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.ObjectMapperUtil;
-import com.thinktank.common.utils.R;
 import com.thinktank.generator.entity.SysUser;
 import com.thinktank.generator.mapper.SysUserMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -71,9 +70,24 @@ public class LoginServiceImpl implements LoginService {
         // 查询该邮箱是否已存在
         LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SysUser::getEmail, sysUser.getEmail());
+        validateUser(sysUser, wrapper);
+        return StpUtil.getTokenValue();
+    }
+
+    @Override
+    public String adminLogin(SysUser sysUser) {
+        // 查询账号是否存在
+        LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysUser::getAccount, sysUser.getAccount());
+        validateUser(sysUser, wrapper);
+        return StpUtil.getTokenValue();
+    }
+
+    private void validateUser(SysUser sysUser, LambdaQueryWrapper<SysUser> wrapper) {
         SysUser user = sysUserMapper.selectOne(wrapper);
+
         if (user == null) {
-            throw new ThinkTankException("该邮箱未注册！");
+            throw new ThinkTankException("账号有误！");
         }
 
         // 将查询到的密码与用户提交的密码做匹配
@@ -84,14 +98,10 @@ public class LoginServiceImpl implements LoginService {
             throw new ThinkTankException("账号或密码错误！");
         }
 
-        // 密码置空
-        user.setPassword(null);
-
         // 为该用户创建会话登录，并且返回token给用户
         StpUtil.login(user.getId().toString(), SaLoginConfig
                 .setExtra("permissions", null) // 用户权限
         );
-        return StpUtil.getTokenValue();
     }
 
 

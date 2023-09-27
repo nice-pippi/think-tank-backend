@@ -63,4 +63,10 @@ public class LoginController {
         StpUtil.logout();
         return R.success("注销成功！");
     }
+
+    @ApiOperation("管理员登录")
+    @PostMapping("adminLogin")
+    public R<String> adminLogin(@RequestBody SysUser sysUser) {
+        return R.success(loginService.adminLogin(sysUser));
+    }
 }

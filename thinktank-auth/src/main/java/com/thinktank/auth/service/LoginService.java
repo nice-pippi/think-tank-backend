@@ -1,7 +1,5 @@
 package com.thinktank.auth.service;
 
-import cn.dev33.satoken.stp.SaTokenInfo;
-import com.thinktank.common.utils.R;
 import com.thinktank.generator.entity.SysUser;
 
 /**
@@ -27,4 +25,12 @@ public interface LoginService {
      * @return
      */
     String passwordLogin(SysUser sysUser);
+
+    /**
+     * 管理员登录
+     *
+     * @param sysUser
+     * @return
+     */
+    String adminLogin(SysUser sysUser);
 }
