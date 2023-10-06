@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  * @Description: 板块管理
  * @Version: 1.0
  */
-@Api(tags = "板块管理接口")
+@Api(tags = "申请创建板块管理接口")
 @RestController
 @RequestMapping("/applicationBlockManage")
 public class ApplicationBlockManageController {

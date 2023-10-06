@@ -7,9 +7,14 @@ import com.thinktank.admin.service.ApplicationBlockManageService;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.generator.dto.BlockApplicationBlockDto;
 import com.thinktank.generator.entity.BlockApplicationBlock;
+import com.thinktank.generator.entity.BlockInfo;
+import com.thinktank.generator.entity.SysUserRole;
 import com.thinktank.generator.mapper.BlockApplicationBlockMapper;
+import com.thinktank.generator.mapper.BlockInfoMapper;
+import com.thinktank.generator.mapper.SysUserRoleMapper;
 import com.thinktank.generator.vo.BlockApplicationBlockVo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +30,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ApplicationBlockManageServiceImpl implements ApplicationBlockManageService {
     @Autowired
     private BlockApplicationBlockMapper blockApplicationBlockMapper;
+
+    @Autowired
+    private BlockInfoMapper blockInfoMapper;
+
+    @Autowired
+    private SysUserRoleMapper sysUserRoleMapper;
 
     @Override
     public IPage<BlockApplicationBlockVo> getApplicationBlockPage(BlockApplicationBlockDto blockApplicationBlockDto) {
@@ -61,15 +72,43 @@ public class ApplicationBlockManageServiceImpl implements ApplicationBlockManage
     @Override
     public void allow(Long id) {
         BlockApplicationBlock blockApplicationBlock = getRecordExists(id);
+
+        // 若不为‘0’，则代表该申请记录已处理，无需重复处理
+        if (!blockApplicationBlock.getStatus().equals(0)) {
+            log.error("该记录已处理过，申请记录id:{}", blockApplicationBlock.getId());
+            throw new ThinkTankException("该记录已处理过！");
+        }
+
+        // 更改申请记录状态为’通过‘
         blockApplicationBlock.setStatus(1);
         blockApplicationBlockMapper.updateById(blockApplicationBlock);
+
+        // 将该板块信息记录到板块信息表
+        BlockInfo blockInfo = new BlockInfo();
+        BeanUtils.copyProperties(blockApplicationBlock, blockInfo);
+        blockInfo.setAvatar("/block-avatar/default_avatar.png"); // 默认板块头像
+        blockInfoMapper.insert(blockInfo);
+
+        // 为该用户分配该板块的板主角色
+        SysUserRole sysUserRole = new SysUserRole();
+        sysUserRole.setUserId(blockApplicationBlock.getUserId());
+        sysUserRole.setRoleId(102L);
+        sysUserRole.setBlockId(blockInfo.getId());
+        sysUserRoleMapper.insert(sysUserRole);
     }
 
 
     @Transactional
     @Override
     public void reject(Long id) {
+        // 更改申请记录状态为’驳回‘
         BlockApplicationBlock blockApplicationBlock = getRecordExists(id);
+
+        // 若不为‘0’，则代表该申请记录已处理，无需重复处理
+        if (!blockApplicationBlock.getStatus().equals(0)) {
+            log.error("该记录已处理过，申请记录id:{}", blockApplicationBlock.getId());
+            throw new ThinkTankException("该记录已处理过！");
+        }
         blockApplicationBlock.setStatus(2);
         blockApplicationBlockMapper.updateById(blockApplicationBlock);
     }

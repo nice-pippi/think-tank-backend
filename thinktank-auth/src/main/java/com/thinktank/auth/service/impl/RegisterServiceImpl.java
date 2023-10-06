@@ -71,11 +71,5 @@ public class RegisterServiceImpl implements RegisterService {
         String newPassword = BCrypt.hashpw(sysUserDto.getPassword(), BCrypt.gensalt()); // 将密码做BCrypt加密
         sysUser.setPassword(newPassword);
         sysUserMapper.insert(sysUser);
-
-        // 为该用户分配普通角色权限
-        SysUserRole sysUserRole = new SysUserRole();
-        sysUserRole.setUserId(sysUser.getId());
-        sysUserRole.setRoleId(104L);
-        sysUserRoleMapper.insert(sysUserRole);
     }
 }
