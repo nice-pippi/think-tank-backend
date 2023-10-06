@@ -89,6 +89,9 @@ public class ApplicationBlockManageServiceImpl implements ApplicationBlockManage
         blockInfo.setAvatar("/block-avatar/default_avatar.png"); // 默认板块头像
         blockInfoMapper.insert(blockInfo);
 
+        //TODO:将板块信息写入elasticsearch数据库
+
+
         // 为该用户分配该板块的板主角色
         SysUserRole sysUserRole = new SysUserRole();
         sysUserRole.setUserId(blockApplicationBlock.getUserId());
