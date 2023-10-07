@@ -5,14 +5,12 @@ import com.thinktank.common.utils.R;
 import com.thinktank.common.validationgroups.InsertValidation;
 import com.thinktank.generator.dto.BlockClassifyDto;
 import com.thinktank.generator.entity.BlockApplicationBlock;
+import com.thinktank.generator.vo.BlockInfoVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,5 +37,11 @@ public class BlockController {
     public R<String> applicationBlock(@RequestBody @Validated(InsertValidation.class) BlockApplicationBlock blockApplicationBlock) {
         blockService.applicationBlock(blockApplicationBlock);
         return R.success("已提交板块创建申请，请耐心等待管理员审核处理。");
+    }
+
+    @ApiOperation("获取板块信息")
+    @GetMapping("{id}")
+    public R<BlockInfoVo> getBlockInfo(@PathVariable("id") Long id) {
+        return R.success(blockService.getBlockInfo(id));
     }
 }

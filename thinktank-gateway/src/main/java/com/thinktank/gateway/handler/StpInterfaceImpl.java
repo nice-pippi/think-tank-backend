@@ -29,7 +29,7 @@ public class StpInterfaceImpl implements StpInterface {
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
         ArrayList<String> list = new ArrayList<>();
-        list.add("ad");
+        list.add("admin");
         return list;
     }
 

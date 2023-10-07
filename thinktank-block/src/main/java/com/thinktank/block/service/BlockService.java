@@ -2,6 +2,7 @@ package com.thinktank.block.service;
 
 import com.thinktank.generator.dto.BlockClassifyDto;
 import com.thinktank.generator.entity.BlockApplicationBlock;
+import com.thinktank.generator.vo.BlockInfoVo;
 
 import java.util.List;
 
@@ -25,4 +26,12 @@ public interface BlockService {
      * @param blockApplicationBlock
      */
     void applicationBlock(BlockApplicationBlock blockApplicationBlock);
+
+    /**
+     * 根据id获取板块信息
+     *
+     * @param id
+     * @return
+     */
+    BlockInfoVo getBlockInfo(Long id);
 }

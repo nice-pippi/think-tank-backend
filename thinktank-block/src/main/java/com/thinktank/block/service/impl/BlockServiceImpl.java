@@ -2,6 +2,7 @@ package com.thinktank.block.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +18,7 @@ import com.thinktank.generator.mapper.BlockApplicationBlockMapper;
 import com.thinktank.generator.mapper.BlockBigTypeMapper;
 import com.thinktank.generator.mapper.BlockInfoMapper;
 import com.thinktank.generator.mapper.BlockSmallTypeMapper;
+import com.thinktank.generator.vo.BlockInfoVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -115,5 +119,50 @@ public class BlockServiceImpl implements BlockService {
         // 将创建板块申请记录到数据库
         blockApplicationBlock.setUserId(id);
         blockApplicationBlockMapper.insert(blockApplicationBlock);
+    }
+
+    @Override
+    public BlockInfoVo getBlockInfo(Long id) {
+        ValueOperations ops = redisTemplate.opsForValue();
+
+        // 若命中缓存，则直接返回缓存数据
+        Object object = ops.get(id);
+        if (object != null) {
+            BlockInfoVo blockInfoVo = ObjectMapperUtil.toObject(object.toString(), BlockInfoVo.class);
+            return blockInfoVo;
+        }
+
+        // 查询板块信息
+        LambdaQueryWrapper<BlockInfo> blockInfoLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        blockInfoLambdaQueryWrapper.eq(BlockInfo::getId, id);
+        List<SFunction<BlockInfo, ?>> columnList = new ArrayList<>();
+        columnList.add(BlockInfo::getId);
+        columnList.add(BlockInfo::getSmallTypeId);
+        columnList.add(BlockInfo::getAvatar);
+        columnList.add(BlockInfo::getBlockName);
+        columnList.add(BlockInfo::getDescription);
+        blockInfoLambdaQueryWrapper.select(columnList);
+        BlockInfo blockInfo = blockInfoMapper.selectOne(blockInfoLambdaQueryWrapper);
+
+        if (blockInfo == null) {
+            log.error("板块'{}'不存在", id);
+            throw new ThinkTankException("该板块不存在！");
+        }
+
+        // 根据板块信息的小分类id查询小分类名称
+        LambdaQueryWrapper<BlockSmallType> blockSmallTypeLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        blockSmallTypeLambdaQueryWrapper.eq(BlockSmallType::getId, blockInfo.getSmallTypeId());
+        blockSmallTypeLambdaQueryWrapper.select(BlockSmallType::getSmallTypeName);
+        BlockSmallType blockSmallType = blockSmallTypeMapper.selectOne(blockSmallTypeLambdaQueryWrapper);
+
+        // 将信息copy到BlockInfoVo
+        BlockInfoVo blockInfoVo = new BlockInfoVo();
+        BeanUtils.copyProperties(blockInfo, blockInfoVo);
+        blockInfoVo.setSmallTypeName(blockSmallType.getSmallTypeName());
+
+        // 写入redis缓存，生命周期为3天
+        ops.set(id, ObjectMapperUtil.toJSON(blockInfoVo), Duration.ofDays(3));
+
+        return blockInfoVo;
     }
 }

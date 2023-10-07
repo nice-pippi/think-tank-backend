@@ -27,7 +27,8 @@ public class SaTokenConfig implements WebMvcConfigurer {
                         "/auth/{id}", // 获取用户信息
                         "/validatecode/generate", // 发送验证码
                         "/validatecode/validate", // 校验验证码
-                        "/block/getBlockClassify" // 获取所有板块分类
+                        "/block/getBlockClassify",// 获取所有板块分类
+                        "/block/{id}" // 获取板块信息
                 )
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {
