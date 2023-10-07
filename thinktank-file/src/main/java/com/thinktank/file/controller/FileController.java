@@ -2,12 +2,17 @@ package com.thinktank.file.controller;
 
 import com.thinktank.common.utils.R;
 import com.thinktank.file.service.FileService;
+import com.thinktank.generator.entity.BlockInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
 
 /**
  * @Author: 弘
@@ -32,5 +37,11 @@ public class FileController {
     public R<String> postImg(MultipartFile file) {
         System.out.println(file);
         return R.success(null);
+    }
+
+    @ApiOperation(("上传板块头像"))
+    @PostMapping("blockAvatar")
+    public R<String> blockAvatar(@RequestParam MultipartFile file, Long id) {
+        return R.success(fileService.uploadBlockAvatar(file,id));
     }
 }

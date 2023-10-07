@@ -153,7 +153,7 @@ public class BlockServiceImpl implements BlockService {
         // 根据板块信息的小分类id查询小分类名称
         LambdaQueryWrapper<BlockSmallType> blockSmallTypeLambdaQueryWrapper = new LambdaQueryWrapper<>();
         blockSmallTypeLambdaQueryWrapper.eq(BlockSmallType::getId, blockInfo.getSmallTypeId());
-        blockSmallTypeLambdaQueryWrapper.select(BlockSmallType::getSmallTypeName,BlockSmallType::getBigTypeId);
+        blockSmallTypeLambdaQueryWrapper.select(BlockSmallType::getSmallTypeName, BlockSmallType::getBigTypeId);
         BlockSmallType blockSmallType = blockSmallTypeMapper.selectOne(blockSmallTypeLambdaQueryWrapper);
 
         // 根据小分类id所属大分类id查询大分类名称
@@ -171,6 +171,34 @@ public class BlockServiceImpl implements BlockService {
         // 写入redis缓存，生命周期为3天
         ops.set(id, ObjectMapperUtil.toJSON(blockInfoVo), Duration.ofDays(3));
 
+        return blockInfoVo;
+    }
+
+    @Transactional
+    @Override
+    public BlockInfoVo update(BlockInfo blockInfo) {
+        // 去除头像url的‘http://192.168.88.150:9000’前缀
+        String baseUrl = blockInfo.getAvatar();
+        if (!baseUrl.contains("/block-avatar")) {
+            throw new ThinkTankException("头像url地址格式有误！");
+        }
+        String url = baseUrl.substring(baseUrl.indexOf("/block-avatar"));
+        blockInfo.setAvatar(url);
+
+        // 保存板块信息到数据库
+        blockInfoMapper.updateById(blockInfo);
+
+        // 删除redis中该板块的信息
+        redisTemplate.delete(blockInfo.getId());
+
+        // 根据板块id查询板块信息
+        BlockInfoVo blockInfoVo = getBlockInfo(blockInfo.getId());
+
+        // 写入redis
+        ValueOperations ops = redisTemplate.opsForValue();
+        ops.set(blockInfo.getId(), ObjectMapperUtil.toJSON(blockInfoVo), Duration.ofDays(3));
+
+        // 返回板块信息给用户
         return blockInfoVo;
     }
 }

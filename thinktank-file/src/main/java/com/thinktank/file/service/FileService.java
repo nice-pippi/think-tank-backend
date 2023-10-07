@@ -9,6 +9,18 @@ import org.springframework.web.multipart.MultipartFile;
  * @Version: 1.0
  */
 public interface FileService {
-
+    /**
+     * 上传用户头像
+     *
+     * @param file
+     * @return
+     */
     String uploadUserAvatar(MultipartFile file);
+
+    /**
+     * @param file 板块头像（封面）
+     * @param id   板块id
+     * @return
+     */
+    String uploadBlockAvatar(MultipartFile file, Long id);
 }

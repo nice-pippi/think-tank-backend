@@ -58,7 +58,7 @@ public class FileServiceImpl implements FileService {
                     .stream(file.getInputStream(), file.getSize(), -1)
                     .build());
         } catch (Exception e) {
-            log.error("头像上传minio失败：用户id:{}", sysUser.getId());
+            log.error("用户头像上传minio失败：用户id:{}", sysUser.getId());
             throw new ThinkTankException("上传minio失败");
         }
 
@@ -76,7 +76,32 @@ public class FileServiceImpl implements FileService {
             throw new ThinkTankException(updateResult.getMsg());
         }
 
-        // 返回头像地址
+        // 返回用户头像地址
         return updateResult.getData().getAvatar();
+    }
+
+    @Override
+    public String uploadBlockAvatar(MultipartFile file, Long id) {
+        // 桶
+        String bucket = "block-avatar";
+
+        // 文件存储路径
+        String object = String.format("/%s/%s", id, file.getOriginalFilename());
+
+        // 将图片文件以流的形式上传至minio
+        try {
+            minioClient.putObject(PutObjectArgs.builder()
+                    .bucket(bucket)
+                    .object(object)
+                    .stream(file.getInputStream(), file.getSize(), -1)
+                    .build());
+        } catch (Exception e) {
+            log.error("板块头像上传minio失败，板块id:{}，文件:{}", id, file.getOriginalFilename());
+            throw new ThinkTankException("上传minio失败");
+        }
+
+        // 返回板块头像地址
+        String avatarPath = "/" + bucket + object;
+        return avatarPath;
     }
 }

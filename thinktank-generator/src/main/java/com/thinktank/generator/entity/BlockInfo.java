@@ -1,19 +1,19 @@
 package com.thinktank.generator.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotation.*;
+import com.thinktank.common.validationgroups.InsertValidation;
+import com.thinktank.common.validationgroups.UpdateValidation;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author pippi
@@ -25,6 +25,7 @@ public class BlockInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @NotNull(groups = { UpdateValidation.class}, message = "板块id不能为空")
     @ApiModelProperty("板块id")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
@@ -38,9 +39,11 @@ public class BlockInfo implements Serializable {
     @ApiModelProperty("板块头像")
     private String avatar;
 
+    @NotEmpty(groups = {InsertValidation.class, UpdateValidation.class}, message = "板块名称不能为空")
     @ApiModelProperty("板块名称")
     private String blockName;
 
+    @NotEmpty(groups = {InsertValidation.class, UpdateValidation.class}, message = "板块介绍不能为空")
     @ApiModelProperty("板块介绍")
     private String description;
 
@@ -131,15 +134,15 @@ public class BlockInfo implements Serializable {
     @Override
     public String toString() {
         return "BlockInfo{" +
-            "id = " + id +
-            ", bigTypeId = " + bigTypeId +
-            ", smallTypeId = " + smallTypeId +
-            ", avatar = " + avatar +
-            ", blockName = " + blockName +
-            ", description = " + description +
-            ", createTime = " + createTime +
-            ", updateTime = " + updateTime +
-            ", delFlag = " + delFlag +
-        "}";
+                "id = " + id +
+                ", bigTypeId = " + bigTypeId +
+                ", smallTypeId = " + smallTypeId +
+                ", avatar = " + avatar +
+                ", blockName = " + blockName +
+                ", description = " + description +
+                ", createTime = " + createTime +
+                ", updateTime = " + updateTime +
+                ", delFlag = " + delFlag +
+                "}";
     }
 }

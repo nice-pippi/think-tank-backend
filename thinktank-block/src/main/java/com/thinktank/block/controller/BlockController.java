@@ -3,8 +3,10 @@ package com.thinktank.block.controller;
 import com.thinktank.block.service.BlockService;
 import com.thinktank.common.utils.R;
 import com.thinktank.common.validationgroups.InsertValidation;
+import com.thinktank.common.validationgroups.UpdateValidation;
 import com.thinktank.generator.dto.BlockClassifyDto;
 import com.thinktank.generator.entity.BlockApplicationBlock;
+import com.thinktank.generator.entity.BlockInfo;
 import com.thinktank.generator.vo.BlockInfoVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -43,5 +45,11 @@ public class BlockController {
     @GetMapping("{id}")
     public R<BlockInfoVo> getBlockInfo(@PathVariable("id") Long id) {
         return R.success(blockService.getBlockInfo(id));
+    }
+
+    @ApiOperation("更改板块信息")
+    @PostMapping
+    public R<BlockInfoVo> updateInfo(@RequestBody @Validated(UpdateValidation.class) BlockInfo blockInfo) {
+        return R.success(blockService.update(blockInfo));
     }
 }
