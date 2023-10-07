@@ -138,6 +138,7 @@ public class BlockServiceImpl implements BlockService {
         List<SFunction<BlockInfo, ?>> columnList = new ArrayList<>();
         columnList.add(BlockInfo::getId);
         columnList.add(BlockInfo::getSmallTypeId);
+        columnList.add(BlockInfo::getBigTypeId);
         columnList.add(BlockInfo::getAvatar);
         columnList.add(BlockInfo::getBlockName);
         columnList.add(BlockInfo::getDescription);
@@ -152,13 +153,20 @@ public class BlockServiceImpl implements BlockService {
         // 根据板块信息的小分类id查询小分类名称
         LambdaQueryWrapper<BlockSmallType> blockSmallTypeLambdaQueryWrapper = new LambdaQueryWrapper<>();
         blockSmallTypeLambdaQueryWrapper.eq(BlockSmallType::getId, blockInfo.getSmallTypeId());
-        blockSmallTypeLambdaQueryWrapper.select(BlockSmallType::getSmallTypeName);
+        blockSmallTypeLambdaQueryWrapper.select(BlockSmallType::getSmallTypeName,BlockSmallType::getBigTypeId);
         BlockSmallType blockSmallType = blockSmallTypeMapper.selectOne(blockSmallTypeLambdaQueryWrapper);
+
+        // 根据小分类id所属大分类id查询大分类名称
+        LambdaQueryWrapper<BlockBigType> blockBigTypeLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        blockBigTypeLambdaQueryWrapper.eq(BlockBigType::getId, blockInfo.getBigTypeId());
+        blockBigTypeLambdaQueryWrapper.select(BlockBigType::getBigTypeName);
+        BlockBigType blockBigType = blockBigTypeMapper.selectOne(blockBigTypeLambdaQueryWrapper);
 
         // 将信息copy到BlockInfoVo
         BlockInfoVo blockInfoVo = new BlockInfoVo();
         BeanUtils.copyProperties(blockInfo, blockInfoVo);
         blockInfoVo.setSmallTypeName(blockSmallType.getSmallTypeName());
+        blockInfoVo.setBigTypeName(blockBigType.getBigTypeName());
 
         // 写入redis缓存，生命周期为3天
         ops.set(id, ObjectMapperUtil.toJSON(blockInfoVo), Duration.ofDays(3));

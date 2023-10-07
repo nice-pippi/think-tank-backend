@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * </p>
  *
  * @author pippi
- * @since 2023-09-24
+ * @since 2023-10-07
  */
 @TableName("block_info")
 @ApiModel(value = "BlockInfo对象", description = "")
@@ -28,6 +28,9 @@ public class BlockInfo implements Serializable {
     @ApiModelProperty("板块id")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
+
+    @ApiModelProperty("大分类板块id")
+    private Long bigTypeId;
 
     @ApiModelProperty("小分类板块id")
     private Long smallTypeId;
@@ -59,6 +62,14 @@ public class BlockInfo implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getBigTypeId() {
+        return bigTypeId;
+    }
+
+    public void setBigTypeId(Long bigTypeId) {
+        this.bigTypeId = bigTypeId;
     }
 
     public Long getSmallTypeId() {
@@ -121,6 +132,7 @@ public class BlockInfo implements Serializable {
     public String toString() {
         return "BlockInfo{" +
             "id = " + id +
+            ", bigTypeId = " + bigTypeId +
             ", smallTypeId = " + smallTypeId +
             ", avatar = " + avatar +
             ", blockName = " + blockName +

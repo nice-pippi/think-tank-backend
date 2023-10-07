@@ -12,6 +12,9 @@ import lombok.Data;
  */
 @Data
 public class BlockInfoVo extends BlockInfo {
+    @ApiModelProperty("大分类")
+    private String bigTypeName;
+
     @ApiModelProperty("小分类")
     private String smallTypeName;
 }
