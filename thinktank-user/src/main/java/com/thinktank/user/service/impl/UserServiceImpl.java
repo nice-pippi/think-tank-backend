@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(sysUserDto, sysUser);
 
         // 判断是否修改邮箱
-        if (!userInfo.getEmail().equals(sysUserDto.getEmail())) {
+        if (sysUserDto.getEmail() != null && !sysUserDto.getEmail().equals(userInfo.getEmail())) {
             // 判断该邮箱是否已被使用
             LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(SysUser::getEmail, sysUserDto.getEmail());
