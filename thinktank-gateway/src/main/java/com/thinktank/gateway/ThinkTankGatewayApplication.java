@@ -1,5 +1,6 @@
 package com.thinktank.gateway;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @Description: 网关
  * @Version: 1.0
  */
+@MapperScan("com.thinktank.generator.mapper")
 @SpringBootApplication
 public class ThinkTankGatewayApplication {
     public static void main(String[] args) {

@@ -16,3 +16,6 @@ spring:
 
 sa-token:
   jwt-secret-key: ppnb
+
+logging:
+  config: classpath:log4j2.xml

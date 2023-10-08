@@ -2,4 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thinktank.generator.mapper.SysUserRoleMapper">
 
+    <select id="getRoleList" resultType="java.lang.String">
+        select role_name
+        from sys_user_role as t1,
+             sys_role as t2
+        where t1.role_id = t2.id
+          and t1.user_id = #{id}
+    </select>
 </mapper>

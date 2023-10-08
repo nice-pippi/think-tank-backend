@@ -32,9 +32,6 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
-    @Autowired
-    private ValidateCodeClient validatecodeClient;
-
     @ApiOperation("账号密码登录")
     @PostMapping("passwordLogin")
     public R<String> passwordLogin(@RequestBody @Validated({QueryValidation.class}) SysUser sysUser) {

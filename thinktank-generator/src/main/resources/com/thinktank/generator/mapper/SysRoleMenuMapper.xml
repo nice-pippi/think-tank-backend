@@ -2,4 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thinktank.generator.mapper.SysRoleMenuMapper">
 
+    <select id="getPermissionList" resultType="java.lang.String">
+        SELECT DISTINCT t4.permission
+        FROM sys_user_role AS t1,
+             sys_role as t2,
+             sys_role_menu as t3,
+             sys_menu AS t4
+        WHERE t1.role_id = t2.id
+          and t2.id = t3.role_id
+          and t3.menu_id = t4.id
+          AND t1.user_id = #{id}
+    </select>
 </mapper>

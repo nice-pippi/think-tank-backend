@@ -28,14 +28,14 @@ public class SaTokenConfig implements WebMvcConfigurer {
                         "/validatecode/generate", // 发送验证码
                         "/validatecode/validate", // 校验验证码
                         "/block/getBlockClassify",// 获取所有板块分类
-                        "/block/{id}" // 获取板块信息
+                        "/block/{id}/" // 获取板块信息
                 )
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {
                     // 所有地址都需要登录校验
                     SaRouter.match("/**", r -> StpUtil.checkLogin());
                     // 权限认证 -- 不同模块, 校验不同权限
-                    SaRouter.match("/post/**", r -> StpUtil.checkPermission("post"));
+                    SaRouter.match("/block/", r -> StpUtil.checkPermission("block:update")); // 检查更改板块权限
                 })
                 // 鉴权之前执行的操作
                 .setBeforeAuth(obj -> {
