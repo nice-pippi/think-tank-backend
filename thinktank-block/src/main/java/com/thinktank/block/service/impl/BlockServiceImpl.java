@@ -58,12 +58,14 @@ public class BlockServiceImpl implements BlockService {
 
     @Override
     public List<BlockClassifyDto> getBlockClassify() {
+        // redis命名空间
+        String namespace = "block:classify";
         ValueOperations ops = redisTemplate.opsForValue();
 
         // 查询redis中是否存在板块分类，若存在直接返回
-        if (ops.get("blockClassify") != null) {
+        if (ops.get(namespace) != null) {
             // 获取 Redis 中的值
-            String blockClassifyJson = ops.get("blockClassify").toString();
+            String blockClassifyJson = ops.get(namespace).toString();
 
             // 使用 ObjectMapper 将 JSON 字符串转换为 List<BlockClassifyDto>
             ObjectMapper objectMapper = new ObjectMapper();
@@ -97,7 +99,7 @@ public class BlockServiceImpl implements BlockService {
         }).collect(Collectors.toList());
 
         // 写入redis
-        ops.set("blockClassify", ObjectMapperUtil.toJSON(collect));
+        ops.set(namespace, ObjectMapperUtil.toJSON(collect));
         return collect;
     }
 
@@ -123,10 +125,12 @@ public class BlockServiceImpl implements BlockService {
 
     @Override
     public BlockInfoVo getBlockInfo(Long id) {
+        // redis命名空间
+        String namespace = "block:info:" + id;
         ValueOperations ops = redisTemplate.opsForValue();
 
         // 若命中缓存，则直接返回缓存数据
-        Object object = ops.get(id);
+        Object object = ops.get(namespace);
         if (object != null) {
             BlockInfoVo blockInfoVo = ObjectMapperUtil.toObject(object.toString(), BlockInfoVo.class);
             return blockInfoVo;
@@ -169,7 +173,7 @@ public class BlockServiceImpl implements BlockService {
         blockInfoVo.setBigTypeName(blockBigType.getBigTypeName());
 
         // 写入redis缓存，生命周期为3天
-        ops.set(id, ObjectMapperUtil.toJSON(blockInfoVo), Duration.ofDays(3));
+        ops.set(namespace, ObjectMapperUtil.toJSON(blockInfoVo), Duration.ofDays(3));
 
         return blockInfoVo;
     }
@@ -196,7 +200,9 @@ public class BlockServiceImpl implements BlockService {
 
         // 写入redis
         ValueOperations ops = redisTemplate.opsForValue();
-        ops.set(blockInfo.getId(), ObjectMapperUtil.toJSON(blockInfoVo), Duration.ofDays(3));
+        // redis命名空间
+        String namespace = "block:info:" + blockInfo.getId();
+        ops.set(namespace, ObjectMapperUtil.toJSON(blockInfoVo), Duration.ofDays(3));
 
         // 返回板块信息给用户
         return blockInfoVo;

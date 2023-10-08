@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -40,9 +41,11 @@ public class StpInterfaceImpl implements StpInterface {
      */
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
+        // redis命名空间
+        String namespace = "gateway:permissions:" + loginId;
         // 从缓存中查询权限集合
         HashOperations ops = redisTemplate.opsForHash();
-        Object o = ops.get(loginId, "permissionList");
+        Object o = ops.get(namespace, "permissionList");
 
         // 若缓存中存在则直接返回
         if (o != null) {
@@ -55,7 +58,7 @@ public class StpInterfaceImpl implements StpInterface {
         log.info("id={},permissionList={}", loginId, permissionList);
 
         // 写入redis缓存
-        ops.put(loginId, "permissionList", ObjectMapperUtil.toJSON(permissionList));
+        ops.put(namespace, "permissionList", ObjectMapperUtil.toJSON(permissionList));
         return permissionList;
     }
 
@@ -68,9 +71,11 @@ public class StpInterfaceImpl implements StpInterface {
      */
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
+        // redis命名空间
+        String namespace = "gateway:roles:" + loginId;
         // 从缓存中查询权限集合
         HashOperations ops = redisTemplate.opsForHash();
-        Object o = ops.get(loginId, "roleList");
+        Object o = ops.get(namespace, "roleList");
 
         // 若缓存中存在则直接返回
         if (o != null) {
@@ -84,7 +89,7 @@ public class StpInterfaceImpl implements StpInterface {
         log.info("id={},roleList={}", loginId, roleList);
 
         // 写入redis缓存
-        ops.put(loginId, "roleList", ObjectMapperUtil.toJSON(roleList));
+        ops.put(namespace, "roleList", ObjectMapperUtil.toJSON(roleList));
         return roleList;
     }
 }
