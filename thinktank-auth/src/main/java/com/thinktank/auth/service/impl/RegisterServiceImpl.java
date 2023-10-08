@@ -31,14 +31,7 @@ public class RegisterServiceImpl implements RegisterService {
     private SysUserMapper sysUserMapper;
 
     @Autowired
-    private SysUserRoleMapper sysUserRoleMapper;
-
-    @Autowired
     private ValidateCodeClient validatecodeClient;
-
-    @Autowired
-    private RedisTemplate redisTemplate;
-
 
     @Transactional
     @Override

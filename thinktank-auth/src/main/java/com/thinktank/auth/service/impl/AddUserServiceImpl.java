@@ -1,16 +1,11 @@
 package com.thinktank.auth.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.thinktank.auth.dto.SysUserDto;
 import com.thinktank.auth.service.AddUserService;
-import com.thinktank.common.exception.ThinkTankException;
-import com.thinktank.common.utils.R;
 import com.thinktank.generator.entity.SysUser;
 import com.thinktank.generator.entity.SysUserRole;
 import com.thinktank.generator.mapper.SysUserMapper;
 import com.thinktank.generator.mapper.SysUserRoleMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

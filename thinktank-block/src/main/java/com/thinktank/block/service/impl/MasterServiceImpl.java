@@ -24,9 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MasterServiceImpl implements MasterService {
     @Autowired
-    private SysUserMapper sysUserMapper;
-
-    @Autowired
     private BlockApplicationMasterMapper blockApplicationMasterMapper;
 
     @Transactional
