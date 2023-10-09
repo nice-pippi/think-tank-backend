@@ -10,6 +10,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Configuration
 public class SaTokenConfig implements WebMvcConfigurer {
     // 注册 Sa-Token全局过滤器
@@ -19,21 +22,23 @@ public class SaTokenConfig implements WebMvcConfigurer {
                 // 拦截地址
                 .addInclude("/**")    /* 拦截全部path */
                 // 开放地址
-                .addExclude(
-                        "/auth/register", // 注册
-                        "/auth/passwordLogin", // 密码登录
-                        "/auth/adminLogin", // 管理员登录
-                        "/auth/wxLogin", // 微信登录
-                        "/auth/{id}", // 获取用户信息
-                        "/validatecode/generate", // 发送验证码
-                        "/validatecode/validate", // 校验验证码
-                        "/block/getBlockClassify",// 获取所有板块分类
-                        "/block/{id}/" // 获取板块信息
-                )
+                .addExclude("/favicon.ico")
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {
                     // 所有地址都需要登录校验
-                    SaRouter.match("/**", r -> StpUtil.checkLogin());
+                    SaRouter.match("/**")
+                            // 排除登录校验
+                            .notMatch(
+                                    "/auth/register",
+                                    "/auth/passwordLogin",
+                                    "/auth/adminLogin",
+                                    "/auth/wxLogin",
+                                    "/auth/{id}",
+                                    "/validatecode/generate",
+                                    "/validatecode/validate",
+                                    "/block/getBlockClassify",
+                                    "/block/{id}")
+                            .check(r -> StpUtil.checkLogin());
                     // 权限认证 -- 不同模块, 校验不同权限
                     SaRouter.match("/block/", r -> StpUtil.checkPermission("block:update")); // 检查更改板块权限
                 })
