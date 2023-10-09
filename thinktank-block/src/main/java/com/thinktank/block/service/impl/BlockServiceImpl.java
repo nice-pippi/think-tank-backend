@@ -20,6 +20,8 @@ import com.thinktank.generator.mapper.BlockInfoMapper;
 import com.thinktank.generator.mapper.BlockSmallTypeMapper;
 import com.thinktank.generator.vo.BlockInfoVo;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -30,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -56,6 +59,9 @@ public class BlockServiceImpl implements BlockService {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private RedissonClient redissonClient;
+
     @Override
     public List<BlockClassifyDto> getBlockClassify() {
         // redis命名空间
@@ -72,34 +78,62 @@ public class BlockServiceImpl implements BlockService {
             JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, BlockClassifyDto.class);
 
             try {
-                List<BlockClassifyDto> blockClassifyDtoList = objectMapper.readValue(blockClassifyJson, javaType);
-                return blockClassifyDtoList;
+                return objectMapper.readValue(blockClassifyJson, javaType);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
         }
-        // 查询所有板块大分类
-        LambdaQueryWrapper<BlockBigType> blockBigTypeLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        List<BlockBigType> blockBigTypes = blockBigTypeMapper.selectList(blockBigTypeLambdaQueryWrapper);
 
-        // 将大分类信息拷贝到BlockClassifyDto
-        List<BlockClassifyDto> blockClassifyDtoList = blockBigTypes.stream().map(item -> {
-            BlockClassifyDto blockClassifyDto = new BlockClassifyDto();
-            BeanUtils.copyProperties(item, blockClassifyDto);
-            return blockClassifyDto;
-        }).collect(Collectors.toList());
+        // 为查询大板块分类分配一个锁
+        RLock lock = redissonClient.getLock("blockclassify");
 
-        // 查询所有板块的小分类，set到blockClassifyDtoList的subCategories属性
-        List<BlockClassifyDto> collect = blockClassifyDtoList.stream().map(item -> {
-            LambdaQueryWrapper<BlockSmallType> blockSmallTypeLambdaQueryWrapper = new LambdaQueryWrapper<>();
-            blockSmallTypeLambdaQueryWrapper.eq(BlockSmallType::getBigTypeId, item.getId());
-            List<BlockSmallType> blockSmallTypes = blockSmallTypeMapper.selectList(blockSmallTypeLambdaQueryWrapper);
-            item.setSubCategories(blockSmallTypes);
-            return item;
-        }).collect(Collectors.toList());
+        // 开启锁
+        lock.lock();
+        List<BlockClassifyDto> collect;
 
-        // 写入redis
-        ops.set(namespace, ObjectMapperUtil.toJSON(collect));
+        try {
+            // 查询redis中是否存在板块分类，若存在直接返回
+            if (ops.get(namespace) != null) {
+                // 获取 Redis 中的值
+                String blockClassifyJson = ops.get(namespace).toString();
+
+                // 使用 ObjectMapper 将 JSON 字符串转换为 List<BlockClassifyDto>
+                ObjectMapper objectMapper = new ObjectMapper();
+                JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, BlockClassifyDto.class);
+
+                try {
+                    return objectMapper.readValue(blockClassifyJson, javaType);
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // 查询所有板块大分类
+            LambdaQueryWrapper<BlockBigType> blockBigTypeLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            List<BlockBigType> blockBigTypes = blockBigTypeMapper.selectList(blockBigTypeLambdaQueryWrapper);
+
+            // 将大分类信息拷贝到BlockClassifyDto
+            List<BlockClassifyDto> blockClassifyDtoList = blockBigTypes.stream().map(item -> {
+                BlockClassifyDto blockClassifyDto = new BlockClassifyDto();
+                BeanUtils.copyProperties(item, blockClassifyDto);
+                return blockClassifyDto;
+            }).collect(Collectors.toList());
+
+            // 查询所有板块的小分类，set到blockClassifyDtoList的subCategories属性
+            collect = blockClassifyDtoList.stream().map(item -> {
+                LambdaQueryWrapper<BlockSmallType> blockSmallTypeLambdaQueryWrapper = new LambdaQueryWrapper<>();
+                blockSmallTypeLambdaQueryWrapper.eq(BlockSmallType::getBigTypeId, item.getId());
+                List<BlockSmallType> blockSmallTypes = blockSmallTypeMapper.selectList(blockSmallTypeLambdaQueryWrapper);
+                item.setSubCategories(blockSmallTypes);
+                return item;
+            }).collect(Collectors.toList());
+
+            // 写入redis
+            ops.set(namespace, ObjectMapperUtil.toJSON(collect));
+        } finally {
+            // 释放锁
+            lock.unlock();
+        }
         return collect;
     }
 
@@ -136,44 +170,63 @@ public class BlockServiceImpl implements BlockService {
             return blockInfoVo;
         }
 
-        // 查询板块信息
-        LambdaQueryWrapper<BlockInfo> blockInfoLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        blockInfoLambdaQueryWrapper.eq(BlockInfo::getId, id);
-        List<SFunction<BlockInfo, ?>> columnList = new ArrayList<>();
-        columnList.add(BlockInfo::getId);
-        columnList.add(BlockInfo::getSmallTypeId);
-        columnList.add(BlockInfo::getBigTypeId);
-        columnList.add(BlockInfo::getAvatar);
-        columnList.add(BlockInfo::getBlockName);
-        columnList.add(BlockInfo::getDescription);
-        blockInfoLambdaQueryWrapper.select(columnList);
-        BlockInfo blockInfo = blockInfoMapper.selectOne(blockInfoLambdaQueryWrapper);
+        // 为不同板块信息分配一个锁
+        RLock lock = redissonClient.getLock("block:info:lock:" + id);
 
-        if (blockInfo == null) {
-            log.error("板块'{}'不存在", id);
-            throw new ThinkTankException("该板块不存在！");
+        // 开启锁
+        lock.lock();
+        BlockInfoVo blockInfoVo;
+
+        try {
+            // 若命中缓存，则直接返回缓存数据
+            object = ops.get(namespace);
+            if (object != null) {
+                blockInfoVo = ObjectMapperUtil.toObject(object.toString(), BlockInfoVo.class);
+                return blockInfoVo;
+            }
+
+            // 查询板块信息
+            LambdaQueryWrapper<BlockInfo> blockInfoLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            blockInfoLambdaQueryWrapper.eq(BlockInfo::getId, id);
+            List<SFunction<BlockInfo, ?>> columnList = new ArrayList<>();
+            columnList.add(BlockInfo::getId);
+            columnList.add(BlockInfo::getSmallTypeId);
+            columnList.add(BlockInfo::getBigTypeId);
+            columnList.add(BlockInfo::getAvatar);
+            columnList.add(BlockInfo::getBlockName);
+            columnList.add(BlockInfo::getDescription);
+            blockInfoLambdaQueryWrapper.select(columnList);
+            BlockInfo blockInfo = blockInfoMapper.selectOne(blockInfoLambdaQueryWrapper);
+
+            if (blockInfo == null) {
+                log.error("板块'{}'不存在", id);
+                throw new ThinkTankException("该板块不存在！");
+            }
+
+            // 根据板块信息的小分类id查询小分类名称
+            LambdaQueryWrapper<BlockSmallType> blockSmallTypeLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            blockSmallTypeLambdaQueryWrapper.eq(BlockSmallType::getId, blockInfo.getSmallTypeId());
+            blockSmallTypeLambdaQueryWrapper.select(BlockSmallType::getSmallTypeName, BlockSmallType::getBigTypeId);
+            BlockSmallType blockSmallType = blockSmallTypeMapper.selectOne(blockSmallTypeLambdaQueryWrapper);
+
+            // 根据小分类id所属大分类id查询大分类名称
+            LambdaQueryWrapper<BlockBigType> blockBigTypeLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            blockBigTypeLambdaQueryWrapper.eq(BlockBigType::getId, blockInfo.getBigTypeId());
+            blockBigTypeLambdaQueryWrapper.select(BlockBigType::getBigTypeName);
+            BlockBigType blockBigType = blockBigTypeMapper.selectOne(blockBigTypeLambdaQueryWrapper);
+
+            // 将信息copy到BlockInfoVo
+            blockInfoVo = new BlockInfoVo();
+            BeanUtils.copyProperties(blockInfo, blockInfoVo);
+            blockInfoVo.setSmallTypeName(blockSmallType.getSmallTypeName());
+            blockInfoVo.setBigTypeName(blockBigType.getBigTypeName());
+
+            // 写入redis缓存，不同的key设置不同的生命周期，防止出现缓存雪崩的问题
+            ops.set(namespace, ObjectMapperUtil.toJSON(blockInfoVo), Duration.ofHours(new Random().nextInt(20)));
+        } finally {
+            // 释放锁
+            lock.unlock();
         }
-
-        // 根据板块信息的小分类id查询小分类名称
-        LambdaQueryWrapper<BlockSmallType> blockSmallTypeLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        blockSmallTypeLambdaQueryWrapper.eq(BlockSmallType::getId, blockInfo.getSmallTypeId());
-        blockSmallTypeLambdaQueryWrapper.select(BlockSmallType::getSmallTypeName, BlockSmallType::getBigTypeId);
-        BlockSmallType blockSmallType = blockSmallTypeMapper.selectOne(blockSmallTypeLambdaQueryWrapper);
-
-        // 根据小分类id所属大分类id查询大分类名称
-        LambdaQueryWrapper<BlockBigType> blockBigTypeLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        blockBigTypeLambdaQueryWrapper.eq(BlockBigType::getId, blockInfo.getBigTypeId());
-        blockBigTypeLambdaQueryWrapper.select(BlockBigType::getBigTypeName);
-        BlockBigType blockBigType = blockBigTypeMapper.selectOne(blockBigTypeLambdaQueryWrapper);
-
-        // 将信息copy到BlockInfoVo
-        BlockInfoVo blockInfoVo = new BlockInfoVo();
-        BeanUtils.copyProperties(blockInfo, blockInfoVo);
-        blockInfoVo.setSmallTypeName(blockSmallType.getSmallTypeName());
-        blockInfoVo.setBigTypeName(blockBigType.getBigTypeName());
-
-        // 写入redis缓存，生命周期为3天
-        ops.set(namespace, ObjectMapperUtil.toJSON(blockInfoVo), Duration.ofDays(3));
 
         return blockInfoVo;
     }
@@ -202,7 +255,7 @@ public class BlockServiceImpl implements BlockService {
         ValueOperations ops = redisTemplate.opsForValue();
         // redis命名空间
         String namespace = "block:info:" + blockInfo.getId();
-        ops.set(namespace, ObjectMapperUtil.toJSON(blockInfoVo), Duration.ofDays(3));
+        ops.set(namespace, ObjectMapperUtil.toJSON(blockInfoVo), Duration.ofHours(new Random().nextInt(20)));
 
         // 返回板块信息给用户
         return blockInfoVo;
