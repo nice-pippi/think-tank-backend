@@ -97,6 +97,10 @@ public class BlockServiceImpl implements BlockService {
                 // 获取 Redis 中的值
                 String blockClassifyJson = ops.get(namespace).toString();
 
+                // 缓存中若为null，则直接返回
+                if ("null".equals(blockClassifyJson)) {
+                    return null;
+                }
                 // 使用 ObjectMapper 将 JSON 字符串转换为 List<BlockClassifyDto>
                 ObjectMapper objectMapper = new ObjectMapper();
                 JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, BlockClassifyDto.class);
@@ -181,6 +185,10 @@ public class BlockServiceImpl implements BlockService {
             // 若命中缓存，则直接返回缓存数据
             object = ops.get(namespace);
             if (object != null) {
+                // 缓存中若为null，则直接返回
+                if ("null".equals(object.toString())) {
+                    return null;
+                }
                 blockInfoVo = ObjectMapperUtil.toObject(object.toString(), BlockInfoVo.class);
                 return blockInfoVo;
             }
