@@ -35,7 +35,7 @@ public class LoginController {
     @ApiOperation("账号密码登录")
     @PostMapping("passwordLogin")
     public R<String> passwordLogin(@RequestBody @Validated({QueryValidation.class}) SysUser sysUser) {
-        return R.success(loginService.passwordLogin(sysUser));
+        return loginService.passwordLogin(sysUser);
     }
 
     @ApiOperation("微信扫码登录")
@@ -43,8 +43,9 @@ public class LoginController {
     public void wxLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String code = request.getParameter("code");
         String state = request.getParameter("state");
-        String token = loginService.wxLogin(code, state);
-        response.sendRedirect("http://localhost:8585/Result?token=" + token);
+
+        String auth = loginService.wxLogin(code, state);
+        response.sendRedirect("http://localhost:8585/Result" + auth);
     }
 
     @ApiOperation("验证登录状态")

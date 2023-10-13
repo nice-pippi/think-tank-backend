@@ -1,5 +1,6 @@
 package com.thinktank.auth.service;
 
+import com.thinktank.common.utils.R;
 import com.thinktank.generator.entity.SysUser;
 
 /**
@@ -24,7 +25,7 @@ public interface LoginService {
      * @param sysUser
      * @return
      */
-    String passwordLogin(SysUser sysUser);
+    R<String> passwordLogin(SysUser sysUser);
 
     /**
      * 管理员登录

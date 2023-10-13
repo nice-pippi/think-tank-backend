@@ -8,17 +8,22 @@ import com.thinktank.auth.service.AddUserService;
 import com.thinktank.auth.service.LoginService;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.ObjectMapperUtil;
+import com.thinktank.common.utils.R;
 import com.thinktank.generator.entity.SysUser;
+import com.thinktank.generator.mapper.SysRoleMenuMapper;
 import com.thinktank.generator.mapper.SysUserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,6 +44,12 @@ public class LoginServiceImpl implements LoginService {
 
     @Autowired
     private SysUserMapper sysUserMapper;
+
+    @Autowired
+    private SysRoleMenuMapper sysRoleMenuMapper;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Value("${weixin.appid}")
     private String appid;
@@ -61,17 +72,41 @@ public class LoginServiceImpl implements LoginService {
         // 会话登录
         StpUtil.login(sysUser.getId().toString());
 
-        // 返回token给用户
-        return StpUtil.getTokenValue();
+        // 根据获取用户所有权限
+        List<String> permissionList = getPermissionList(sysUser.getId());
+
+        // 返回token以及权限码给用户
+        String base = String.format("?token=%s&permissions=%s",StpUtil.getTokenValue(),permissionList );
+        return base;
     }
 
     @Override
-    public String passwordLogin(SysUser sysUser) {
+    public R<String> passwordLogin(SysUser sysUser) {
         // 查询该邮箱是否已存在
         LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SysUser::getEmail, sysUser.getEmail());
-        validateUser(sysUser, wrapper);
-        return StpUtil.getTokenValue();
+        SysUser user = validateUser(sysUser, wrapper);
+
+        // 根据获取用户所有权限
+        List<String> permissionList = getPermissionList(user.getId());
+
+        // 返回用户token以及权限码
+        return R.success(StpUtil.getTokenValue()).add("permissions", permissionList);
+    }
+
+    // 根据用户id获取用户所有权限
+    private List<String> getPermissionList(Long id) {
+        // 1.获取用户所有权限
+        List<String> permissionList = sysRoleMenuMapper.getPermissionList(id);
+
+        // 将用户权限放入redis缓存中，命名空间为gateway:permissions: + id，减少网关查询权限再次查询数据库的操作
+        // 1.设置redis命名空间
+        String namespace = "gateway:permissions:" + id;
+
+        // 2.写入redis缓存，以hash形式存储
+        HashOperations ops = redisTemplate.opsForHash();
+        ops.put(namespace, "permissionList", ObjectMapperUtil.toJSON(permissionList));
+        return permissionList;
     }
 
     @Override
@@ -83,7 +118,8 @@ public class LoginServiceImpl implements LoginService {
         return StpUtil.getTokenValue();
     }
 
-    private void validateUser(SysUser sysUser, LambdaQueryWrapper<SysUser> wrapper) {
+    // 校验用户是否存在
+    private SysUser validateUser(SysUser sysUser, LambdaQueryWrapper<SysUser> wrapper) {
         SysUser user = sysUserMapper.selectOne(wrapper);
 
         if (user == null) {
@@ -98,12 +134,11 @@ public class LoginServiceImpl implements LoginService {
             throw new ThinkTankException("账号或密码错误！");
         }
 
-        // 为该用户创建会话登录，并且返回token给用户
-        StpUtil.login(user.getId().toString(), SaLoginConfig
-                .setExtra("permissions", null) // 用户权限
-        );
-    }
+        // 为该用户创建会话登录
+        StpUtil.login(user.getId().toString());
 
+        return user;
+    }
 
     /**
      * 根据code请求微信接口获取access_token

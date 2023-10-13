@@ -48,12 +48,6 @@ public class AddUserServiceImpl implements AddUserService {
 
         // 添加用户到数据库
         sysUserMapper.insert(sysUser);
-
-        // 为该新用户分配普通角色（104）
-        SysUserRole sysUserRole = new SysUserRole();
-        sysUserRole.setUserId(sysUser.getId());
-        sysUserRole.setRoleId(104L);
-        sysUserRoleMapper.insert(sysUserRole);
         return sysUser;
     }
 }

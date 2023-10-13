@@ -1,7 +1,5 @@
 package com.thinktank.auth.service;
 
-import com.thinktank.auth.dto.SysUserDto;
-import com.thinktank.common.utils.R;
 import com.thinktank.generator.entity.SysUser;
 
 import java.util.Map;
