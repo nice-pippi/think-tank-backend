@@ -23,7 +23,7 @@ import java.util.List;
 public class Generator {
     private final static String url = "jdbc:mysql://192.168.88.150:3306/thinktank?serverTimezone=UTC&characterEncoding=utf8";
     private final static String username = "root";
-    private final static String password = "123456";
+    private final static String password = "pp520";
 
     public static void main(String[] args) {
         // 当前项目根路径
