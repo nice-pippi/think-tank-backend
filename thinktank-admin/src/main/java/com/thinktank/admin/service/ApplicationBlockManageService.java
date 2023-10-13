@@ -7,17 +7,17 @@ import com.thinktank.generator.vo.BlockApplicationBlockVo;
 /**
  * @Author: 弘
  * @CreateTime: 2023年09⽉27⽇ 16:36
- * @Description: 板块管理接口
+ * @Description: 创建板块申请记录管理接口
  * @Version: 1.0
  */
 public interface ApplicationBlockManageService {
     /**
-     * 获取申请板块分页
+     * 获取创建板块申请板块分页
      *
      * @param blockApplicationBlockDto
      * @return
      */
-    IPage<BlockApplicationBlockVo> getApplicationBlockPage(BlockApplicationBlockDto blockApplicationBlockDto);
+    IPage<BlockApplicationBlockVo> page(BlockApplicationBlockDto blockApplicationBlockDto);
 
     /**
      * 通过板块创建申请

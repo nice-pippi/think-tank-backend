@@ -38,23 +38,9 @@ public class ApplicationBlockManageServiceImpl implements ApplicationBlockManage
     private SysUserRoleMapper sysUserRoleMapper;
 
     @Override
-    public IPage<BlockApplicationBlockVo> getApplicationBlockPage(BlockApplicationBlockDto blockApplicationBlockDto) {
-        // 根据条件查询分页
-        LambdaQueryWrapper<BlockApplicationBlock> wrapper = new LambdaQueryWrapper<>();
-
-        // 若大分类id存在则新增匹配条件
-        wrapper.eq(blockApplicationBlockDto.getBigTypeId() != null,
-                BlockApplicationBlock::getBigTypeId,
-                blockApplicationBlockDto.getBigTypeId());
-        // 若大分类id存在则新增匹配条件
-        wrapper.eq(blockApplicationBlockDto.getSmallTypeId() != null,
-                BlockApplicationBlock::getSmallTypeId,
-                blockApplicationBlockDto.getSmallTypeId());
-        wrapper.orderByDesc(BlockApplicationBlock::getCreateTime);
-
+    public IPage<BlockApplicationBlockVo> page(BlockApplicationBlockDto blockApplicationBlockDto) {
         Page<BlockApplicationBlock> page = new Page<>(blockApplicationBlockDto.getCurrentPage(), blockApplicationBlockDto.getSize());
-        IPage<BlockApplicationBlockVo> result = blockApplicationBlockMapper.getApplicationBlockPage(page, wrapper);
-        return result;
+        return blockApplicationBlockMapper.getApplicationBlockPage(page, blockApplicationBlockDto);
     }
 
     // 获取该id的记录是否存在

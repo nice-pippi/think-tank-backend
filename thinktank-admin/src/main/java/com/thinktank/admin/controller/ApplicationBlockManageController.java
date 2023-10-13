@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * @Author: 弘
  * @CreateTime: 2023年09⽉27⽇ 16:23
- * @Description: 板块管理
+ * @Description: 申请创建板块管理
  * @Version: 1.0
  */
 @Api(tags = "申请创建板块管理接口")
@@ -23,10 +23,10 @@ public class ApplicationBlockManageController {
     @Autowired
     private ApplicationBlockManageService applicationBlockManageService;
 
-    @ApiOperation("板块创建申请的分页查询")
+    @ApiOperation("板块创建申请分页查询")
     @PostMapping("page")
-    public R<IPage<BlockApplicationBlockVo>> getApplicationBlockPage(@RequestBody BlockApplicationBlockDto blockApplicationBlockDto) {
-        IPage<BlockApplicationBlockVo> page = applicationBlockManageService.getApplicationBlockPage(blockApplicationBlockDto);
+    public R<IPage<BlockApplicationBlockVo>> page(@RequestBody BlockApplicationBlockDto blockApplicationBlockDto) {
+        IPage<BlockApplicationBlockVo> page = applicationBlockManageService.page(blockApplicationBlockDto);
         return R.success(page);
     }
 
@@ -44,7 +44,7 @@ public class ApplicationBlockManageController {
         return R.success("已驳回该申请");
     }
 
-    @ApiOperation("删除板块创建申请")
+    @ApiOperation("删除板块创建申请记录")
     @DeleteMapping("{id}")
     public R<String> deleteApplicationBlock(@PathVariable("id") Long id) {
         applicationBlockManageService.delete(id);
