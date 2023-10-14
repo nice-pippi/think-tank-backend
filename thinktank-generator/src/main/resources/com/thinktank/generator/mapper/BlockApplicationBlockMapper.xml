@@ -28,6 +28,6 @@
         <if test="blockApplicationBlockDto.smallTypeId !=null">
             AND t3.id = #{blockApplicationBlockDto.smallTypeId}
         </if>
-        ORDER BY t1.create_time DESC,t1.status
+        ORDER BY t1.update_time DESC,t1.status
     </select>
 </mapper>
