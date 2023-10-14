@@ -284,6 +284,43 @@ public class BlockServiceImpl implements BlockService {
 
     @Override
     public List<BlockSmallType> getBlockSmallTypeList() {
-        return null;
+        // redis命名空间
+        String namespace = "block:classify:small";
+        ValueOperations ops = redisTemplate.opsForValue();
+
+        Object object = ops.get(namespace);
+
+        // 若命中缓存，则直接返回数据
+        if (object != null) {
+            return RedisCacheUtil.getObjectByTypeReference(object, new TypeReference<List<BlockSmallType>>() {
+            });
+        }
+
+        // 为不同板块信息分配一个锁
+        RLock lock = redissonClient.getLock(namespace + ":lock:");
+
+        // 开启锁
+        lock.lock();
+        List<BlockSmallType> list;
+
+        try {
+            // 若命中缓存，则直接返回数据
+            object = ops.get(namespace);
+            if (object != null) {
+                return RedisCacheUtil.getObjectByTypeReference(object, new TypeReference<List<BlockSmallType>>() {
+                });
+            }
+
+            // 查询小分类集合
+            LambdaQueryWrapper<BlockSmallType> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.select(BlockSmallType::getSmallTypeName, BlockSmallType::getId);
+            list = blockSmallTypeMapper.selectList(queryWrapper);
+
+            // 写入redis
+            ops.set(namespace, ObjectMapperUtil.toJSON(list));
+        } finally {
+            lock.unlock();
+        }
+        return list;
     }
 }
