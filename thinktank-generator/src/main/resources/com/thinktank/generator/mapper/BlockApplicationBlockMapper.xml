@@ -9,7 +9,7 @@
         t1.block_name,
         t1.description,
         t1.create_time,
-        t1.STATUS,
+        t1.status,
         t2.big_type_name,
         t3.small_type_name,
         t4.username
@@ -28,6 +28,6 @@
         <if test="blockApplicationBlockDto.smallTypeId !=null">
             AND t3.id = #{blockApplicationBlockDto.smallTypeId}
         </if>
-        ORDER BY t1.create_time DESC
+        ORDER BY t1.create_time DESC,t1.status
     </select>
 </mapper>

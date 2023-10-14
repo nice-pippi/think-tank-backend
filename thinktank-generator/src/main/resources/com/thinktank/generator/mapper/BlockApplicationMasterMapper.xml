@@ -26,6 +26,6 @@
         <if test="blockApplicationMasterDto.smallTypeId !=null">
             AND t4.id = #{blockApplicationMasterDto.smallTypeId}
         </if>
-        ORDER BY t1.create_time DESC
+        ORDER BY t1.create_time DESC,t1.status
     </select>
 </mapper>
