@@ -6,7 +6,9 @@ import com.thinktank.common.validationgroups.InsertValidation;
 import com.thinktank.common.validationgroups.UpdateValidation;
 import com.thinktank.generator.dto.BlockClassifyDto;
 import com.thinktank.generator.entity.BlockApplicationBlock;
+import com.thinktank.generator.entity.BlockBigType;
 import com.thinktank.generator.entity.BlockInfo;
+import com.thinktank.generator.entity.BlockSmallType;
 import com.thinktank.generator.vo.BlockInfoVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -51,5 +53,17 @@ public class BlockController {
     @PostMapping
     public R<BlockInfoVo> updateInfo(@RequestBody @Validated(UpdateValidation.class) BlockInfo blockInfo) {
         return R.success(blockService.update(blockInfo));
+    }
+
+    @ApiOperation("获取板块大分类集合")
+    @GetMapping("getBlockBigTypeList")
+    public R<List<BlockBigType>> getBlockBigTypeList() {
+        return R.success(blockService.getBlockBigTypeList());
+    }
+
+    @ApiOperation("获取板块小分类集合")
+    @GetMapping("getBlockSmallTypeList")
+    public R<List<BlockSmallType>> getBlockSmallTypeList() {
+        return R.success(blockService.getBlockSmallTypeList());
     }
 }

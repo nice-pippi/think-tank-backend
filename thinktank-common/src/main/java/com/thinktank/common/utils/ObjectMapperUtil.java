@@ -1,6 +1,7 @@
 package com.thinktank.common.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -46,7 +47,7 @@ public class ObjectMapperUtil {
      * 将任意的JSON串转化为对象  传递什么类型转化什么对象
      *
      * @param json   JSON字符串
-     * @param target 类
+     * @param target 要转换的类
      * @param <T>    泛型
      * @return
      */
@@ -58,7 +59,26 @@ public class ObjectMapperUtil {
             return OBJECT_MAPPER.readValue(json, target);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            throw new ThinkTankException("json转化异常");
+            throw new ThinkTankException("json转化异常：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 将任意的JSON串转化为对象  传递什么目标类型转化什么对象
+     *
+     * @param json       JSON字符串
+     * @param targetType 目标类型
+     * @param <T>        泛型
+     * @return
+     */
+    public static <T> T toObjectByTypeReference(String json, TypeReference<T> targetType) {
+        if (StringUtils.isEmpty(json) || targetType == null) {
+            throw new IllegalArgumentException("传递的字符串或目标类型不能为空");
+        }
+        try {
+            return OBJECT_MAPPER.readValue(json, targetType);
+        } catch (JsonProcessingException e) {
+            throw new ThinkTankException("JSON转换异常: " + e.getMessage());
         }
     }
 }

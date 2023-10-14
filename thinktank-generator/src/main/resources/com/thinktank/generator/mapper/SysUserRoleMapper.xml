@@ -3,7 +3,7 @@
 <mapper namespace="com.thinktank.generator.mapper.SysUserRoleMapper">
 
     <select id="getRoleList" resultType="java.lang.String">
-        select role_name
+        select role_key
         from sys_user_role as t1,
              sys_role as t2
         where t1.role_id = t2.id

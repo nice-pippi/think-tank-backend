@@ -3,12 +3,11 @@ package com.thinktank.block.service.impl;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.thinktank.block.service.BlockService;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.ObjectMapperUtil;
+import com.thinktank.common.utils.RedisCacheUtil;
 import com.thinktank.generator.dto.BlockClassifyDto;
 import com.thinktank.generator.entity.BlockApplicationBlock;
 import com.thinktank.generator.entity.BlockBigType;
@@ -69,19 +68,10 @@ public class BlockServiceImpl implements BlockService {
         ValueOperations ops = redisTemplate.opsForValue();
 
         // 查询redis中是否存在板块分类，若存在直接返回
-        if (ops.get(namespace) != null) {
-            // 获取 Redis 中的值
-            String blockClassifyJson = ops.get(namespace).toString();
-
-            // 使用 ObjectMapper 将 JSON 字符串转换为 List<BlockClassifyDto>
-            ObjectMapper objectMapper = new ObjectMapper();
-            JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, BlockClassifyDto.class);
-
-            try {
-                return objectMapper.readValue(blockClassifyJson, javaType);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
+        Object object = ops.get(namespace);
+        if (object != null) {
+            return RedisCacheUtil.getObjectByTypeReference(object, new TypeReference<List<BlockClassifyDto>>() {
+            });
         }
 
         // 为查询大板块分类分配一个锁
@@ -93,23 +83,10 @@ public class BlockServiceImpl implements BlockService {
 
         try {
             // 查询redis中是否存在板块分类，若存在直接返回
-            if (ops.get(namespace) != null) {
-                // 获取 Redis 中的值
-                String blockClassifyJson = ops.get(namespace).toString();
-
-                // 缓存中若为null，则直接返回
-                if ("null".equals(blockClassifyJson)) {
-                    return null;
-                }
-                // 使用 ObjectMapper 将 JSON 字符串转换为 List<BlockClassifyDto>
-                ObjectMapper objectMapper = new ObjectMapper();
-                JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, BlockClassifyDto.class);
-
-                try {
-                    return objectMapper.readValue(blockClassifyJson, javaType);
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                }
+            object = ops.get(namespace);
+            if (object != null) {
+                return RedisCacheUtil.getObjectByTypeReference(object, new TypeReference<List<BlockClassifyDto>>() {
+                });
             }
 
             // 查询所有板块大分类
@@ -170,8 +147,7 @@ public class BlockServiceImpl implements BlockService {
         // 若命中缓存，则直接返回缓存数据
         Object object = ops.get(namespace);
         if (object != null) {
-            BlockInfoVo blockInfoVo = ObjectMapperUtil.toObject(object.toString(), BlockInfoVo.class);
-            return blockInfoVo;
+            return RedisCacheUtil.getObject(object, BlockInfoVo.class);
         }
 
         // 为不同板块信息分配一个锁
@@ -185,12 +161,7 @@ public class BlockServiceImpl implements BlockService {
             // 若命中缓存，则直接返回缓存数据
             object = ops.get(namespace);
             if (object != null) {
-                // 缓存中若为null，则直接返回
-                if ("null".equals(object.toString())) {
-                    return null;
-                }
-                blockInfoVo = ObjectMapperUtil.toObject(object.toString(), BlockInfoVo.class);
-                return blockInfoVo;
+                return RedisCacheUtil.getObject(object, BlockInfoVo.class);
             }
 
             // 查询板块信息
@@ -267,5 +238,52 @@ public class BlockServiceImpl implements BlockService {
 
         // 返回板块信息给用户
         return blockInfoVo;
+    }
+
+    @Override
+    public List<BlockBigType> getBlockBigTypeList() {
+        // redis命名空间
+        String namespace = "block:classify:big";
+        ValueOperations ops = redisTemplate.opsForValue();
+
+        Object object = ops.get(namespace);
+
+        // 若命中缓存，则直接返回数据
+        if (object != null) {
+            return RedisCacheUtil.getObjectByTypeReference(object, new TypeReference<List<BlockBigType>>() {
+            });
+        }
+
+        // 为不同板块信息分配一个锁
+        RLock lock = redissonClient.getLock(namespace + ":lock:");
+
+        // 开启锁
+        lock.lock();
+        List<BlockBigType> list;
+
+        try {
+            // 若命中缓存，则直接返回数据
+            object = ops.get(namespace);
+            if (object != null) {
+                return RedisCacheUtil.getObjectByTypeReference(object, new TypeReference<List<BlockBigType>>() {
+                });
+            }
+
+            // 查询大分类集合
+            LambdaQueryWrapper<BlockBigType> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.select(BlockBigType::getBigTypeName, BlockBigType::getId);
+            list = blockBigTypeMapper.selectList(queryWrapper);
+
+            // 写入redis
+            ops.set(namespace, ObjectMapperUtil.toJSON(list));
+        } finally {
+            lock.unlock();
+        }
+        return list;
+    }
+
+    @Override
+    public List<BlockSmallType> getBlockSmallTypeList() {
+        return null;
     }
 }

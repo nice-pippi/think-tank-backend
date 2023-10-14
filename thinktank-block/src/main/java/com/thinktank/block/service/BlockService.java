@@ -2,7 +2,9 @@ package com.thinktank.block.service;
 
 import com.thinktank.generator.dto.BlockClassifyDto;
 import com.thinktank.generator.entity.BlockApplicationBlock;
+import com.thinktank.generator.entity.BlockBigType;
 import com.thinktank.generator.entity.BlockInfo;
+import com.thinktank.generator.entity.BlockSmallType;
 import com.thinktank.generator.vo.BlockInfoVo;
 
 import java.util.List;
@@ -43,4 +45,8 @@ public interface BlockService {
      * @return
      */
     BlockInfoVo update(BlockInfo blockInfo);
+
+    List<BlockBigType> getBlockBigTypeList();
+
+    List<BlockSmallType> getBlockSmallTypeList();
 }
