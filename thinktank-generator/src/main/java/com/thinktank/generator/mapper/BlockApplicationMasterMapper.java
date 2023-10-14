@@ -18,5 +18,5 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface BlockApplicationMasterMapper extends BaseMapper<BlockApplicationMaster> {
 
-    IPage<BlockApplicationMasterVo> getApplicationBlockPage(Page<BlockApplicationMaster> page, @Param("blockApplicationMasterDto") BlockApplicationMasterDto blockApplicationMasterDto);
+    IPage<BlockApplicationMasterVo> getApplicationMasterPage(Page<BlockApplicationMaster> page, @Param("blockApplicationMasterDto") BlockApplicationMasterDto blockApplicationMasterDto);
 }

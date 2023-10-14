@@ -33,21 +33,21 @@ public class ApplicationMasterManageController {
     @ApiOperation("通过板主申请")
     @PutMapping("allow/{id}")
     public R<String> allowApplicationBlock(@PathVariable("id") Long id) {
-
+        applicationMasterManageService.allow(id);
         return R.success("已通过该申请");
     }
 
     @ApiOperation("驳回板主申请")
     @PutMapping("reject/{id}")
     public R<String> rejectApplicationBlock(@PathVariable("id") Long id) {
-
+        applicationMasterManageService.reject(id);
         return R.success("已驳回该申请");
     }
 
     @ApiOperation("删除板主申请记录")
     @DeleteMapping("{id}")
     public R<String> deleteApplicationBlock(@PathVariable("id") Long id) {
-
+        applicationMasterManageService.delete(id);
         return R.success("已删除该申请记录");
     }
 }

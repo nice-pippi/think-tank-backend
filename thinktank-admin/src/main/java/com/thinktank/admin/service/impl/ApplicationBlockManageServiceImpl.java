@@ -1,6 +1,5 @@
 package com.thinktank.admin.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.thinktank.admin.service.ApplicationBlockManageService;
@@ -90,7 +89,6 @@ public class ApplicationBlockManageServiceImpl implements ApplicationBlockManage
     @Transactional
     @Override
     public void reject(Long id) {
-        // 更改申请记录状态为’驳回‘
         BlockApplicationBlock blockApplicationBlock = getRecordExists(id);
 
         // 若不为‘0’，则代表该申请记录已处理，无需重复处理
