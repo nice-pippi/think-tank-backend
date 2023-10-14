@@ -9,19 +9,17 @@ import com.fasterxml.jackson.core.type.TypeReference;
  * @Version: 1.0
  */
 public class RedisCacheUtil {
-    public static <T> T getObjectByTypeReference(Object object, TypeReference<T> typeRef) {
-        String json = object.toString();
-        if ("null".equals(json)) {
+    public static <T> T getObjectByTypeReference(String result, TypeReference<T> typeRef) {
+        if ("null".equals(result)) {
             return null;
         }
-        return ObjectMapperUtil.toObjectByTypeReference(json, typeRef);
+        return ObjectMapperUtil.toObjectByTypeReference(result, typeRef);
     }
 
-    public static <T> T getObject(Object object, Class<T> target) {
-        String json = object.toString();
-        if ("null".equals(json)) {
+    public static <T> T getObject(String result, Class<T> target) {
+        if ("null".equals(result)) {
             return null;
         }
-        return ObjectMapperUtil.toObject(json, target);
+        return ObjectMapperUtil.toObject(result, target);
     }
 }

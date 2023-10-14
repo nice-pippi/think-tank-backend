@@ -4,14 +4,12 @@ import com.thinktank.block.service.MasterService;
 import com.thinktank.common.utils.R;
 import com.thinktank.common.validationgroups.InsertValidation;
 import com.thinktank.generator.entity.BlockApplicationMaster;
+import com.thinktank.generator.vo.BlockMasterListVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author: 弘
@@ -31,4 +29,11 @@ public class MasterController {
     public R<String> applicationMaster(@RequestBody @Validated({InsertValidation.class}) BlockApplicationMaster blockApplicationMaster) {
         return R.success(masterService.applicationMaster(blockApplicationMaster));
     }
+
+    @ApiOperation("查看当前板块板主以及小板主信息")
+    @GetMapping("/{id}")
+    public R<BlockMasterListVo> getAllBlockMaster(@PathVariable("id") Long id) {
+        return R.success(masterService.getAllBlockMaster(id));
+    }
+
 }

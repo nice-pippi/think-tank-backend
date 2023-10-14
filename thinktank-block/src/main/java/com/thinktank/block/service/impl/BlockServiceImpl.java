@@ -56,7 +56,7 @@ public class BlockServiceImpl implements BlockService {
     private BlockInfoMapper blockInfoMapper;
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     @Autowired
     private RedissonClient redissonClient;
@@ -65,12 +65,12 @@ public class BlockServiceImpl implements BlockService {
     public List<BlockClassifyDto> getBlockClassify() {
         // redis命名空间
         String namespace = "block:classify";
-        ValueOperations ops = redisTemplate.opsForValue();
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
 
         // 查询redis中是否存在板块分类，若存在直接返回
-        Object object = ops.get(namespace);
-        if (object != null) {
-            return RedisCacheUtil.getObjectByTypeReference(object, new TypeReference<List<BlockClassifyDto>>() {
+        String result = ops.get(namespace);
+        if (result != null) {
+            return RedisCacheUtil.getObjectByTypeReference(result, new TypeReference<List<BlockClassifyDto>>() {
             });
         }
 
@@ -83,9 +83,9 @@ public class BlockServiceImpl implements BlockService {
 
         try {
             // 查询redis中是否存在板块分类，若存在直接返回
-            object = ops.get(namespace);
-            if (object != null) {
-                return RedisCacheUtil.getObjectByTypeReference(object, new TypeReference<List<BlockClassifyDto>>() {
+            result = ops.get(namespace);
+            if (result != null) {
+                return RedisCacheUtil.getObjectByTypeReference(result, new TypeReference<List<BlockClassifyDto>>() {
                 });
             }
 
@@ -142,12 +142,12 @@ public class BlockServiceImpl implements BlockService {
     public BlockInfoVo getBlockInfo(Long id) {
         // redis命名空间
         String namespace = "block:info:" + id;
-        ValueOperations ops = redisTemplate.opsForValue();
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
 
         // 若命中缓存，则直接返回缓存数据
-        Object object = ops.get(namespace);
-        if (object != null) {
-            return RedisCacheUtil.getObject(object, BlockInfoVo.class);
+        String result = ops.get(namespace);
+        if (result != null) {
+            return RedisCacheUtil.getObject(result, BlockInfoVo.class);
         }
 
         // 为不同板块信息分配一个锁
@@ -159,9 +159,9 @@ public class BlockServiceImpl implements BlockService {
 
         try {
             // 若命中缓存，则直接返回缓存数据
-            object = ops.get(namespace);
-            if (object != null) {
-                return RedisCacheUtil.getObject(object, BlockInfoVo.class);
+            result = ops.get(namespace);
+            if (result != null) {
+                return RedisCacheUtil.getObject(result, BlockInfoVo.class);
             }
 
             // 查询板块信息
@@ -224,16 +224,17 @@ public class BlockServiceImpl implements BlockService {
         // 保存板块信息到数据库
         blockInfoMapper.updateById(blockInfo);
 
+        // redis命名空间
+        String namespace = "block:info:" + blockInfo.getId();
+
         // 删除redis中该板块的信息
-        redisTemplate.delete(blockInfo.getId());
+        redisTemplate.delete(namespace);
 
         // 根据板块id查询板块信息
         BlockInfoVo blockInfoVo = getBlockInfo(blockInfo.getId());
 
         // 写入redis
-        ValueOperations ops = redisTemplate.opsForValue();
-        // redis命名空间
-        String namespace = "block:info:" + blockInfo.getId();
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
         ops.set(namespace, ObjectMapperUtil.toJSON(blockInfoVo), Duration.ofHours(new Random().nextInt(20)));
 
         // 返回板块信息给用户
@@ -244,13 +245,13 @@ public class BlockServiceImpl implements BlockService {
     public List<BlockBigType> getBlockBigTypeList() {
         // redis命名空间
         String namespace = "block:classify:big";
-        ValueOperations ops = redisTemplate.opsForValue();
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
 
-        Object object = ops.get(namespace);
+        String result = ops.get(namespace);
 
         // 若命中缓存，则直接返回数据
-        if (object != null) {
-            return RedisCacheUtil.getObjectByTypeReference(object, new TypeReference<List<BlockBigType>>() {
+        if (result != null) {
+            return RedisCacheUtil.getObjectByTypeReference(result, new TypeReference<List<BlockBigType>>() {
             });
         }
 
@@ -263,9 +264,9 @@ public class BlockServiceImpl implements BlockService {
 
         try {
             // 若命中缓存，则直接返回数据
-            object = ops.get(namespace);
-            if (object != null) {
-                return RedisCacheUtil.getObjectByTypeReference(object, new TypeReference<List<BlockBigType>>() {
+            result = ops.get(namespace);
+            if (result != null) {
+                return RedisCacheUtil.getObjectByTypeReference(result, new TypeReference<List<BlockBigType>>() {
                 });
             }
 
@@ -286,13 +287,13 @@ public class BlockServiceImpl implements BlockService {
     public List<BlockSmallType> getBlockSmallTypeList() {
         // redis命名空间
         String namespace = "block:classify:small";
-        ValueOperations ops = redisTemplate.opsForValue();
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
 
-        Object object = ops.get(namespace);
+        String result = ops.get(namespace);
 
         // 若命中缓存，则直接返回数据
-        if (object != null) {
-            return RedisCacheUtil.getObjectByTypeReference(object, new TypeReference<List<BlockSmallType>>() {
+        if (result != null) {
+            return RedisCacheUtil.getObjectByTypeReference(result, new TypeReference<List<BlockSmallType>>() {
             });
         }
 
@@ -305,9 +306,9 @@ public class BlockServiceImpl implements BlockService {
 
         try {
             // 若命中缓存，则直接返回数据
-            object = ops.get(namespace);
-            if (object != null) {
-                return RedisCacheUtil.getObjectByTypeReference(object, new TypeReference<List<BlockSmallType>>() {
+            result = ops.get(namespace);
+            if (result != null) {
+                return RedisCacheUtil.getObjectByTypeReference(result, new TypeReference<List<BlockSmallType>>() {
                 });
             }
 

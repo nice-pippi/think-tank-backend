@@ -1,6 +1,7 @@
 package com.thinktank.block.service;
 
 import com.thinktank.generator.entity.BlockApplicationMaster;
+import com.thinktank.generator.vo.BlockMasterListVo;
 
 /**
  * @Author: 弘
@@ -15,4 +16,12 @@ public interface MasterService {
      * @param blockApplicationMaster
      */
     String applicationMaster(BlockApplicationMaster blockApplicationMaster);
+
+    /**
+     * 获取当前板块板主以及小板主信息
+     *
+     * @param id
+     * @return
+     */
+    BlockMasterListVo getAllBlockMaster(Long id);
 }

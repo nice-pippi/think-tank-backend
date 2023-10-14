@@ -2,4 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thinktank.generator.mapper.SysUserMapper">
 
+    <select id="getAllBlockMasterByBlockId" resultType="com.thinktank.generator.entity.SysUser">
+        SELECT t1.id,
+               t1.username,
+               t1.avatar
+        FROM sys_user AS t1,
+             sys_user_role AS t2
+        WHERE t1.id = t2.user_id
+          AND t2.role_id = 102
+          AND t2.block_id = #{id}
+    </select>
+    <select id="getAllBlockSmallMasterByBlockId" resultType="com.thinktank.generator.entity.SysUser">
+        SELECT t1.id,
+               t1.username,
+               t1.avatar
+        FROM sys_user AS t1,
+             sys_user_role AS t2
+        WHERE t1.id = t2.user_id
+          AND t2.role_id = 103
+          AND t2.block_id = #{id}
+    </select>
 </mapper>

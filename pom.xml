@@ -34,7 +34,7 @@
         <swagger.version>3.0.0</swagger.version>
         <elasticsearch.version>7.12.1</elasticsearch.version>
         <commons.lang3.version>3.13.0</commons.lang3.version>
-        <sa.token.all.version>1.35.0.RC</sa.token.all.version>
+        <sa.token.all.version>1.36.0</sa.token.all.version>
         <okhttp.version>4.10.0</okhttp.version>
         <minio.version>8.5.5</minio.version>
         <redisson.version>3.11.2</redisson.version>

@@ -29,15 +29,16 @@ public class SaTokenConfig implements WebMvcConfigurer {
                     SaRouter.match("/**")
                             // 排除登录校验
                             .notMatch(
-                                    "/auth/register",
-                                    "/auth/passwordLogin",
-                                    "/auth/adminLogin",
-                                    "/auth/wxLogin",
-                                    "/auth/{id}",
-                                    "/validatecode/generate",
-                                    "/validatecode/validate",
-                                    "/block/getBlockClassify",
-                                    "/block/{id}")
+                                    "/auth/register", // 用户注册
+                                    "/auth/passwordLogin", // 密码登录
+                                    "/auth/adminLogin", // 管理员登录
+                                    "/auth/wxLogin", // 微信登录
+                                    "/validatecode/generate", // 生成验证码
+                                    "/validatecode/validate", // 校验验证码
+                                    "/block/getBlockClassify", // 获取板块分类
+                                    "/block/{id}", // 获取板块信息
+                                    "/block/master/{id}" // 查看当前板块板主以及小板主信息
+                            )
                             .check(r -> StpUtil.checkLogin());
                     // 权限认证 -- 不同模块, 校验不同权限
                     SaRouter.match("/admin/**", r -> StpUtil.checkRole("super-admin")); // 检查是否具有超级管理员身份
