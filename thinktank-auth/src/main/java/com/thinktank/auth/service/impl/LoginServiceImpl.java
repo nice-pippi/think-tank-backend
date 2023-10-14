@@ -49,7 +49,7 @@ public class LoginServiceImpl implements LoginService {
     private SysRoleMenuMapper sysRoleMenuMapper;
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     @Value("${weixin.appid}")
     private String appid;
@@ -76,7 +76,7 @@ public class LoginServiceImpl implements LoginService {
         List<String> permissionList = getPermissionList(sysUser.getId());
 
         // 返回token以及权限码给用户
-        String base = String.format("?token=%s&permissions=%s",StpUtil.getTokenValue(),permissionList );
+        String base = String.format("?token=%s&permissions=%s", StpUtil.getTokenValue(), permissionList);
         return base;
     }
 
@@ -104,7 +104,7 @@ public class LoginServiceImpl implements LoginService {
         String namespace = "gateway:permissions:" + id;
 
         // 2.写入redis缓存，以hash形式存储
-        HashOperations ops = redisTemplate.opsForHash();
+        HashOperations<String, Object, Object> ops = redisTemplate.opsForHash();
         ops.put(namespace, "permissionList", ObjectMapperUtil.toJSON(permissionList));
         return permissionList;
     }

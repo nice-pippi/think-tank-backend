@@ -1,7 +1,9 @@
 package com.thinktank.gateway.handler;
 
 import cn.dev33.satoken.stp.StpInterface;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.thinktank.common.utils.ObjectMapperUtil;
+import com.thinktank.common.utils.RedisCacheUtil;
 import com.thinktank.generator.mapper.SysRoleMenuMapper;
 import com.thinktank.generator.mapper.SysUserRoleMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +32,7 @@ public class StpInterfaceImpl implements StpInterface {
     private SysRoleMenuMapper sysRoleMenuMapper;
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     /**
      * 获取权限列表
@@ -44,16 +46,18 @@ public class StpInterfaceImpl implements StpInterface {
         // redis命名空间
         String namespace = "gateway:permissions:" + loginId;
         // 从缓存中查询权限集合
-        HashOperations ops = redisTemplate.opsForHash();
+        HashOperations<String, Object, Object> ops = redisTemplate.opsForHash();
         Object o = ops.get(namespace, "permissionList");
 
         // 若缓存中存在则直接返回
         if (o != null) {
-            List<String> list = ObjectMapperUtil.toObject(o.toString(), List.class);
+            List<String> list = RedisCacheUtil.getObjectByTypeReference(o.toString(), new TypeReference<List<String>>() {
+            });
             log.info("id={},permissionList={}", loginId, list);
             return list;
         }
 
+        // 查询当前用户权限集合
         List<String> permissionList = sysRoleMenuMapper.getPermissionList(loginId);
         log.info("id={},permissionList={}", loginId, permissionList);
 
@@ -74,17 +78,18 @@ public class StpInterfaceImpl implements StpInterface {
         // redis命名空间
         String namespace = "gateway:roles:" + loginId;
         // 从缓存中查询权限集合
-        HashOperations ops = redisTemplate.opsForHash();
+        HashOperations<String, Object, Object> ops = redisTemplate.opsForHash();
         Object o = ops.get(namespace, "roleList");
 
         // 若缓存中存在则直接返回
         if (o != null) {
-            List<String> list = ObjectMapperUtil.toObject(o.toString(), List.class);
-            log.info("id={},roleList={}", loginId, list);
+            List<String> list = RedisCacheUtil.getObjectByTypeReference(o.toString(), new TypeReference<List<String>>() {
+            });
+            log.info("id={},permissionList={}", loginId, list);
             return list;
         }
 
-        // 从缓存中查询角色集合
+        //查询当前用户角色集合
         List<String> roleList = sysUserRoleMapper.getRoleList(loginId);
         log.info("id={},roleList={}", loginId, roleList);
 
