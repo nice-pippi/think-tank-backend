@@ -23,5 +23,5 @@ public interface MasterService {
      * @param id
      * @return
      */
-    BlockMasterListVo getAllBlockMaster(Long id);
+    BlockMasterListVo getAllBlockMasterById(Long id);
 }

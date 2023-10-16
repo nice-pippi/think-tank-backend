@@ -12,6 +12,7 @@ import com.thinktank.generator.mapper.SysUserRoleMapper;
 import com.thinktank.generator.vo.BlockApplicationMasterVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,9 @@ public class ApplicationMasterManageServiceImpl implements ApplicationMasterMana
 
     @Autowired
     private SysUserRoleMapper sysUserRoleMapper;
+
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     @Override
     public IPage<BlockApplicationMasterVo> page(BlockApplicationMasterDto blockApplicationMasterDto) {
@@ -67,6 +71,9 @@ public class ApplicationMasterManageServiceImpl implements ApplicationMasterMana
         sysUserRole.setUserId(blockApplicationMaster.getUserId());
         sysUserRole.setRoleId(blockApplicationMaster.getRoleId());
         sysUserRole.setBlockId(blockApplicationMaster.getBlockId());
+
+        // 删除该用户申请板块的板主缓存
+        redisTemplate.delete("block:master:" + blockApplicationMaster.getBlockId());
         sysUserRoleMapper.insert(sysUserRole);
     }
 

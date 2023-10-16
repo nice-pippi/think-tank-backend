@@ -30,10 +30,10 @@ public class MasterController {
         return R.success(masterService.applicationMaster(blockApplicationMaster));
     }
 
-    @ApiOperation("查看当前板块板主以及小板主信息")
+    @ApiOperation("查看当前板块所有板主以及小板主信息")
     @GetMapping("/{id}")
-    public R<BlockMasterListVo> getAllBlockMaster(@PathVariable("id") Long id) {
-        return R.success(masterService.getAllBlockMaster(id));
+    public R<BlockMasterListVo> getAllBlockMasterById(@PathVariable("id") Long id) {
+        return R.success(masterService.getAllBlockMasterById(id));
     }
 
 }

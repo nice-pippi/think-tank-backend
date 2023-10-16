@@ -116,7 +116,7 @@ public class MasterServiceImpl implements MasterService {
     }
 
     @Override
-    public BlockMasterListVo getAllBlockMaster(Long id) {
+    public BlockMasterListVo getAllBlockMasterById(Long id) {
         // 命名空间
         String namespace = "block:master:" + id;
         // 从缓存中查询是否存在当前板块板主集合信息，若命中则直接返回
@@ -154,9 +154,7 @@ public class MasterServiceImpl implements MasterService {
             // 准备BlockMasterListVo
             blockMasterListVo = new BlockMasterListVo();
             blockMasterListVo.setMasterList(masterList);
-            blockMasterListVo.setMasterCount(masterList.size());
             blockMasterListVo.setSmallMasterList(smallMasterList);
-            blockMasterListVo.setSmallMasterCount(smallMasterList.size());
 
             // 写入redis缓存
             ops.set(namespace, ObjectMapperUtil.toJSON(blockMasterListVo));

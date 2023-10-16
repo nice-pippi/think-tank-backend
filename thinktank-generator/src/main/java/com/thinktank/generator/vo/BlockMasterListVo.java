@@ -14,12 +14,6 @@ import java.util.List;
  */
 @Data
 public class BlockMasterListVo {
-    @ApiModelProperty("板主个数")
-    private Integer MasterCount;
-
-    @ApiModelProperty("小板主个数")
-    private Integer smallMasterCount;
-
     @ApiModelProperty("板主列表")
     private List<SysUser> masterList;
 
