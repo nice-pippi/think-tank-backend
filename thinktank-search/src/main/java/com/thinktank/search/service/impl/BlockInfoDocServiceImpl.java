@@ -24,10 +24,7 @@ public class BlockInfoDocServiceImpl implements BlockInfoDocService {
     private ElasticsearchRestTemplate elasticsearchRestTemplate;
 
     @Override
-    public BlockInfoDoc addBlockInfoDoc(Long id) {
-        // 获取板块信息
-        BlockInfo blockInfo = blockInfoMapper.selectById(id);
-
+    public BlockInfoDoc addBlockInfoDoc(BlockInfo blockInfo) {
         // 将板块信息拷贝到板块信息文档
         BlockInfoDoc blockInfoDoc = new BlockInfoDoc();
         BeanUtils.copyProperties(blockInfo, blockInfoDoc);

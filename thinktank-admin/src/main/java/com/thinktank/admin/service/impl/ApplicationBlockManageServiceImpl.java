@@ -3,7 +3,10 @@ package com.thinktank.admin.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.thinktank.admin.service.ApplicationBlockManageService;
+import com.thinktank.api.clients.SearchClient;
+import com.thinktank.api.doc.BlockInfoDoc;
 import com.thinktank.common.exception.ThinkTankException;
+import com.thinktank.common.utils.R;
 import com.thinktank.generator.dto.BlockApplicationBlockDto;
 import com.thinktank.generator.entity.BlockApplicationBlock;
 import com.thinktank.generator.entity.BlockInfo;
@@ -35,6 +38,9 @@ public class ApplicationBlockManageServiceImpl implements ApplicationBlockManage
 
     @Autowired
     private SysUserRoleMapper sysUserRoleMapper;
+
+    @Autowired
+    private SearchClient searchClient;
 
     @Override
     public IPage<BlockApplicationBlockVo> page(BlockApplicationBlockDto blockApplicationBlockDto) {
@@ -74,8 +80,12 @@ public class ApplicationBlockManageServiceImpl implements ApplicationBlockManage
         blockInfo.setAvatar("/block-avatar/default_avatar.png"); // 默认板块头像
         blockInfoMapper.insert(blockInfo);
 
-        //TODO:将板块信息写入elasticsearch数据库
+        // 将板块信息写入elasticsearch数据库
+        R<BlockInfoDoc> result = searchClient.addBlockInfoDoc(blockInfo);
 
+        if (!result.getStatus().equals(200)) {
+            throw new ThinkTankException(result.getMsg());
+        }
 
         // 为该用户分配该板块的板主角色
         SysUserRole sysUserRole = new SysUserRole();

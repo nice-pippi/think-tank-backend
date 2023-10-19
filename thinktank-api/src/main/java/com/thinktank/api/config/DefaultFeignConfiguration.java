@@ -1,5 +1,6 @@
 package com.thinktank.api.config;
 
+import com.thinktank.api.fallbackfactories.SearchClientFallBackFactory;
 import com.thinktank.api.fallbackfactories.UserClientFallBackFactory;
 import com.thinktank.api.fallbackfactories.ValidateCodeClientFallBackFactory;
 import feign.Logger;
@@ -29,5 +30,10 @@ public class DefaultFeignConfiguration {
     @Bean
     public UserClientFallBackFactory userClientFallBackFactory() {
         return new UserClientFallBackFactory();
+    }
+
+    @Bean
+    public SearchClientFallBackFactory searchClientFallBackFactory() {
+        return new SearchClientFallBackFactory();
     }
 }

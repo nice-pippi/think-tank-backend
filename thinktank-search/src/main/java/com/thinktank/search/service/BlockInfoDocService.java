@@ -1,5 +1,6 @@
 package com.thinktank.search.service;
 
+import com.thinktank.generator.entity.BlockInfo;
 import com.thinktank.search.doc.BlockInfoDoc;
 
 /**
@@ -9,5 +10,5 @@ import com.thinktank.search.doc.BlockInfoDoc;
  * @Version: 1.0
  */
 public interface BlockInfoDocService {
-    BlockInfoDoc addBlockInfoDoc(Long id);
+    BlockInfoDoc addBlockInfoDoc(BlockInfo blockInfo);
 }

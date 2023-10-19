@@ -4,6 +4,7 @@ import com.thinktank.common.config.SaTokenConfig;
 import com.thinktank.common.exception.SentinelExceptionHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Import;
 
 /**
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Import;
  * @Description: 后台管理服务
  * @Version: 1.0
  */
+@EnableFeignClients(basePackages = "com.thinktank.api.clients")
 @Import({SentinelExceptionHandler.class, SaTokenConfig.class})
 @SpringBootApplication(scanBasePackages = "com.thinktank")
 public class ThinkTankAdminApplication {
