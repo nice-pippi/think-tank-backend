@@ -37,12 +37,14 @@ public class SaTokenConfig implements WebMvcConfigurer {
                                     "/validatecode/validate", // 校验验证码
                                     "/block/getBlockClassify", // 获取板块分类
                                     "/block/{id}", // 获取板块信息
-                                    "/block/master/{id}" // 查看当前板块板主以及小板主信息
+                                    "/block/master/{id}",// 查看当前板块板主以及小板主信息
+                                    "/search/searchBlock" // 搜索板块
                             )
                             .check(r -> StpUtil.checkLogin());
                     // 权限认证 -- 不同模块, 校验不同权限
                     SaRouter.match("/admin/**", r -> StpUtil.checkRole("super-admin")); // 检查是否具有超级管理员身份
                     SaRouter.match("/block/", r -> StpUtil.checkPermission("block:update")); // 检查更改板块权限
+                    SaRouter.match("/search/block/**", r -> StpUtil.checkRole("super-admin")); // 检查更改板块权限
                 })
                 // 鉴权之前执行的操作
                 .setBeforeAuth(obj -> {

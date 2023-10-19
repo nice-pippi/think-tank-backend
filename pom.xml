@@ -19,6 +19,7 @@
         <module>thinktank-file</module>
         <module>thinktank-user</module>
         <module>thinktank-block</module>
+        <module>thinktank-search</module>
     </modules>
     <packaging>pom</packaging>
 
