@@ -19,12 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author: 弘
  * @CreateTime: 2023年09⽉23⽇ 18:54
- * @Description: 板主管理接口实现类
+ * @Description: 板主管理业务接口实现类
  * @Version: 1.0
  */
 @Slf4j
@@ -64,6 +63,23 @@ public class MasterServiceImpl implements MasterService {
         // 获取当前登录用户id
         long id = StpUtil.getLoginIdAsLong();
 
+        // 获取当前板块用户身份
+        LambdaQueryWrapper<SysUserRole> sysUserRoleLambdaQueryWrapper1 = new LambdaQueryWrapper<>();
+        sysUserRoleLambdaQueryWrapper1.eq(SysUserRole::getBlockId, blockApplicationMaster.getBlockId());
+        sysUserRoleLambdaQueryWrapper1.eq(SysUserRole::getUserId, id);
+        SysUserRole sysUserRole = sysUserRoleMapper.selectOne(sysUserRoleLambdaQueryWrapper1);
+
+        if (sysUserRole != null) {
+            if (sysUserRole.getRoleId().equals(102L) || sysUserRole.getRoleId().equals(103L)) {
+                String masterType = (sysUserRole.getRoleId().equals(102L)) ? "板主" : "小板主"; // 102为版主身份
+                log.error("用户'{}'已是'{}'板块{}身份", id, sysUserRole.getBlockId(), masterType);
+                throw new ThinkTankException(String.format("你已经是本板块的%s，无法重复申请本板块其他身份！", masterType));
+            } else if (sysUserRole.getRoleId().equals(104L)) {
+                log.error("用户:'{}'在'{}'板块已被禁言，无法申请板主", id, blockApplicationMaster.getBlockId());
+                throw new ThinkTankException("你在本板块已被禁言，无法申请板主身份！");
+            }
+        }
+
         // 验证用户是否已关注该板块
         LambdaQueryWrapper<BlockFollow> blockFollowLambdaQueryWrapper = new LambdaQueryWrapper<>();
         blockFollowLambdaQueryWrapper.eq(BlockFollow::getBlockId, blockApplicationMaster.getBlockId());
@@ -72,17 +88,6 @@ public class MasterServiceImpl implements MasterService {
         if (count == 0) {
             log.error("用户:'{}'未关注'{}'板块，无法申请板主", id, blockApplicationMaster.getBlockId());
             throw new ThinkTankException("你暂未关注本板块，无法申请板主身份！");
-        }
-
-        // 验证用户在当前板块是否被禁言
-        LambdaQueryWrapper<SysUserRole> sysUserRoleLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        sysUserRoleLambdaQueryWrapper.eq(SysUserRole::getBlockId, blockApplicationMaster.getBlockId());
-        sysUserRoleLambdaQueryWrapper.eq(SysUserRole::getUserId, id);
-        sysUserRoleLambdaQueryWrapper.eq(SysUserRole::getRoleId, 104);
-        Long count2 = sysUserRoleMapper.selectCount(sysUserRoleLambdaQueryWrapper);
-        if (count2 > 0) {
-            log.error("用户:'{}'在'{}'板块已被禁言，无法申请板主", id, blockApplicationMaster.getBlockId());
-            throw new ThinkTankException("你在本板块已被禁言，无法申请板主身份！");
         }
 
         // 查询是否已提交过该板块板主申请

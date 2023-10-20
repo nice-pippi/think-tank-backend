@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 /**
  * @Author: 弘
  * @CreateTime: 2023年09⽉22⽇ 14:58
- * @Description: 板块接口实现类
+ * @Description: 板块业务接口实现类
  * @Version: 1.0
  */
 @Slf4j

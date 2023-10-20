@@ -6,7 +6,7 @@ import com.thinktank.generator.vo.BlockMasterListVo;
 /**
  * @Author: 弘
  * @CreateTime: 2023年09⽉23⽇ 18:54
- * @Description: 板主管理接口
+ * @Description: 板主管理业务接口
  * @Version: 1.0
  */
 public interface MasterService {

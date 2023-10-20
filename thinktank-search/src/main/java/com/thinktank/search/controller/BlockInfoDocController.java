@@ -24,7 +24,7 @@ public class BlockInfoDocController {
     @Autowired
     private BlockInfoDocService blockInfoDocService;
 
-    @ApiOperation("根据板块id新增板块信息文档")
+    @ApiOperation("根据板块id新增或更改板块信息文档")
     @PostMapping
     public R<BlockInfoDoc> addBlockInfoDoc(@RequestBody BlockInfo blockInfo) {
         return R.success(blockInfoDocService.addBlockInfoDoc(blockInfo));

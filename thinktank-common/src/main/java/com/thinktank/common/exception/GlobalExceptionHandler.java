@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public R<String> runtimeException(RuntimeException e) {
         log.error("系统运行时出现了异常：{}", e.getMessage());
-        return R.error("系统运行时出现了异常...");
+        return R.error(e.getMessage());
     }
 
     @ResponseBody

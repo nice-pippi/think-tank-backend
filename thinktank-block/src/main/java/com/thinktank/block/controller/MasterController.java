@@ -31,7 +31,7 @@ public class MasterController {
     }
 
     @ApiOperation("查看当前板块所有板主以及小板主信息")
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public R<BlockMasterListVo> getAllBlockMasterById(@PathVariable("id") Long id) {
         return R.success(masterService.getAllBlockMasterById(id));
     }

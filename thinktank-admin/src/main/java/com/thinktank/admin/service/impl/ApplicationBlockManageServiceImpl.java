@@ -9,9 +9,11 @@ import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.R;
 import com.thinktank.generator.dto.BlockApplicationBlockDto;
 import com.thinktank.generator.entity.BlockApplicationBlock;
+import com.thinktank.generator.entity.BlockFollow;
 import com.thinktank.generator.entity.BlockInfo;
 import com.thinktank.generator.entity.SysUserRole;
 import com.thinktank.generator.mapper.BlockApplicationBlockMapper;
+import com.thinktank.generator.mapper.BlockFollowMapper;
 import com.thinktank.generator.mapper.BlockInfoMapper;
 import com.thinktank.generator.mapper.SysUserRoleMapper;
 import com.thinktank.generator.vo.BlockApplicationBlockVo;
@@ -38,6 +40,9 @@ public class ApplicationBlockManageServiceImpl implements ApplicationBlockManage
 
     @Autowired
     private SysUserRoleMapper sysUserRoleMapper;
+
+    @Autowired
+    private BlockFollowMapper blockFollowMapper;
 
     @Autowired
     private SearchClient searchClient;
@@ -93,6 +98,12 @@ public class ApplicationBlockManageServiceImpl implements ApplicationBlockManage
         sysUserRole.setRoleId(102L);
         sysUserRole.setBlockId(blockInfo.getId());
         sysUserRoleMapper.insert(sysUserRole);
+
+        // 将该用户写入关注板块记录表
+        BlockFollow blockFollow = new BlockFollow();
+        blockFollow.setBlockId(blockInfo.getId());
+        blockFollow.setUserId(blockApplicationBlock.getUserId());
+        blockFollowMapper.insert(blockFollow);
     }
 
 

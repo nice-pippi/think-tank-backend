@@ -43,7 +43,7 @@ public class SaTokenConfig implements WebMvcConfigurer {
                             .check(r -> StpUtil.checkLogin());
                     // 权限认证 -- 不同模块, 校验不同权限
                     SaRouter.match("/admin/**", r -> StpUtil.checkRole("super-admin")); // 检查是否具有超级管理员身份
-                    SaRouter.match("/block/", r -> StpUtil.checkPermission("block:update")); // 检查更改板块权限
+                    SaRouter.match(SaHttpMethod.POST).match("/block/", r -> StpUtil.checkPermission("block:update")); // 检查更改板块权限
                     SaRouter.match("/search/block/**", r -> StpUtil.checkRole("super-admin")); // 检查更改板块权限
                 })
                 // 鉴权之前执行的操作

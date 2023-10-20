@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author pippi
- * @since 2023-10-13
+ * @since 2023-10-20
  */
 public interface BlockFollowMapper extends BaseMapper<BlockFollow> {
 
