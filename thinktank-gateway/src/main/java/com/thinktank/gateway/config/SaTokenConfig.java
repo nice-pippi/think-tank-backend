@@ -22,7 +22,14 @@ public class SaTokenConfig implements WebMvcConfigurer {
                 // 拦截地址
                 .addInclude("/**")    /* 拦截全部path */
                 // 开放地址
-                .addExclude("/favicon.ico")
+                .addExclude(
+                        "/favicon.ico",
+                        // 以下为开放swagger地址
+                        "/**/swagger-ui/**",
+                        "/**/webjars/**",
+                        "/**/v2/api-docs",
+                        "/**/swagger-resources/**"
+                )
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {
                     // 所有地址都需要登录校验
@@ -38,7 +45,7 @@ public class SaTokenConfig implements WebMvcConfigurer {
                                     "/block/getBlockClassify", // 获取板块分类
                                     "/block/{id}", // 获取板块信息
                                     "/block/master/{id}",// 查看当前板块板主以及小板主信息
-                                    "/search/searchBlock" // 搜索板块
+                                    "/search/searchBlock"// 搜索板块
                             )
                             .check(r -> StpUtil.checkLogin());
                     // 权限认证 -- 不同模块, 校验不同权限
