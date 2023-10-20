@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.thinktank.api.clients.SearchClient;
 import com.thinktank.block.service.BlockService;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.ObjectMapperUtil;
@@ -60,6 +61,9 @@ public class BlockServiceImpl implements BlockService {
 
     @Autowired
     private RedissonClient redissonClient;
+
+    @Autowired
+    private SearchClient searchClient;
 
     @Override
     public List<BlockClassifyDto> getBlockClassify() {
@@ -223,6 +227,9 @@ public class BlockServiceImpl implements BlockService {
 
         // 保存板块信息到数据库
         blockInfoMapper.updateById(blockInfo);
+
+        // 保存板块信息到es
+        searchClient.addBlockInfoDoc(blockInfo);
 
         // redis命名空间
         String namespace = "block:info:" + blockInfo.getId();
