@@ -32,6 +32,23 @@ public class FileServiceImpl implements FileService {
     @Autowired
     private MinioClient minioClient;
 
+    // 将图片文件以流的形式上传至minio
+    private String uploadToMinio(MultipartFile file, String bucket, String object) {
+        try {
+            minioClient.putObject(PutObjectArgs.builder()
+                    .bucket(bucket)
+                    .object(object)
+                    .stream(file.getInputStream(), file.getSize(), -1)
+                    .build());
+        } catch (Exception e) {
+            log.error("上传minio失败，桶:{}, 文件:{}", bucket, file.getOriginalFilename());
+            throw new ThinkTankException("上传minio失败");
+        }
+
+        // 返回上传的文件路径
+        return "/" + bucket + object;
+    }
+
     @Override
     public String uploadUserAvatar(MultipartFile file) {
         // 根据用户id，远程调用auth服务的用户查询接口
@@ -52,20 +69,7 @@ public class FileServiceImpl implements FileService {
         // 文件存储路径
         String object = String.format("/%s/%s", sysUser.getId(), file.getOriginalFilename());
 
-        // 将图片文件以流的形式上传至minio
-        try {
-            minioClient.putObject(PutObjectArgs.builder()
-                    .bucket(bucket)
-                    .object(object)
-                    .stream(file.getInputStream(), file.getSize(), -1)
-                    .build());
-        } catch (Exception e) {
-            log.error("用户头像上传minio失败：用户id:{}", sysUser.getId());
-            throw new ThinkTankException("上传minio失败");
-        }
-
-        // 将该图片地址替换用户信息原头像地址
-        String avatarPath = "/" + bucket + object;
+        String avatarPath = uploadToMinio(file, bucket, object);
         sysUser.setAvatar(avatarPath);
 
         // 远程调用auth服务的用户更改接口
@@ -90,21 +94,8 @@ public class FileServiceImpl implements FileService {
         // 文件存储路径
         String object = String.format("/%s/%s", id, file.getOriginalFilename());
 
-        // 将图片文件以流的形式上传至minio
-        try {
-            minioClient.putObject(PutObjectArgs.builder()
-                    .bucket(bucket)
-                    .object(object)
-                    .stream(file.getInputStream(), file.getSize(), -1)
-                    .build());
-        } catch (Exception e) {
-            log.error("板块头像上传minio失败，板块id:{}，文件:{}", id, file.getOriginalFilename());
-            throw new ThinkTankException("上传minio失败");
-        }
-
         // 返回板块头像地址
-        String avatarPath = "/" + bucket + object;
-        return avatarPath;
+        return uploadToMinio(file, bucket, object);
     }
 
     @Override
@@ -115,20 +106,7 @@ public class FileServiceImpl implements FileService {
         // 文件存储路径
         String object = String.format("/%s", UUID.randomUUID());
 
-        // 将图片文件以流的形式上传至minio
-        try {
-            minioClient.putObject(PutObjectArgs.builder()
-                    .bucket(bucket)
-                    .object(object)
-                    .stream(file.getInputStream(), file.getSize(), -1)
-                    .build());
-        } catch (Exception e) {
-            log.error("帖子上传minio失败，文件:{}", file.getOriginalFilename());
-            throw new ThinkTankException("上传minio失败");
-        }
-
-        // 返回板块头像地址
-        String avatarPath = "/" + bucket + object;
-        return avatarPath;
+        // 返回帖子地址
+        return uploadToMinio(file, bucket, object);
     }
 }
