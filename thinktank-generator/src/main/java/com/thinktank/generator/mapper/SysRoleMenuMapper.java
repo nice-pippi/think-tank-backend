@@ -14,5 +14,10 @@ import java.util.List;
  * @since 2023-09-11
  */
 public interface SysRoleMenuMapper extends BaseMapper<SysRoleMenu> {
+    /**
+     * 获取所有权限列表
+     * @param id
+     * @return
+     */
     List<String> getPermissionList(Object id);
 }

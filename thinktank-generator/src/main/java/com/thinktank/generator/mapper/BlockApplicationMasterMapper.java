@@ -17,6 +17,12 @@ import org.apache.ibatis.annotations.Param;
  * @since 2023-10-13
  */
 public interface BlockApplicationMasterMapper extends BaseMapper<BlockApplicationMaster> {
-
+    /**
+     * 板主申请记录分页
+     *
+     * @param page
+     * @param blockApplicationMasterDto
+     * @return
+     */
     IPage<BlockApplicationMasterVo> getApplicationMasterPage(Page<BlockApplicationMaster> page, @Param("blockApplicationMasterDto") BlockApplicationMasterDto blockApplicationMasterDto);
 }

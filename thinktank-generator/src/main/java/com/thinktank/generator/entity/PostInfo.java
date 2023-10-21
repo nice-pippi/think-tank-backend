@@ -1,19 +1,18 @@
 package com.thinktank.generator.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotation.*;
+import com.thinktank.common.validationgroups.InsertValidation;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author pippi
@@ -32,9 +31,11 @@ public class PostInfo implements Serializable {
     @ApiModelProperty("用户id")
     private Long userId;
 
+    @NotNull(groups = {InsertValidation.class}, message = "板块id不能为空")
     @ApiModelProperty("所属板块id")
     private Long blockId;
 
+    @NotEmpty(groups = {InsertValidation.class}, message = "帖子标题不能为空")
     @ApiModelProperty("帖子标题")
     private String title;
 
@@ -97,12 +98,12 @@ public class PostInfo implements Serializable {
     @Override
     public String toString() {
         return "PostInfo{" +
-            "id = " + id +
-            ", userId = " + userId +
-            ", blockId = " + blockId +
-            ", title = " + title +
-            ", createTime = " + createTime +
-            ", delFlag = " + delFlag +
-        "}";
+                "id = " + id +
+                ", userId = " + userId +
+                ", blockId = " + blockId +
+                ", title = " + title +
+                ", createTime = " + createTime +
+                ", delFlag = " + delFlag +
+                "}";
     }
 }

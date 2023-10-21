@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
  * </p>
  *
  * @author pippi
- * @since 2023-09-11
+ * @since 2023-10-21
  */
 @TableName("post_score")
 @ApiModel(value = "PostScore对象", description = "")
@@ -28,11 +28,14 @@ public class PostScore implements Serializable {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
-    @ApiModelProperty("用户id")
-    private Long userId;
+    @ApiModelProperty("板块id")
+    private Long blockId;
 
     @ApiModelProperty("被评分的帖子id")
     private Long postId;
+
+    @ApiModelProperty("用户id")
+    private Long userId;
 
     @ApiModelProperty("评分分数")
     private Integer score;
@@ -53,12 +56,12 @@ public class PostScore implements Serializable {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getBlockId() {
+        return blockId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setBlockId(Long blockId) {
+        this.blockId = blockId;
     }
 
     public Long getPostId() {
@@ -67,6 +70,14 @@ public class PostScore implements Serializable {
 
     public void setPostId(Long postId) {
         this.postId = postId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Integer getScore() {
@@ -97,8 +108,9 @@ public class PostScore implements Serializable {
     public String toString() {
         return "PostScore{" +
             "id = " + id +
-            ", userId = " + userId +
+            ", blockId = " + blockId +
             ", postId = " + postId +
+            ", userId = " + userId +
             ", score = " + score +
             ", createTime = " + createTime +
             ", updateTime = " + updateTime +

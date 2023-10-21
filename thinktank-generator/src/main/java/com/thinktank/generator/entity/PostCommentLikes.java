@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
  * </p>
  *
  * @author pippi
- * @since 2023-09-11
+ * @since 2023-10-21
  */
 @TableName("post_comment_likes")
 @ApiModel(value = "PostCommentLikes对象", description = "")
@@ -28,11 +28,17 @@ public class PostCommentLikes implements Serializable {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
-    @ApiModelProperty("用户id")
-    private Long userId;
+    @ApiModelProperty("板块id")
+    private Long blockId;
+
+    @ApiModelProperty("帖子id")
+    private Long postId;
 
     @ApiModelProperty("被点赞的评论id")
     private Long commentId;
+
+    @ApiModelProperty("用户id")
+    private Long userId;
 
     @ApiModelProperty("点赞时间")
     @TableField(fill = FieldFill.INSERT)
@@ -46,12 +52,20 @@ public class PostCommentLikes implements Serializable {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getBlockId() {
+        return blockId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setBlockId(Long blockId) {
+        this.blockId = blockId;
+    }
+
+    public Long getPostId() {
+        return postId;
+    }
+
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
     public Long getCommentId() {
@@ -60,6 +74,14 @@ public class PostCommentLikes implements Serializable {
 
     public void setCommentId(Long commentId) {
         this.commentId = commentId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public LocalDateTime getCreateTime() {
@@ -74,8 +96,10 @@ public class PostCommentLikes implements Serializable {
     public String toString() {
         return "PostCommentLikes{" +
             "id = " + id +
-            ", userId = " + userId +
+            ", blockId = " + blockId +
+            ", postId = " + postId +
             ", commentId = " + commentId +
+            ", userId = " + userId +
             ", createTime = " + createTime +
         "}";
     }

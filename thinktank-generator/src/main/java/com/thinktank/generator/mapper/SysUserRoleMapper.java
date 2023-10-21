@@ -14,5 +14,10 @@ import java.util.List;
  * @since 2023-09-11
  */
 public interface SysUserRoleMapper extends BaseMapper<SysUserRole> {
+    /**
+     * 获取所有角色列表
+     * @param id
+     * @return
+     */
     List<String> getRoleList(Object id);
 }

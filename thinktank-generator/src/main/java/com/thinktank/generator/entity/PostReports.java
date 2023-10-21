@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
  * </p>
  *
  * @author pippi
- * @since 2023-09-11
+ * @since 2023-10-21
  */
 @TableName("post_reports")
 @ApiModel(value = "PostReports对象", description = "")
@@ -28,14 +28,17 @@ public class PostReports implements Serializable {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
-    @ApiModelProperty("举报用户id")
-    private Long userId;
+    @ApiModelProperty("板块id")
+    private Long blockId;
 
     @ApiModelProperty("帖子id（若为空则举报的是评论）")
     private Long postId;
 
     @ApiModelProperty("评论id（若为空则举报的是帖子）")
     private Long commentId;
+
+    @ApiModelProperty("举报用户id")
+    private Long userId;
 
     @ApiModelProperty("举报类型")
     private Byte typeId;
@@ -62,12 +65,12 @@ public class PostReports implements Serializable {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getBlockId() {
+        return blockId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setBlockId(Long blockId) {
+        this.blockId = blockId;
     }
 
     public Long getPostId() {
@@ -84,6 +87,14 @@ public class PostReports implements Serializable {
 
     public void setCommentId(Long commentId) {
         this.commentId = commentId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Byte getTypeId() {
@@ -130,9 +141,10 @@ public class PostReports implements Serializable {
     public String toString() {
         return "PostReports{" +
             "id = " + id +
-            ", userId = " + userId +
+            ", blockId = " + blockId +
             ", postId = " + postId +
             ", commentId = " + commentId +
+            ", userId = " + userId +
             ", typeId = " + typeId +
             ", reason = " + reason +
             ", status = " + status +
