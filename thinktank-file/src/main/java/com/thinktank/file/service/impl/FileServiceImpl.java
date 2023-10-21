@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.UUID;
+
 /**
  * @Author: 弘
  * @CreateTime: 2023年09⽉16⽇ 12:03
@@ -97,6 +99,31 @@ public class FileServiceImpl implements FileService {
                     .build());
         } catch (Exception e) {
             log.error("板块头像上传minio失败，板块id:{}，文件:{}", id, file.getOriginalFilename());
+            throw new ThinkTankException("上传minio失败");
+        }
+
+        // 返回板块头像地址
+        String avatarPath = "/" + bucket + object;
+        return avatarPath;
+    }
+
+    @Override
+    public String uploadPostImg(MultipartFile file) {
+        // 桶
+        String bucket = "post-image";
+
+        // 文件存储路径
+        String object = String.format("/%s", UUID.randomUUID());
+
+        // 将图片文件以流的形式上传至minio
+        try {
+            minioClient.putObject(PutObjectArgs.builder()
+                    .bucket(bucket)
+                    .object(object)
+                    .stream(file.getInputStream(), file.getSize(), -1)
+                    .build());
+        } catch (Exception e) {
+            log.error("帖子上传minio失败，文件:{}", file.getOriginalFilename());
             throw new ThinkTankException("上传minio失败");
         }
 

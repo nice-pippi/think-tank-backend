@@ -18,9 +18,20 @@ public interface FileService {
     String uploadUserAvatar(MultipartFile file);
 
     /**
-     * @param file 板块头像（封面）
-     * @param id   板块id
+     * 上传板块头像
+     *
+     * @param file
+     * @param id
      * @return
      */
     String uploadBlockAvatar(MultipartFile file, Long id);
+
+
+    /**
+     * 上传帖子图片
+     *
+     * @param file
+     * @return
+     */
+    String uploadPostImg(MultipartFile file);
 }
