@@ -18,9 +18,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class BlockInfoDocServiceImpl implements BlockInfoDocService {
     @Autowired
-    private BlockInfoMapper blockInfoMapper;
-
-    @Autowired
     private ElasticsearchRestTemplate elasticsearchRestTemplate;
 
     @Override

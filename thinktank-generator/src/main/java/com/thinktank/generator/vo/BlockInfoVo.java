@@ -7,7 +7,7 @@ import lombok.Data;
 /**
  * @Author: 弘
  * @CreateTime: 2023年10⽉06⽇ 19:42
- * @Description: 板块信息
+ * @Description: 板块信息vo
  * @Version: 1.0
  */
 @Data

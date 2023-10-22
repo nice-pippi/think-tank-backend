@@ -1,11 +1,11 @@
 package com.thinktank.search.service.impl;
 
-import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.R;
 import com.thinktank.search.doc.BlockInfoDoc;
+import com.thinktank.search.doc.PostInfoDoc;
 import com.thinktank.search.dto.BlockInfoDocDto;
+import com.thinktank.search.dto.PostInfoDocDto;
 import com.thinktank.search.service.SearchService;
-import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
@@ -41,6 +41,8 @@ public class SearchServiceImpl implements SearchService {
                 .withSort(SortBuilders.fieldSort("createTime").order(SortOrder.DESC)) // 按板块创建时间降序排序
                 .withPageable(PageRequest.of(blockInfoDocDto.getCurrentPage() - 1, blockInfoDocDto.getSize()))  // 分页查询
                 .build();
+
+        // 查询
         SearchHits<BlockInfoDoc> searchHits = elasticsearchRestTemplate.search(query, BlockInfoDoc.class);
 
         // 处理数据，将高亮结果替换原结果
@@ -50,6 +52,29 @@ public class SearchServiceImpl implements SearchService {
         }).collect(Collectors.toList());
 
         // 返回给用户
-        return R.success(list).add("total",searchHits.getTotalHits());
+        return R.success(list).add("total", searchHits.getTotalHits());
+    }
+
+    @Override
+    public R<List<PostInfoDoc>> searchPost(PostInfoDocDto postInfoDocDto) {
+        // 构建查询条件
+        NativeSearchQuery query = new NativeSearchQueryBuilder()
+                .withHighlightBuilder(new HighlightBuilder().field("title").preTags("<em>").postTags("</em>"))
+                .withQuery(QueryBuilders.matchQuery("title", postInfoDocDto.getTitle()))
+                .withSort(SortBuilders.fieldSort("createTime").order(SortOrder.DESC))
+                .withPageable(PageRequest.of(postInfoDocDto.getCurrentPage() - 1, postInfoDocDto.getSize()))
+                .build();
+
+        // 查询
+        SearchHits<PostInfoDoc> searchHits = elasticsearchRestTemplate.search(query, PostInfoDoc.class);
+
+        // 处理数据，将高亮结果替换原结果
+        List<PostInfoDoc> list = searchHits.get().map(item -> {
+            item.getContent().setTitle(item.getHighlightField("title").get(0));
+            return item.getContent();
+        }).collect(Collectors.toList());
+
+        // 返回给用户
+        return R.success(list);
     }
 }

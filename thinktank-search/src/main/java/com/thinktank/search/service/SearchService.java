@@ -2,7 +2,9 @@ package com.thinktank.search.service;
 
 import com.thinktank.common.utils.R;
 import com.thinktank.search.doc.BlockInfoDoc;
+import com.thinktank.search.doc.PostInfoDoc;
 import com.thinktank.search.dto.BlockInfoDocDto;
+import com.thinktank.search.dto.PostInfoDocDto;
 
 import java.util.List;
 
@@ -14,4 +16,6 @@ import java.util.List;
  */
 public interface SearchService {
     R<List<BlockInfoDoc>> searchBlock(BlockInfoDocDto blockInfoDocDto);
+
+    R<List<PostInfoDoc>> searchPost(PostInfoDocDto postInfoDocDto);
 }

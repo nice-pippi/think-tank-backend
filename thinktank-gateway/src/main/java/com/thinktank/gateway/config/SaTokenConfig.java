@@ -10,9 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Configuration
 public class SaTokenConfig implements WebMvcConfigurer {
     // 注册 Sa-Token全局过滤器
@@ -44,8 +41,9 @@ public class SaTokenConfig implements WebMvcConfigurer {
                                     "/validatecode/validate", // 校验验证码
                                     "/block/getBlockClassify", // 获取板块分类
                                     "/block/{id}", // 获取板块信息
-                                    "/block/master/{id}",// 查看当前板块板主以及小板主信息
-                                    "/search/searchBlock"// 搜索板块
+                                    "/block/master/{id}", // 查看当前板块板主以及小板主信息
+                                    "/search/searchBlock", // 搜索板块
+                                    "/search/searchPost" // 搜索帖子
                             )
                             .check(r -> StpUtil.checkLogin());
                     // 权限认证 -- 不同模块, 校验不同权限

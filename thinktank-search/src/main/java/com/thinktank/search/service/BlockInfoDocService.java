@@ -10,5 +10,11 @@ import com.thinktank.search.doc.BlockInfoDoc;
  * @Version: 1.0
  */
 public interface BlockInfoDocService {
+    /**
+     * 添加板块信息文档
+     *
+     * @param blockInfo
+     * @return
+     */
     BlockInfoDoc addBlockInfoDoc(BlockInfo blockInfo);
 }

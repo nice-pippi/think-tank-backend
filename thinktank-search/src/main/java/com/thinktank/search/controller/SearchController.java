@@ -3,7 +3,9 @@ package com.thinktank.search.controller;
 import com.thinktank.common.utils.R;
 import com.thinktank.common.validationgroups.QueryValidation;
 import com.thinktank.search.doc.BlockInfoDoc;
+import com.thinktank.search.doc.PostInfoDoc;
 import com.thinktank.search.dto.BlockInfoDocDto;
+import com.thinktank.search.dto.PostInfoDocDto;
 import com.thinktank.search.service.SearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,5 +33,11 @@ public class SearchController {
     @PostMapping("searchBlock")
     public R<List<BlockInfoDoc>> searchBlock(@RequestBody @Validated(QueryValidation.class) BlockInfoDocDto blockInfoDocDto) {
         return searchService.searchBlock(blockInfoDocDto);
+    }
+
+    @ApiOperation("搜索帖子")
+    @PostMapping("searchPost")
+    public R<List<PostInfoDoc>> searchPost(@RequestBody @Validated(QueryValidation.class) PostInfoDocDto postInfoDocDto) {
+        return searchService.searchPost(postInfoDocDto);
     }
 }

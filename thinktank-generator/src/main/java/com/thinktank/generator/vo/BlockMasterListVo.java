@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @Author: 弘
  * @CreateTime: 2023年10⽉14⽇ 18:50
- * @Description: 板块板主信息
+ * @Description: 板块板主信息vo
  * @Version: 1.0
  */
 @Data
