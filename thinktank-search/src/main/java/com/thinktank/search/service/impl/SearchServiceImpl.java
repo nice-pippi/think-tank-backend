@@ -75,6 +75,6 @@ public class SearchServiceImpl implements SearchService {
         }).collect(Collectors.toList());
 
         // 返回给用户
-        return R.success(list);
+        return R.success(list).add("total", searchHits.getTotalHits());
     }
 }

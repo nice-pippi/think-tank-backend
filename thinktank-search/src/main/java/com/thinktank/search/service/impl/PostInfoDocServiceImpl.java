@@ -57,18 +57,22 @@ public class PostInfoDocServiceImpl implements PostInfoDocService {
         List<PostComments> postComments = postCommentsMapper.selectList(queryWrapper);
 
         // 帖子内容
-        String context = postComments.stream()
+        String content = postComments.stream()
                 .filter(item -> item.getTopicFlag() == 1)
                 .map(PostComments::getContent)
                 .findFirst()
                 .orElse("");
 
+        // 去掉帖子内容中的HTML标签
+        content = content.replaceAll("<.*?>", "");
+        // 去掉制表符
+        content = content.replaceAll("\\t", "");
+
         // 收集所有帖子评论中的图片URL
         Pattern pattern = Pattern.compile("<img\\s+src=\"([^\"]+)\"");
         List<String> imageUrlList = new ArrayList<>();
         for (PostComments comment : postComments) {
-            String content = comment.getContent();
-            Matcher matcher = pattern.matcher(content);
+            Matcher matcher = pattern.matcher(comment.getContent());
             while (matcher.find()) {
                 imageUrlList.add(matcher.group(1));
             }
@@ -82,7 +86,7 @@ public class PostInfoDocServiceImpl implements PostInfoDocService {
 
         PostInfoDoc postInfoDoc = new PostInfoDoc();
         BeanUtils.copyProperties(postInfo, postInfoDoc);
-        postInfoDoc.setContent(context);
+        postInfoDoc.setContent(content);
         postInfoDoc.setBlockId(blockInfo.getId());
         postInfoDoc.setBlockName(blockInfo.getBlockName());
         postInfoDoc.setUsername(sysUser.getUsername());
