@@ -2,4 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thinktank.generator.mapper.PostCommentsMapper">
 
+    <select id="getPage" resultType="com.thinktank.generator.vo.PostCommentsVo">
+        SELECT t1.id,
+               t1.content,
+               t1.create_time,
+               t1.user_id,
+               t1.topic_flag,
+               t2.username,
+               t2.avatar
+        FROM post_comments AS t1,
+             sys_user AS t2
+        WHERE t1.user_id = t2.id
+          AND t1.post_id = #{postId}
+          AND t1.parent_id =0
+    </select>
+    <select id="getAllChildrenComment" resultType="com.thinktank.generator.vo.PostCommentsVo">
+        SELECT t1.id,
+               t1.content,
+               t1.parent_id,
+               t1.create_time,
+               t1.user_id,
+               t2.username,
+               t2.avatar
+        FROM post_comments AS t1,
+             sys_user AS t2
+        WHERE t1.user_id = t2.id
+          and t1.parent_id = #{commentId}
+    </select>
 </mapper>

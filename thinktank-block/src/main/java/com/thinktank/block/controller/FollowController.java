@@ -16,7 +16,7 @@ import java.util.List;
  * @Description: 关注板块接口
  * @Version: 1.0
  */
-@Api(tags = "板块管理接口")
+@Api(tags = "关注板块接口")
 @RestController
 @RequestMapping("follow")
 public class FollowController {
