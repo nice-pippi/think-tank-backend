@@ -8,10 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author: 弘
@@ -31,5 +28,12 @@ public class PostController {
     public R<String> publish(@RequestBody @Validated(InsertValidation.class) PostInfoDto postInfoDto) {
         postService.publish(postInfoDto);
         return R.success("发布成功");
+    }
+
+    @ApiOperation("删除帖子")
+    @DeleteMapping("{postId}")
+    public R<String> delete(@PathVariable("id") Long postId){
+        postService.delete(postId);
+        return R.success("删除成功");
     }
 }

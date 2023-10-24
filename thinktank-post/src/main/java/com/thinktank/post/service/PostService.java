@@ -9,5 +9,17 @@ import com.thinktank.generator.dto.PostInfoDto;
  * @Version: 1.0
  */
 public interface PostService {
+    /**
+     * 发布帖子
+     *
+     * @param postInfoDto
+     */
     void publish(PostInfoDto postInfoDto);
+
+    /**
+     * 删除帖子
+     *
+     * @param postId
+     */
+    void delete(Long postId);
 }

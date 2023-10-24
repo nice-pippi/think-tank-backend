@@ -1,12 +1,10 @@
 package com.thinktank.post.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.generator.dto.PostInfoDto;
-import com.thinktank.generator.entity.BlockInfo;
-import com.thinktank.generator.entity.MessagePrivate;
-import com.thinktank.generator.entity.PostComments;
-import com.thinktank.generator.entity.PostInfo;
+import com.thinktank.generator.entity.*;
 import com.thinktank.generator.mapper.*;
 import com.thinktank.post.service.PostService;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +37,9 @@ public class PostServiceImpl implements PostService {
     private SysUserMapper sysUserMapper;
 
     @Autowired
+    private SysUserRoleMapper sysUserRoleMapper;
+
+    @Autowired
     private MessagePrivateMapper messagePrivateMapper;
 
     // 获取板块信息
@@ -59,6 +60,16 @@ public class PostServiceImpl implements PostService {
 
         // 获取登录用户id
         long loginId = StpUtil.getLoginIdAsLong();
+
+        // 验证当前用户是否被所在板块禁言
+        LambdaQueryWrapper<SysUserRole> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SysUserRole::getUserId, loginId);
+        queryWrapper.eq(SysUserRole::getBlockId, postInfoDto.getBlockId());
+        queryWrapper.eq(SysUserRole::getRoleId, 104L);
+        if (sysUserRoleMapper.selectCount(queryWrapper) > 0) {
+            log.error("用户'{}'在'{}'被禁言，无法发布帖子", loginId, postInfoDto.getBlockId());
+            throw new ThinkTankException("您在当前板块已被禁言，无法发布帖子！");
+        }
 
         // 写入记录到帖子信息表
         PostInfo postInfo = new PostInfo();
@@ -94,6 +105,60 @@ public class PostServiceImpl implements PostService {
             }
         }
 
-        // todo:写入帖子信息到es
+        // todo:提交待处理帖子id到mq队列，由队列异步处理写入es文档操作
+    }
+
+    // 细粒度验证用户身份
+    private Boolean validateRole(Long postId) {
+
+        // 验证是否超级管理员身份
+        if (StpUtil.hasRole("super-admin")) {
+            return true;
+        }
+
+        // 获取当前登录用户id
+        long loginId = StpUtil.getLoginIdAsLong();
+
+        // 验证该帖子是否由用户自己发布的
+        PostInfo postInfo = postInfoMapper.selectById(postId);
+        if (postInfo == null) {
+            log.error("帖子id:'{}'不存在", postId);
+            throw new ThinkTankException("该帖子id不存在！");
+        }
+
+        if (postInfo.getUserId().equals(loginId)) {
+            return true;
+        }
+
+        // 验证是否该板块板主
+        if (StpUtil.hasRoleOr("big-master", "small-master")) {
+            LambdaQueryWrapper<SysUserRole> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(SysUserRole::getUserId, loginId);
+            queryWrapper.eq(SysUserRole::getBlockId, postInfo.getBlockId());
+            SysUserRole sysUserRole = sysUserRoleMapper.selectOne(queryWrapper);
+            if (sysUserRole == null) {
+                return false;
+            }
+
+            // 验证是否被禁言用户，若不是则代表该用户有当前板块的板主或小版主角色
+            return !sysUserRole.getRoleId().equals(104L);
+        }
+        return false;
+    }
+
+    @Transactional
+    @Override
+    public void delete(Long postId) {
+        if (!validateRole(postId)) {
+            throw new ThinkTankException("您无权对他人的帖子进行操作！");
+        }
+
+        // 删除该帖子下所有评论
+        LambdaQueryWrapper<PostComments> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PostComments::getPostId,postId);
+        postCommentsMapper.delete(queryWrapper);
+
+        // 删除该帖子
+        postInfoMapper.deleteById(postId);
     }
 }
