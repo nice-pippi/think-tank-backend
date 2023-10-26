@@ -1,20 +1,22 @@
 package com.thinktank.search.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.thinktank.common.utils.ObjectMapperUtil;
 import com.thinktank.generator.entity.BlockInfo;
 import com.thinktank.generator.entity.PostComments;
 import com.thinktank.generator.entity.PostInfo;
 import com.thinktank.generator.entity.SysUser;
 import com.thinktank.generator.mapper.BlockInfoMapper;
 import com.thinktank.generator.mapper.PostCommentsMapper;
-import com.thinktank.generator.mapper.PostInfoMapper;
 import com.thinktank.generator.mapper.SysUserMapper;
 import com.thinktank.search.doc.PostInfoDoc;
 import com.thinktank.search.service.PostInfoDocService;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +29,8 @@ import java.util.regex.Pattern;
  * @Description: 板块信息文档管理业务接口实现类
  * @Version: 1.0
  */
-@Service
+@Component
 public class PostInfoDocServiceImpl implements PostInfoDocService {
-    @Autowired
-    private PostInfoMapper postInfoMapper;
-
     @Autowired
     private PostCommentsMapper postCommentsMapper;
 
@@ -44,10 +43,13 @@ public class PostInfoDocServiceImpl implements PostInfoDocService {
     @Autowired
     private ElasticsearchRestTemplate elasticsearchRestTemplate;
 
+    @RabbitListener(queues = "fanout.queue.postdoc")
     @Override
-    public PostInfoDoc addPostInfoDoc(Long id) {
-        // 查询帖子信息
-        PostInfo postInfo = postInfoMapper.selectById(id);
+    public void addPostInfoDoc(Message message) {
+        // 获取消息
+        byte[] bytes = message.getBody();
+        String json = new String(bytes);
+        PostInfo postInfo = ObjectMapperUtil.toObject(json, PostInfo.class);
 
         // 查询帖子前5条发言
         LambdaQueryWrapper<PostComments> queryWrapper = new LambdaQueryWrapper<>();
@@ -94,7 +96,6 @@ public class PostInfoDocServiceImpl implements PostInfoDocService {
         postInfoDoc.setImages(imageUrlList);
 
         // 保存到es文档
-        postInfoDoc = elasticsearchRestTemplate.save(postInfoDoc);
-        return postInfoDoc;
+        elasticsearchRestTemplate.save(postInfoDoc);
     }
 }

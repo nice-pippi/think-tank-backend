@@ -1,7 +1,6 @@
 package com.thinktank.search.service;
 
-import com.thinktank.generator.vo.PostInfoVo;
-import com.thinktank.search.doc.PostInfoDoc;
+import org.springframework.amqp.core.Message;
 
 /**
  * @Author: 弘
@@ -13,8 +12,8 @@ public interface PostInfoDocService {
     /**
      * 添加帖子信息文档
      *
-     * @param id
+     * @param message
      * @return
      */
-    PostInfoDoc addPostInfoDoc(Long id);
+    void addPostInfoDoc(Message message);
 }

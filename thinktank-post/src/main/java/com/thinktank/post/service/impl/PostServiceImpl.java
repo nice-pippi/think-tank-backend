@@ -3,17 +3,26 @@ package com.thinktank.post.service.impl;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.thinktank.common.exception.ThinkTankException;
+import com.thinktank.common.utils.ObjectMapperUtil;
 import com.thinktank.generator.dto.PostInfoDto;
 import com.thinktank.generator.entity.*;
 import com.thinktank.generator.mapper.*;
+import com.thinktank.post.config.AddPostDocFanoutConfig;
 import com.thinktank.post.service.PostService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageBuilder;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @Author: 弘
@@ -41,6 +50,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private MessagePrivateMapper messagePrivateMapper;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     // 获取板块信息
     private BlockInfo getBlockExists(Long id) {
@@ -105,7 +117,31 @@ public class PostServiceImpl implements PostService {
             }
         }
 
-        // todo:提交待处理帖子id到mq队列，由队列异步处理写入es文档操作
+        // 提交待处理帖子id到mq队列，由队列异步处理写入es文档操作
+        // 1.全局唯一的消息ID，需要封装到CorrelationData中
+        CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
+        // 2.添加callback
+        correlationData.getFuture().addCallback(new ListenableFutureCallback<CorrelationData.Confirm>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                log.error("消息发送异常, ID:{}, 原因{}", correlationData.getId(), throwable.getMessage());
+            }
+
+            @Override
+            public void onSuccess(CorrelationData.Confirm confirm) {
+                if (confirm.isAck()) {
+                    // 3.1.ack，消息成功
+                    log.debug("消息发送成功, ID:{}", correlationData.getId());
+                } else {
+                    // 3.2.nack，消息失败
+                    log.error("消息发送失败, ID:{}, 原因{}", correlationData.getId(), confirm.getReason());
+                }
+            }
+        });
+        // 3.发送消息
+        String json = ObjectMapperUtil.toJSON(postInfo);
+        Message message = MessageBuilder.withBody(json.getBytes(StandardCharsets.UTF_8)).build(); // 消息内容
+        rabbitTemplate.convertAndSend(AddPostDocFanoutConfig.FANOUT_EXCHANGE, "", message, correlationData);
     }
 
     // 细粒度验证用户身份
@@ -155,7 +191,7 @@ public class PostServiceImpl implements PostService {
 
         // 删除该帖子下所有评论
         LambdaQueryWrapper<PostComments> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(PostComments::getPostId,postId);
+        queryWrapper.eq(PostComments::getPostId, postId);
         postCommentsMapper.delete(queryWrapper);
 
         // 删除该帖子
