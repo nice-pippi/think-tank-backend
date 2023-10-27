@@ -65,10 +65,8 @@ public class PostInfoDocServiceImpl implements PostInfoDocService {
                 .findFirst()
                 .orElse("");
 
-        // 去掉帖子内容中的HTML标签
-        content = content.replaceAll("<.*?>", "");
-        // 去掉制表符
-        content = content.replaceAll("\\t", "");
+        // 去掉帖子内容中的HTML标签以及制表符
+        content = content.replaceAll("<.*?>", "").replaceAll("\\t", "");
 
         // 收集所有帖子评论中的图片URL
         Pattern pattern = Pattern.compile("<img\\s+src=\"([^\"]+)\"");
@@ -89,10 +87,8 @@ public class PostInfoDocServiceImpl implements PostInfoDocService {
         PostInfoDoc postInfoDoc = new PostInfoDoc();
         BeanUtils.copyProperties(postInfo, postInfoDoc);
         postInfoDoc.setContent(content);
-        postInfoDoc.setBlockId(blockInfo.getId());
         postInfoDoc.setBlockName(blockInfo.getBlockName());
         postInfoDoc.setUsername(sysUser.getUsername());
-        postInfoDoc.setUserId(sysUser.getId());
         postInfoDoc.setImages(imageUrlList);
 
         // 保存到es文档
