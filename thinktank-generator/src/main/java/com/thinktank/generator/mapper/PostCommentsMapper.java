@@ -15,7 +15,7 @@ import java.util.List;
  * </p>
  *
  * @author pippi
- * @since 2023-10-21
+ * @since 2023-10-27
  */
 public interface PostCommentsMapper extends BaseMapper<PostComments> {
     IPage<PostCommentsVo> getPage(@Param("postId") Long postId, Page<PostCommentsVo> page);
