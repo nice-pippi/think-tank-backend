@@ -44,7 +44,8 @@ public class SaTokenConfig implements WebMvcConfigurer {
                                     "/block/master/{id}", // 查看当前板块板主以及小板主信息
                                     "/search/searchBlock", // 搜索板块
                                     "/search/searchPost", // 搜索帖子
-                                    "/post/comment/{postId}/{currentPage}" // 帖子评论分页
+                                    "/post/comment/{postId}/{currentPage}", // 帖子评论分页
+                                    "/post/postAction/getLatestPosts" // 获取最新帖子
                             )
                             .check(r -> StpUtil.checkLogin());
                     // 权限认证 -- 不同模块, 校验不同权限
