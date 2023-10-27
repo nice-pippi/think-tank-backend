@@ -54,7 +54,7 @@ public class PostInfoDocServiceImpl implements PostInfoDocService {
         // 查询帖子前5条发言
         LambdaQueryWrapper<PostComments> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(PostComments::getPostId, postInfo.getId());
-        queryWrapper.isNull(PostComments::getParentId);
+        queryWrapper.eq(PostComments::getParentId,0);
         queryWrapper.last("limit 5");
         List<PostComments> postComments = postCommentsMapper.selectList(queryWrapper);
 
