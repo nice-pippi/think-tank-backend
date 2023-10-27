@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * </p>
  *
  * @author pippi
- * @since 2023-10-21
+ * @since 2023-10-27
  */
 @TableName("post_comments")
 @ApiModel(value = "PostComments对象", description = "")
@@ -51,7 +52,8 @@ public class PostComments implements Serializable {
     private Integer topicFlag;
 
     @ApiModelProperty("删除标志（0:未删除 1:已删除）")
-    private Integer deleteFlag;
+    @TableLogic
+    private Integer delFlag;
 
     public Long getId() {
         return id;
@@ -117,12 +119,12 @@ public class PostComments implements Serializable {
         this.topicFlag = topicFlag;
     }
 
-    public Integer getDeleteFlag() {
-        return deleteFlag;
+    public Integer getDelFlag() {
+        return delFlag;
     }
 
-    public void setDeleteFlag(Integer deleteFlag) {
-        this.deleteFlag = deleteFlag;
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 
     @Override
@@ -136,7 +138,7 @@ public class PostComments implements Serializable {
             ", content = " + content +
             ", createTime = " + createTime +
             ", topicFlag = " + topicFlag +
-            ", deleteFlag = " + deleteFlag +
+            ", delFlag = " + delFlag +
         "}";
     }
 }
