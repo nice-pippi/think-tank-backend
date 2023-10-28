@@ -2,27 +2,40 @@ package com.thinktank.post.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.ObjectMapperUtil;
+import com.thinktank.common.utils.R;
+import com.thinktank.common.utils.RedisCacheUtil;
 import com.thinktank.generator.dto.PostInfoDto;
 import com.thinktank.generator.entity.*;
 import com.thinktank.generator.mapper.*;
+import com.thinktank.generator.vo.PostInfoVo;
 import com.thinktank.post.config.AddPostDocFanoutConfig;
 import com.thinktank.post.service.PostService;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @Author: 弘
@@ -53,6 +66,12 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
+
+    @Autowired
+    private RedissonClient redissonClient;
 
     // 获取板块信息
     private BlockInfo getBlockExists(Long id) {
@@ -196,5 +215,103 @@ public class PostServiceImpl implements PostService {
 
         // 删除该帖子
         postInfoMapper.deleteById(postId);
+    }
+
+    // 根据帖子id封装vo所需信息
+    private PostInfoVo getPostInfo(PostInfo postInfo) {
+        // 查询帖子前5条发言
+        LambdaQueryWrapper<PostComments> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PostComments::getPostId, postInfo.getId());
+        queryWrapper.eq(PostComments::getParentId, 0);
+        queryWrapper.last("limit 5");
+        List<PostComments> postComments = postCommentsMapper.selectList(queryWrapper);
+
+        // 帖子内容
+        String content = postComments.stream()
+                .filter(item -> item.getTopicFlag() == 1)
+                .map(PostComments::getContent)
+                .findFirst()
+                .orElse("");
+
+        // 去掉帖子内容中的HTML标签以及制表符
+        content = content.replaceAll("<.*?>", "").replaceAll("\\t", "");
+
+        // 收集所有帖子评论中的图片URL
+        Pattern pattern = Pattern.compile("<img\\s+src=\"([^\"]+)\"");
+        List<String> imageUrlList = new ArrayList<>();
+        for (PostComments comment : postComments) {
+            Matcher matcher = pattern.matcher(comment.getContent());
+            while (matcher.find()) {
+                imageUrlList.add(matcher.group(1));
+            }
+        }
+
+        // 查询板块名称
+        BlockInfo blockInfo = blockInfoMapper.selectById(postInfo.getBlockId());
+
+        // 根据帖子id查询发布帖子用户的名称
+        SysUser sysUser = sysUserMapper.selectById(postInfo.getUserId());
+
+        PostInfoVo postInfoVo = new PostInfoVo();
+        BeanUtils.copyProperties(postInfo, postInfoVo);
+        postInfoVo.setUsername(sysUser.getUsername());
+        postInfoVo.setBlockName(blockInfo.getBlockName());
+        postInfoVo.setImages(imageUrlList);
+        postInfoVo.setContent(content);
+        return postInfoVo;
+    }
+
+    @Override
+    public List<PostInfoVo> getLatestPosts() {
+        // 先查缓存
+        String namespace = "post:latest";
+
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+
+        // 查询redis中是否存在数据，若存在直接返回
+        String result = ops.get(namespace);
+        if (result != null) {
+            return RedisCacheUtil.getObjectByTypeReference(result, new TypeReference<List<PostInfoVo>>() {
+            });
+        }
+
+        // 为最新帖子分配锁
+        RLock lock = redissonClient.getLock(namespace + ":lock");
+        List<PostInfoVo> list;
+
+        // 开启锁
+        lock.lock();
+        try {
+            // 查询redis中是否存在数据，若存在直接返回
+            result = ops.get(namespace);
+            if (result != null) {
+                return RedisCacheUtil.getObjectByTypeReference(result, new TypeReference<List<PostInfoVo>>() {
+                });
+            }
+
+            // 查数据库
+            LambdaQueryWrapper<PostInfo> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.orderByDesc(PostInfo::getCreateTime);
+            queryWrapper.last("limit 20");
+            List<PostInfo> postInfoList = postInfoMapper.selectList(queryWrapper);
+            list = postInfoList.stream().map(this::getPostInfo).collect(Collectors.toList());
+
+            // 写入缓存
+            ops.set(namespace, ObjectMapperUtil.toJSON(list));
+        } finally {
+            lock.unlock();
+        }
+        return list;
+    }
+
+    @Override
+    public List<PostInfoVo> page(PostInfoDto postInfoDto) {
+        Page<PostInfo> page = new Page<>(postInfoDto.getCurrentPage(), postInfoDto.getSize());
+        LambdaQueryWrapper<PostInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PostInfo::getBlockId, postInfoDto.getBlockId());
+        queryWrapper.orderByDesc(PostInfo::getCreateTime);
+        Page<PostInfo> postInfoPage = postInfoMapper.selectPage(page, queryWrapper);
+
+        return postInfoPage.getRecords().stream().map(this::getPostInfo).collect(Collectors.toList());
     }
 }

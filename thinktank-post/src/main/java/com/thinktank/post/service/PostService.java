@@ -1,6 +1,11 @@
 package com.thinktank.post.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.thinktank.common.utils.R;
 import com.thinktank.generator.dto.PostInfoDto;
+import com.thinktank.generator.vo.PostInfoVo;
+
+import java.util.List;
 
 /**
  * @Author: 弘
@@ -22,4 +27,8 @@ public interface PostService {
      * @param postId
      */
     void delete(Long postId);
+
+    List<PostInfoVo> getLatestPosts();
+
+    List<PostInfoVo> page(PostInfoDto postInfoDto);
 }

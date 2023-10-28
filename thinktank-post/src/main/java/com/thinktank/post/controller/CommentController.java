@@ -26,7 +26,7 @@ public class CommentController {
     private CommentService commentService;
 
     @ApiOperation("帖子评论分页")
-    @GetMapping("{postId}/{currentPage}")
+    @GetMapping("/page/{postId}/{currentPage}")
     public R<IPage<PostCommentsVo>> page(@PathVariable("postId") Long postId, @PathVariable("currentPage") Integer currentPage) {
         return R.success(commentService.page(postId,currentPage));
     }

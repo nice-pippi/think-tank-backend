@@ -2,6 +2,7 @@ package com.thinktank.generator.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.thinktank.common.validationgroups.InsertValidation;
+import com.thinktank.common.validationgroups.QueryValidation;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -31,7 +32,7 @@ public class PostInfo implements Serializable {
     @ApiModelProperty("用户id")
     private Long userId;
 
-    @NotNull(groups = {InsertValidation.class}, message = "板块id不能为空")
+    @NotNull(groups = {InsertValidation.class, QueryValidation.class}, message = "板块id不能为空")
     @ApiModelProperty("所属板块id")
     private Long blockId;
 
