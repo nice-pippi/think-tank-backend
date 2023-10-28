@@ -1,6 +1,7 @@
 package com.thinktank.post.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.thinktank.generator.entity.PostComments;
 import com.thinktank.generator.vo.PostCommentsVo;
 
 /**
@@ -11,4 +12,6 @@ import com.thinktank.generator.vo.PostCommentsVo;
  */
 public interface CommentService {
     IPage<PostCommentsVo> page(Long postId, Integer currentPage);
+
+    void replyPost(PostComments postComments);
 }

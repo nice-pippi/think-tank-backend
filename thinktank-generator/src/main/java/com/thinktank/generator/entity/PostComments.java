@@ -8,8 +8,13 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import com.thinktank.common.validationgroups.InsertValidation;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * <p>
@@ -29,9 +34,11 @@ public class PostComments implements Serializable {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
+    @NotNull(groups = {InsertValidation.class},message = "板块id不能为空")
     @ApiModelProperty("板块id")
     private Long blockId;
 
+    @NotNull(groups = {InsertValidation.class},message = "帖子id不能为空")
     @ApiModelProperty("帖子id")
     private Long postId;
 
