@@ -44,14 +44,15 @@ public class SaTokenConfig implements WebMvcConfigurer {
                                     "/block/master/{id}", // 查看当前板块板主以及小板主信息
                                     "/search/searchBlock", // 搜索板块
                                     "/search/searchPost", // 搜索帖子
-                                    "/post/comment/{postId}/{currentPage}", // 帖子评论分页
-                                    "/post/postAction/getLatestPosts" // 获取最新帖子
+                                    "/post/comment/page/**", // 帖子评论分页
+                                    "/post/postAction/getLatestPosts", // 获取最新帖子
+                                    "/post/postAction/page/**" // 根据板块id获取当前板块下帖子分页
                             )
                             .check(r -> StpUtil.checkLogin());
                     // 权限认证 -- 不同模块, 校验不同权限
                     SaRouter.match("/admin/**", r -> StpUtil.checkRole("super-admin")); // 检查是否具有超级管理员身份
                     SaRouter.match(SaHttpMethod.POST).match("/block/", r -> StpUtil.checkPermission("block:update")); // 检查更改板块权限
-                    SaRouter.match("/search/block/**", r -> StpUtil.checkRole("super-admin")); // 检查更改板块权限
+                    SaRouter.match("/search/block/**", r -> StpUtil.checkRole("super-admin")); // 检查板块信息文档管理权限
                 })
                 // 鉴权之前执行的操作
                 .setBeforeAuth(obj -> {
