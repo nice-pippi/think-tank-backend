@@ -5,6 +5,8 @@ import com.thinktank.search.doc.PostInfoDoc;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -15,10 +17,14 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 public class PostInfoDocDto extends PostInfoDoc {
+    @Min(groups = {QueryValidation.class}, value = 1, message = "当前页码最小不能低于1")
+    @Max(groups = {QueryValidation.class}, value = 50, message = "当前页码最大不能高于50")
     @NotNull(groups = QueryValidation.class, message = "当前页码不能为空")
     @ApiModelProperty("当前页")
     private Integer currentPage;
 
+    @Min(groups = {QueryValidation.class}, value = 1, message = "每页显示数量最小不能低于1")
+    @Max(groups = {QueryValidation.class}, value = 20, message = "每页显示数量最大不能高于20")
     @NotNull(groups = QueryValidation.class, message = "当前页显示数不能为空")
     @ApiModelProperty("当前页显示数量")
     private Integer size;
