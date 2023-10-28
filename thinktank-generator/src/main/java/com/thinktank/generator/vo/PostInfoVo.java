@@ -20,7 +20,7 @@ public class PostInfoVo extends PostInfo {
     @ApiModelProperty("帖子内容")
     private String content;
 
-    @ApiModelProperty("帖子图片（最多只取5张）")
+    @ApiModelProperty("帖子图片")
     private List<String> images;
 
     @ApiModelProperty("用户名")
