@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @ApiOperation("更改用户信息")
-    @PostMapping("/")
+    @PutMapping("/")
     public R<SysUser> updateUser(@RequestBody @Validated(UpdateValidation.class) SysUserDto sysUserDto) {
         return R.success(userService.update(sysUserDto));
     }

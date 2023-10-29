@@ -40,15 +40,16 @@ public class SaTokenConfig implements WebMvcConfigurer {
                                     "/validatecode/generate", // 生成验证码
                                     "/validatecode/validate", // 校验验证码
                                     "/block/getBlockClassify", // 获取板块分类
-                                    "/block/follow/getAllFollow/**", // 根据用户id获取所有已关注板块
+                                    "/block/follow/getAllFollow/{id}", // 根据用户id获取所有已关注板块
                                     "/block/{id}", // 获取板块信息
                                     "/block/master/{id}", // 查看当前板块板主以及小板主信息
                                     "/search/searchBlock", // 搜索板块
                                     "/search/searchPost", // 搜索帖子
-                                    "/post/comment/page/**", // 帖子评论分页
+                                    "/post/comment/page/{postId}/{currentPage}", // 帖子评论分页
                                     "/post/postAction/getLatestPosts", // 获取最新帖子
-                                    "/post/postAction/page/**", // 根据板块id获取当前板块下帖子分页
-                                    "/post/postAction/getTitle/**"// 根据帖子id获取帖子标题
+                                    "/post/postAction/page", // 根据板块id获取当前板块下帖子分页
+                                    "/post/postAction/getTitle/{postId}" ,// 根据帖子id获取帖子标题
+                                    "/user/{id}" // 根据用户id获取用户信息
                             )
                             .check(r -> StpUtil.checkLogin());
                     // 权限认证 -- 不同模块, 校验不同权限
