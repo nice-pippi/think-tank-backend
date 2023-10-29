@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.ObjectMapperUtil;
-import com.thinktank.common.utils.R;
 import com.thinktank.common.utils.RedisCacheUtil;
 import com.thinktank.generator.dto.PostInfoDto;
 import com.thinktank.generator.entity.*;
@@ -314,4 +313,19 @@ public class PostServiceImpl implements PostService {
 
         return postInfoPage.getRecords().stream().map(this::getPostInfo).collect(Collectors.toList());
     }
+
+    @Override
+    public String getTitle(Long postId) {
+        LambdaQueryWrapper<PostInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(PostInfo::getTitle);
+        queryWrapper.eq(PostInfo::getId, postId);
+        PostInfo postInfo = postInfoMapper.selectOne(queryWrapper);
+
+        if (postInfo == null) {
+            log.error("帖子'{}'不存在", postId);
+            throw new ThinkTankException("当前帖子不存在！");
+        }
+        return postInfo.getTitle();
+    }
+
 }

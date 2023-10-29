@@ -1,6 +1,5 @@
 package com.thinktank.post.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.thinktank.common.utils.R;
 import com.thinktank.common.validationgroups.InsertValidation;
 import com.thinktank.common.validationgroups.QueryValidation;
@@ -53,6 +52,13 @@ public class PostController {
     public R<List<PostInfoVo>> page(@RequestBody @Validated(QueryValidation.class) PostInfoDto postInfoDto) {
         return R.success(postService.page(postInfoDto));
     }
+
+    @ApiOperation("根据帖子id获取帖子标题")
+    @GetMapping("/getTitle/{postId}")
+    public R<String> getTitle(@PathVariable("postId") Long postId) {
+        return R.success(postService.getTitle(postId));
+    }
+
 }
 
 

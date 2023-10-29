@@ -1,7 +1,5 @@
 package com.thinktank.post.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.thinktank.common.utils.R;
 import com.thinktank.generator.dto.PostInfoDto;
 import com.thinktank.generator.vo.PostInfoVo;
 
@@ -31,4 +29,6 @@ public interface PostService {
     List<PostInfoVo> getLatestPosts();
 
     List<PostInfoVo> page(PostInfoDto postInfoDto);
+
+    String getTitle(Long postId);
 }
