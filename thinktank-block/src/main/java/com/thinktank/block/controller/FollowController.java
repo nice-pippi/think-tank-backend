@@ -31,9 +31,9 @@ public class FollowController {
         return R.success("关注成功！");
     }
 
-    @ApiOperation("获取当前账号所有已关注板块")
-    @GetMapping("getAllFollow")
-    public R<List<BlockInfo>> getAllFollow() {
-        return R.success(followService.getAllFollow());
+    @ApiOperation("根据用户id获取所有已关注板块")
+    @GetMapping("/getAllFollow/{id}")
+    public R<List<BlockInfo>> getAllFollow(@PathVariable("id") Long id) {
+        return R.success(followService.getAllFollow(id));
     }
 }

@@ -40,6 +40,7 @@ public class SaTokenConfig implements WebMvcConfigurer {
                                     "/validatecode/generate", // 生成验证码
                                     "/validatecode/validate", // 校验验证码
                                     "/block/getBlockClassify", // 获取板块分类
+                                    "/block/follow/getAllFollow/**", // 根据用户id获取所有已关注板块
                                     "/block/{id}", // 获取板块信息
                                     "/block/master/{id}", // 查看当前板块板主以及小板主信息
                                     "/search/searchBlock", // 搜索板块

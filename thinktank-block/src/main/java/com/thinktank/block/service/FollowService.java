@@ -17,9 +17,9 @@ public interface FollowService {
     void followBlock(Long id);
 
     /**
-     * 获取当前账号所有已关注板块
+     * 根据用户id获取所有已关注板块
      *
      * @return
      */
-    List<BlockInfo> getAllFollow();
+    List<BlockInfo> getAllFollow(Long id);
 }

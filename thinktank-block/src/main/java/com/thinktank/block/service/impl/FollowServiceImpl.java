@@ -61,10 +61,7 @@ public class FollowServiceImpl implements FollowService {
     }
 
     @Override
-    public List<BlockInfo> getAllFollow() {
-        // 获取当前登录id
-        long id = StpUtil.getLoginIdAsLong();
-
+    public List<BlockInfo> getAllFollow(Long id) {
         // 获取当前用户所有已关注板块
         LambdaQueryWrapper<BlockFollow> blockFollowLambdaQueryWrapper = new LambdaQueryWrapper<>();
         blockFollowLambdaQueryWrapper.eq(BlockFollow::getUserId, id);
