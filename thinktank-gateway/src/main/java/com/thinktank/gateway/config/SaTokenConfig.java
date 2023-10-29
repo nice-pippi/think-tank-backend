@@ -49,6 +49,7 @@ public class SaTokenConfig implements WebMvcConfigurer {
                                     "/post/postAction/getLatestPosts", // 获取最新帖子
                                     "/post/postAction/page", // 根据板块id获取当前板块下帖子分页
                                     "/post/postAction/getTitle/{postId}" ,// 根据帖子id获取帖子标题
+                                    "/post/postAction/getPageByPublishedPosts/{id}/{currentPage}", // 根据用户id获取已发布的帖子
                                     "/user/{id}" // 根据用户id获取用户信息
                             )
                             .check(r -> StpUtil.checkLogin());

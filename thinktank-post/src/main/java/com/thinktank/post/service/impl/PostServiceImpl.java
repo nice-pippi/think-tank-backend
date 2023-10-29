@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.ObjectMapperUtil;
+import com.thinktank.common.utils.R;
 import com.thinktank.common.utils.RedisCacheUtil;
 import com.thinktank.generator.dto.PostInfoDto;
 import com.thinktank.generator.entity.*;
@@ -304,14 +305,16 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostInfoVo> page(PostInfoDto postInfoDto) {
+    public R<List<PostInfoVo>> page(PostInfoDto postInfoDto) {
         Page<PostInfo> page = new Page<>(postInfoDto.getCurrentPage(), postInfoDto.getSize());
         LambdaQueryWrapper<PostInfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(PostInfo::getBlockId, postInfoDto.getBlockId());
         queryWrapper.orderByDesc(PostInfo::getCreateTime);
         Page<PostInfo> postInfoPage = postInfoMapper.selectPage(page, queryWrapper);
 
-        return postInfoPage.getRecords().stream().map(this::getPostInfo).collect(Collectors.toList());
+        List<PostInfoVo> list = postInfoPage.getRecords().stream().map(this::getPostInfo).collect(Collectors.toList());
+
+        return R.success(list).add("total", postInfoPage.getTotal());
     }
 
     @Override
@@ -326,6 +329,19 @@ public class PostServiceImpl implements PostService {
             throw new ThinkTankException("当前帖子不存在！");
         }
         return postInfo.getTitle();
+    }
+
+    @Override
+    public R<List<PostInfoVo>> getPageByPublishedPosts(Long id, Integer currentPage) {
+        Page<PostInfo> page = new Page<>(currentPage, 15);
+        LambdaQueryWrapper<PostInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PostInfo::getUserId, id);
+        queryWrapper.orderByDesc(PostInfo::getCreateTime);
+        Page<PostInfo> postInfoPage = postInfoMapper.selectPage(page, queryWrapper);
+
+        List<PostInfoVo> list = postInfoPage.getRecords().stream().map(this::getPostInfo).collect(Collectors.toList());
+
+        return R.success(list).add("total", postInfoPage.getTotal());
     }
 
 }

@@ -50,7 +50,7 @@ public class PostController {
     @ApiOperation(("根据板块id获取当前板块下帖子分页"))
     @PostMapping("/page")
     public R<List<PostInfoVo>> page(@RequestBody @Validated(QueryValidation.class) PostInfoDto postInfoDto) {
-        return R.success(postService.page(postInfoDto));
+        return postService.page(postInfoDto);
     }
 
     @ApiOperation("根据帖子id获取帖子标题")
@@ -59,6 +59,11 @@ public class PostController {
         return R.success(postService.getTitle(postId));
     }
 
+    @ApiOperation("根据用户id获取已发布的帖子")
+    @GetMapping("/getPageByPublishedPosts/{id}/{currentPage}")
+    public R<List<PostInfoVo>> getPageByPublishedPosts(@PathVariable("id") Long id, @PathVariable("currentPage") Integer currentPage) {
+        return postService.getPageByPublishedPosts(id, currentPage);
+    }
 }
 
 
