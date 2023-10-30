@@ -37,4 +37,10 @@ public class CommentController {
         commentService.replyPost(postComments);
         return R.success("评论已发布");
     }
+
+    @ApiOperation("回复评论")
+    @PostMapping("replyComment")
+    public R<PostComments> replyComment(@RequestBody @Validated(InsertValidation.class) PostComments postComments) {
+        return R.success(commentService.replyComment(postComments));
+    }
 }

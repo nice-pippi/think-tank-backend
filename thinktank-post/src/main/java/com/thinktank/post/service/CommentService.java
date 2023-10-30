@@ -14,4 +14,6 @@ public interface CommentService {
     IPage<PostCommentsVo> page(Long postId, Integer currentPage);
 
     void replyPost(PostComments postComments);
+
+    PostComments replyComment(PostComments postComments);
 }

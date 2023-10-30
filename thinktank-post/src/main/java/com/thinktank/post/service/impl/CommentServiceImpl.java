@@ -66,9 +66,8 @@ public class CommentServiceImpl implements CommentService {
         return commentsVoIPage;
     }
 
-    @Transactional
-    @Override
-    public void replyPost(PostComments postComments) {
+    // 评论合法性校验，若校验成功返回登录用户id
+    private long validate(PostComments postComments) {
         // 验证当前帖子是否存在
         PostInfo postInfo = postInfoMapper.selectById(postComments.getPostId());
         if (postInfo == null) {
@@ -95,9 +94,37 @@ public class CommentServiceImpl implements CommentService {
             log.error("当前板块'{}'下用户'{}'已被禁言，无法发表评论", postComments.getBlockId(), loginId);
             throw new ThinkTankException("您在当前板块下已被禁言，无法发表评论！！");
         }
+        return loginId;
+    }
 
+    @Transactional
+    @Override
+    public void replyPost(PostComments postComments) {
+        // 评论合法性校验，若校验成功返回登录用户id
+        long loginId = validate(postComments);
         postComments.setUserId(loginId);
         postCommentsMapper.insert(postComments);
+    }
+
+    @Transactional
+    @Override
+    public PostComments replyComment(PostComments postComments) {
+        long loginId = validate(postComments);
+
+        // 验证父级评论是否存在
+        PostComments parent = postCommentsMapper.selectById(postComments.getParentId());
+        if (parent == null) {
+            log.error("因该评论不存在，用户评论区回复失败，用户id:{},被评论id:{}", loginId, postComments.getParentId());
+            throw new ThinkTankException("该评论不存在！");
+        }
+
+        // 写入数据库
+        postComments.setUserId(loginId);
+        postCommentsMapper.insert(postComments);
+
+        postComments.setDelFlag(null);
+        postComments.setTopicFlag(null);
+        return postComments;
     }
 
 
