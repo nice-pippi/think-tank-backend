@@ -14,7 +14,7 @@
              sys_user AS t2
         WHERE t1.user_id = t2.id
           AND t1.post_id = #{postId}
-          AND t1.parent_id =0
+          AND t1.parent_id = 0
     </select>
     <select id="getAllChildrenComment" resultType="com.thinktank.generator.vo.PostCommentsVo">
         SELECT t1.id,
@@ -28,5 +28,21 @@
              sys_user AS t2
         WHERE t1.user_id = t2.id
           and t1.parent_id = #{commentId}
+    </select>
+
+    <select id="getPostCommentsVo" resultType="com.thinktank.generator.vo.PostCommentsVo">
+        SELECT t1.content,
+               t1.topic_flag,
+               t2.block_name,
+               t3.username
+        FROM post_comments AS t1,
+             block_info AS t2,
+             sys_user AS t3
+        WHERE t1.block_id = t2.id
+          AND t1.user_id = t3.id
+          AND t1.post_id = #{postId}
+          AND t1.parent_id = 0
+          and t1.del_flag = 0
+        LIMIT 5
     </select>
 </mapper>

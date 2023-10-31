@@ -14,6 +14,9 @@ import java.util.List;
  */
 @Data
 public class PostCommentsVo extends PostComments {
+    @ApiModelProperty("本板块名称")
+    private String blockName;
+
     @ApiModelProperty("用户名")
     private String username;
 

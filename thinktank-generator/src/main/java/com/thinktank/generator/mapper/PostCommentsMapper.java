@@ -21,4 +21,6 @@ public interface PostCommentsMapper extends BaseMapper<PostComments> {
     IPage<PostCommentsVo> getPage(@Param("postId") Long postId, Page<PostCommentsVo> page);
 
     List<PostCommentsVo> getAllChildrenComment(Long commentId);
+
+    List<PostCommentsVo> getPostCommentsVo(Long postId);
 }

@@ -25,4 +25,7 @@ public class PostInfoVo extends PostInfo {
 
     @ApiModelProperty("用户名")
     private String username;
+
+    @ApiModelProperty("主题帖标识")
+    private Integer topicFlag;
 }

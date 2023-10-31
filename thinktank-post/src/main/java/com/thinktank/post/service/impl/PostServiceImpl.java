@@ -11,6 +11,7 @@ import com.thinktank.common.utils.RedisCacheUtil;
 import com.thinktank.generator.dto.PostInfoDto;
 import com.thinktank.generator.entity.*;
 import com.thinktank.generator.mapper.*;
+import com.thinktank.generator.vo.PostCommentsVo;
 import com.thinktank.generator.vo.PostInfoVo;
 import com.thinktank.post.config.AddPostDocFanoutConfig;
 import com.thinktank.post.service.PostService;
@@ -219,22 +220,18 @@ public class PostServiceImpl implements PostService {
 
     // 根据帖子id封装vo所需信息
     private PostInfoVo getPostInfo(PostInfo postInfo) {
-        // 查询帖子前5条发言
-        LambdaQueryWrapper<PostComments> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(PostComments::getPostId, postInfo.getId());
-        queryWrapper.eq(PostComments::getParentId, 0);
-        queryWrapper.last("limit 5");
-        List<PostComments> postComments = postCommentsMapper.selectList(queryWrapper);
+        // 根据帖子id获取该帖子前五条评论
+        List<PostCommentsVo> postComments = postCommentsMapper.getPostCommentsVo(postInfo.getId());
 
-        // 帖子内容
-        String content = postComments.stream()
-                .filter(item -> item.getTopicFlag() == 1)
-                .map(PostComments::getContent)
-                .findFirst()
-                .orElse("");
+        // 获取主题帖
+        PostCommentsVo postCommentsVo = postComments.stream().filter(item -> item.getTopicFlag() == 1).findFirst().orElse(null);
+
+        if (postCommentsVo == null) {
+            throw new ThinkTankException("该帖子不存在主题帖！");
+        }
 
         // 去掉帖子内容中的HTML标签以及制表符
-        content = content.replaceAll("<.*?>", "").replaceAll("\\t", "");
+        String content = postCommentsVo.getContent().replaceAll("<.*?>", "").replaceAll("\\t", "");
 
         // 收集所有帖子评论中的图片URL
         Pattern pattern = Pattern.compile("<img\\s+src=\"([^\"]+)\"");
@@ -246,16 +243,10 @@ public class PostServiceImpl implements PostService {
             }
         }
 
-        // 查询板块名称
-        BlockInfo blockInfo = blockInfoMapper.selectById(postInfo.getBlockId());
-
-        // 根据帖子id查询发布帖子用户的名称
-        SysUser sysUser = sysUserMapper.selectById(postInfo.getUserId());
-
         PostInfoVo postInfoVo = new PostInfoVo();
         BeanUtils.copyProperties(postInfo, postInfoVo);
-        postInfoVo.setUsername(sysUser.getUsername());
-        postInfoVo.setBlockName(blockInfo.getBlockName());
+        postInfoVo.setUsername(postCommentsVo.getUsername());
+        postInfoVo.setBlockName(postCommentsVo.getBlockName());
         postInfoVo.setImages(imageUrlList);
         postInfoVo.setContent(content);
         return postInfoVo;

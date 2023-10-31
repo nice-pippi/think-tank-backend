@@ -1,6 +1,7 @@
 package com.thinktank.search.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.ObjectMapperUtil;
 import com.thinktank.generator.entity.BlockInfo;
 import com.thinktank.generator.entity.PostComments;
@@ -9,6 +10,8 @@ import com.thinktank.generator.entity.SysUser;
 import com.thinktank.generator.mapper.BlockInfoMapper;
 import com.thinktank.generator.mapper.PostCommentsMapper;
 import com.thinktank.generator.mapper.SysUserMapper;
+import com.thinktank.generator.vo.PostCommentsVo;
+import com.thinktank.generator.vo.PostInfoVo;
 import com.thinktank.search.doc.PostInfoDoc;
 import com.thinktank.search.service.PostInfoDocService;
 import org.springframework.amqp.core.Message;
@@ -51,22 +54,18 @@ public class PostInfoDocServiceImpl implements PostInfoDocService {
         String json = new String(bytes);
         PostInfo postInfo = ObjectMapperUtil.toObject(json, PostInfo.class);
 
-        // 查询帖子前5条发言
-        LambdaQueryWrapper<PostComments> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(PostComments::getPostId, postInfo.getId());
-        queryWrapper.eq(PostComments::getParentId,0);
-        queryWrapper.last("limit 5");
-        List<PostComments> postComments = postCommentsMapper.selectList(queryWrapper);
+        // 根据帖子id获取该帖子前五条评论
+        List<PostCommentsVo> postComments = postCommentsMapper.getPostCommentsVo(postInfo.getId());
 
-        // 帖子内容
-        String content = postComments.stream()
-                .filter(item -> item.getTopicFlag() == 1)
-                .map(PostComments::getContent)
-                .findFirst()
-                .orElse("");
+        // 获取主题帖
+        PostCommentsVo postCommentsVo = postComments.stream().filter(item -> item.getTopicFlag() == 1).findFirst().orElse(null);
+
+        if (postCommentsVo == null) {
+            throw new ThinkTankException("该帖子不存在主题帖！");
+        }
 
         // 去掉帖子内容中的HTML标签以及制表符
-        content = content.replaceAll("<.*?>", "").replaceAll("\\t", "");
+        String content = postCommentsVo.getContent().replaceAll("<.*?>", "").replaceAll("\\t", "");
 
         // 收集所有帖子评论中的图片URL
         Pattern pattern = Pattern.compile("<img\\s+src=\"([^\"]+)\"");
@@ -78,17 +77,11 @@ public class PostInfoDocServiceImpl implements PostInfoDocService {
             }
         }
 
-        // 查询板块名称
-        BlockInfo blockInfo = blockInfoMapper.selectById(postInfo.getBlockId());
-
-        // 根据帖子id查询发布帖子用户的名称
-        SysUser sysUser = sysUserMapper.selectById(postInfo.getUserId());
-
         PostInfoDoc postInfoDoc = new PostInfoDoc();
         BeanUtils.copyProperties(postInfo, postInfoDoc);
         postInfoDoc.setContent(content);
-        postInfoDoc.setBlockName(blockInfo.getBlockName());
-        postInfoDoc.setUsername(sysUser.getUsername());
+        postInfoDoc.setBlockName(postCommentsVo.getBlockName());
+        postInfoDoc.setUsername(postCommentsVo.getUsername());
         postInfoDoc.setImages(imageUrlList);
 
         // 保存到es文档
