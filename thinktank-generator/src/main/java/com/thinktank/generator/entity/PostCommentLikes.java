@@ -1,18 +1,18 @@
 package com.thinktank.generator.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotation.*;
+import com.thinktank.common.validationgroups.DeleteValidation;
+import com.thinktank.common.validationgroups.InsertValidation;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author pippi
@@ -28,12 +28,15 @@ public class PostCommentLikes implements Serializable {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
+    @NotNull(groups = {InsertValidation.class}, message = "板块id不能为空")
     @ApiModelProperty("板块id")
     private Long blockId;
 
+    @NotNull(groups = {InsertValidation.class}, message = "帖子id不能为空")
     @ApiModelProperty("帖子id")
     private Long postId;
 
+    @NotNull(groups = {InsertValidation.class, DeleteValidation.class}, message = "被点赞的评论id不能为空")
     @ApiModelProperty("被点赞的评论id")
     private Long commentId;
 
@@ -95,12 +98,12 @@ public class PostCommentLikes implements Serializable {
     @Override
     public String toString() {
         return "PostCommentLikes{" +
-            "id = " + id +
-            ", blockId = " + blockId +
-            ", postId = " + postId +
-            ", commentId = " + commentId +
-            ", userId = " + userId +
-            ", createTime = " + createTime +
-        "}";
+                "id = " + id +
+                ", blockId = " + blockId +
+                ", postId = " + postId +
+                ", commentId = " + commentId +
+                ", userId = " + userId +
+                ", createTime = " + createTime +
+                "}";
     }
 }

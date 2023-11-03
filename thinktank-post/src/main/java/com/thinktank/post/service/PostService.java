@@ -27,11 +27,35 @@ public interface PostService {
      */
     void delete(Long postId);
 
+    /**
+     * 首页大厅获取最新帖子
+     *
+     * @return
+     */
     List<PostInfoVo> getLatestPosts();
 
+    /**
+     * 根据板块id获取当前板块下帖子分页
+     *
+     * @param postInfoDto
+     * @return
+     */
     R<List<PostInfoVo>> page(PostInfoDto postInfoDto);
 
+    /**
+     * 根据帖子id获取帖子标题
+     *
+     * @param postId
+     * @return
+     */
     String getTitle(Long postId);
 
+    /**
+     * 根据用户id获取已发布的帖子
+     *
+     * @param id
+     * @param currentPage
+     * @return
+     */
     R<List<PostInfoVo>> getPageByPublishedPosts(Long id, Integer currentPage);
 }

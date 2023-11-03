@@ -23,8 +23,11 @@ public class PostCommentsVo extends PostComments {
     @ApiModelProperty("用户头像")
     private String avatar;
 
-    @ApiModelProperty("回复数量")
-    private String repliesCount;
+    @ApiModelProperty("点赞数量")
+    private Integer likes;
+
+    @ApiModelProperty("是否点赞标识")
+    private Boolean likeFlag;
 
     @ApiModelProperty("子级评论内容")
     private List<PostCommentsVo> replies;

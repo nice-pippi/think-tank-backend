@@ -15,7 +15,19 @@ import java.util.List;
  * @Version: 1.0
  */
 public interface SearchService {
+    /**
+     * 搜索板块
+     *
+     * @param blockInfoDocDto
+     * @return
+     */
     R<List<BlockInfoDoc>> searchBlock(BlockInfoDocDto blockInfoDocDto);
 
+    /**
+     * 搜索帖子
+     *
+     * @param postInfoDocDto
+     * @return
+     */
     R<List<PostInfoDoc>> searchPost(PostInfoDocDto postInfoDocDto);
 }

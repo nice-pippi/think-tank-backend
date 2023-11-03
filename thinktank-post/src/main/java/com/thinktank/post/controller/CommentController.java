@@ -2,7 +2,9 @@ package com.thinktank.post.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.thinktank.common.utils.R;
+import com.thinktank.common.validationgroups.DeleteValidation;
 import com.thinktank.common.validationgroups.InsertValidation;
+import com.thinktank.generator.entity.PostCommentLikes;
 import com.thinktank.generator.entity.PostComments;
 import com.thinktank.generator.vo.PostCommentsVo;
 import com.thinktank.post.service.CommentService;
@@ -42,5 +44,19 @@ public class CommentController {
     @PostMapping("replyComment")
     public R<PostComments> replyComment(@RequestBody @Validated(InsertValidation.class) PostComments postComments) {
         return R.success(commentService.replyComment(postComments));
+    }
+
+    @ApiOperation("评论点赞")
+    @PostMapping("addLikeComment")
+    public R<String> addLikeComment(@RequestBody @Validated(InsertValidation.class) PostCommentLikes postCommentLikes) {
+        commentService.addLikeComment(postCommentLikes);
+        return R.success("点赞成功~");
+    }
+
+    @ApiOperation("取消评论点赞")
+    @PostMapping("removeLikeComment")
+    public R<String> removeLikeComment(@RequestBody @Validated(DeleteValidation.class) PostCommentLikes postCommentLikes) {
+        commentService.removeLikeComment(postCommentLikes);
+        return R.success("已取消点赞");
     }
 }

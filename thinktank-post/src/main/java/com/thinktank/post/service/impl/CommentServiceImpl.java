@@ -4,10 +4,14 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.thinktank.common.exception.ThinkTankException;
+import com.thinktank.common.utils.ObjectMapperUtil;
+import com.thinktank.generator.entity.PostCommentLikes;
 import com.thinktank.generator.entity.PostComments;
 import com.thinktank.generator.entity.PostInfo;
 import com.thinktank.generator.entity.SysUserRole;
+import com.thinktank.generator.mapper.PostCommentLikesMapper;
 import com.thinktank.generator.mapper.PostCommentsMapper;
 import com.thinktank.generator.mapper.PostInfoMapper;
 import com.thinktank.generator.mapper.SysUserRoleMapper;
@@ -15,6 +19,8 @@ import com.thinktank.generator.vo.PostCommentsVo;
 import com.thinktank.post.service.CommentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,12 +45,43 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private SysUserRoleMapper sysUserRoleMapper;
 
+    @Autowired
+    private PostCommentLikesMapper postCommentLikesMapper;
+
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
+
+    // 统计当前评论点赞用户id集合
+    private List<Long> getLikes(Long commentId) {
+        String namespace = "post:comment:like";
+        HashOperations<String, String, Object> ops = redisTemplate.opsForHash();
+        Object o = ops.get(namespace, commentId.toString());
+
+        List<Long> userList;
+        if (o == null) {
+            LambdaQueryWrapper<PostCommentLikes> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(PostCommentLikes::getCommentId, commentId);
+            userList = postCommentLikesMapper.selectList(queryWrapper)
+                    .stream().map(PostCommentLikes::getUserId).collect(Collectors.toList());
+            ops.put(namespace, commentId.toString(), ObjectMapperUtil.toJSON(userList));
+        } else {
+            userList = ObjectMapperUtil.toObjectByTypeReference(o.toString(), new TypeReference<List<Long>>() {
+            });
+        }
+        return userList;
+    }
+
     // 递归获取当前评论下所有子评论
-    private List<PostCommentsVo> getAllChildrenComment(Long id) {
+    private List<PostCommentsVo> getAllChildrenComment(Long id, boolean isLogin) {
         List<PostCommentsVo> childrenComment = postCommentsMapper.getAllChildrenComment(id);
         if (childrenComment.size() > 0) {
             for (PostCommentsVo postCommentsVo : childrenComment) {
-                postCommentsVo.setReplies(postCommentsMapper.getAllChildrenComment(postCommentsVo.getId()));
+                // 查询当前子评论的点赞信息
+                List<Long> likes = getLikes(postCommentsVo.getId());
+                postCommentsVo.setLikes(likes.size());  // 点赞数量
+                postCommentsVo.setLikeFlag(isLogin && likes.contains(StpUtil.getLoginIdAsLong()));
+
+                postCommentsVo.setReplies(getAllChildrenComment(postCommentsVo.getId(), isLogin));
             }
         }
         return childrenComment;
@@ -55,9 +92,18 @@ public class CommentServiceImpl implements CommentService {
         Page<PostCommentsVo> page = new Page<>(currentPage, 15);
 
         IPage<PostCommentsVo> commentsVoIPage = postCommentsMapper.getPage(postId, page);
+
+        // 获取当前用户登录状态
+        boolean isLogin = StpUtil.isLogin();
+
         List<PostCommentsVo> collect = commentsVoIPage.getRecords().stream().map(item -> {
+            // 查询当前评论的点赞信息
+            List<Long> likes = getLikes(item.getId());
+            item.setLikes(likes.size());  // 点赞数量
+            item.setLikeFlag(isLogin && likes.contains(StpUtil.getLoginIdAsLong()));  // 点赞用户ID列表
+
             // 查询当前评论的所有子评论
-            List<PostCommentsVo> allChildrenComment = getAllChildrenComment(item.getId());
+            List<PostCommentsVo> allChildrenComment = getAllChildrenComment(item.getId(), isLogin);
             item.setReplies(allChildrenComment);
             return item;
         }).collect(Collectors.toList());
@@ -127,5 +173,65 @@ public class CommentServiceImpl implements CommentService {
         return postComments;
     }
 
+    @Transactional
+    @Override
+    public void addLikeComment(PostCommentLikes postCommentLikes) {
+        // 查询评论记录
+        long loginId = StpUtil.getLoginIdAsLong();
+        Long commentId = postCommentLikes.getCommentId();
+        PostComments postComments = postCommentsMapper.selectById(commentId);
 
+        if (postComments == null) {
+            log.error("当前评论id'{}'不存在，操作用户'{}'", commentId, loginId);
+            throw new ThinkTankException("评论不存在！");
+        }
+
+        if (!postComments.getBlockId().equals(postCommentLikes.getBlockId())) {
+            log.error("板块id'{}'与当前评论id'{}'不匹配", postCommentLikes.getBlockId(), commentId);
+            throw new ThinkTankException("板块id不匹配！");
+        }
+
+        // 获取该评论的点赞用户id列表
+        List<Long> userLikes = getLikes(postCommentLikes.getCommentId());
+
+        // 点赞记录唯一性验证
+        if (userLikes.contains(loginId)) {
+            log.error("用户重复点赞，用户id'{}'，评论id'{}'", loginId, commentId);
+            throw new ThinkTankException("请勿重复点赞！");
+        }
+
+        // 追加当前用户id并更新
+        userLikes.add(loginId);
+        String namespace = "post:comment:like";
+        HashOperations<String, String, Object> ops = redisTemplate.opsForHash();
+        ops.put(namespace, commentId.toString(), ObjectMapperUtil.toJSON(userLikes));
+    }
+
+    @Override
+    public void removeLikeComment(PostCommentLikes postCommentLikes) {
+        // 查询评论记录
+        long loginId = StpUtil.getLoginIdAsLong();
+        Long commentId = postCommentLikes.getCommentId();
+        PostComments postComments = postCommentsMapper.selectById(commentId);
+
+        if (postComments == null) {
+            log.error("当前评论id'{}'不存在，操作用户'{}'", commentId, loginId);
+            throw new ThinkTankException("评论不存在！");
+        }
+
+        // 获取该评论的点赞用户id列表
+        List<Long> userLikes = getLikes(postCommentLikes.getCommentId());
+
+        // 验证是否在点赞记录里
+        if (!userLikes.contains(loginId)) {
+            log.error("用户取消点赞失败，用户id'{}'，评论id'{}'", loginId, postCommentLikes.getCommentId());
+            throw new ThinkTankException("取消点赞失败");
+        }
+
+        // 删除当前用户id并更新
+        userLikes.remove(loginId);
+        String namespace = "post:comment:like";
+        HashOperations<String, String, Object> ops = redisTemplate.opsForHash();
+        ops.put(namespace, postCommentLikes.getCommentId().toString(), ObjectMapperUtil.toJSON(userLikes));
+    }
 }
