@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author pippi
- * @since 2023-10-21
+ * @since 2023-11-04
  */
 @TableName("post_comment_likes")
 @ApiModel(value = "PostCommentLikes对象", description = "")
@@ -28,15 +28,7 @@ public class PostCommentLikes implements Serializable {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
-    @NotNull(groups = {InsertValidation.class}, message = "板块id不能为空")
-    @ApiModelProperty("板块id")
-    private Long blockId;
-
-    @NotNull(groups = {InsertValidation.class}, message = "帖子id不能为空")
-    @ApiModelProperty("帖子id")
-    private Long postId;
-
-    @NotNull(groups = {InsertValidation.class, DeleteValidation.class}, message = "被点赞的评论id不能为空")
+    @NotNull(groups = {InsertValidation.class, DeleteValidation.class}, message = "评论id不能为空")
     @ApiModelProperty("被点赞的评论id")
     private Long commentId;
 
@@ -53,22 +45,6 @@ public class PostCommentLikes implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getBlockId() {
-        return blockId;
-    }
-
-    public void setBlockId(Long blockId) {
-        this.blockId = blockId;
-    }
-
-    public Long getPostId() {
-        return postId;
-    }
-
-    public void setPostId(Long postId) {
-        this.postId = postId;
     }
 
     public Long getCommentId() {
@@ -99,8 +75,6 @@ public class PostCommentLikes implements Serializable {
     public String toString() {
         return "PostCommentLikes{" +
                 "id = " + id +
-                ", blockId = " + blockId +
-                ", postId = " + postId +
                 ", commentId = " + commentId +
                 ", userId = " + userId +
                 ", createTime = " + createTime +
