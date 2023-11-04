@@ -25,3 +25,17 @@ sa-token:
 feign:
   sentinel:
     enabled: true # 开启feign对sentinel的支持
+
+xxl:
+  job:
+    admin:
+      addresses: http://192.168.88.150:8081/xxl-job-admin
+    executor:
+      appname: post-process-service
+      address:
+      ip:
+      port: 9999
+      logpath: D:/Desktop/Logs/xxl-job
+      logretentiondays: 30
+    accessToken: default_token
+

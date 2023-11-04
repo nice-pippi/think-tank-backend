@@ -2,4 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thinktank.generator.mapper.PostCommentLikesMapper">
 
+    <insert id="insertBatch">
+        insert into post_comment_likes (id,comment_id, user_id,create_time) values
+        <foreach collection="userList" item="userId" open="(" separator="," close=")">
+            #{id}, #{commentId}, #{userId},now()
+        </foreach>
+    </insert>
 </mapper>

@@ -39,6 +39,7 @@
         <okhttp.version>4.10.0</okhttp.version>
         <minio.version>8.5.5</minio.version>
         <redisson.version>3.11.2</redisson.version>
+        <xxl-job-core.version>2.4.0</xxl-job-core.version>
     </properties>
 
     <dependencyManagement>
@@ -148,6 +149,12 @@
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson-spring-boot-starter</artifactId>
                 <version>${redisson.version}</version>
+            </dependency>
+            <!--分布式任务调度-->
+            <dependency>
+                <groupId>com.xuxueli</groupId>
+                <artifactId>xxl-job-core</artifactId>
+                <version>${xxl-job-core.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

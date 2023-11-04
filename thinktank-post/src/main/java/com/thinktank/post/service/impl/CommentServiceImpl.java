@@ -186,11 +186,6 @@ public class CommentServiceImpl implements CommentService {
             throw new ThinkTankException("评论不存在！");
         }
 
-        if (!postComments.getBlockId().equals(postCommentLikes.getBlockId())) {
-            log.error("板块id'{}'与当前评论id'{}'不匹配", postCommentLikes.getBlockId(), commentId);
-            throw new ThinkTankException("板块id不匹配！");
-        }
-
         // 获取该评论的点赞用户id列表
         List<Long> userLikes = getLikes(postCommentLikes.getCommentId());
 
