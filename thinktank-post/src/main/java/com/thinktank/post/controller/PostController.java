@@ -36,7 +36,7 @@ public class PostController {
 
     @ApiOperation("删除帖子")
     @DeleteMapping("{postId}")
-    public R<String> delete(@PathVariable("id") Long postId) {
+    public R<String> delete(@PathVariable("postId") Long postId) {
         postService.delete(postId);
         return R.success("删除成功");
     }
