@@ -34,7 +34,7 @@ public class CommentLikeJob {
     private PostCommentLikesMapper postCommentLikesMapper;
 
     /**
-     * 每隔5小时将redis中用户点赞记录写入数据库
+     * 每天0点将redis中用户点赞记录更新到数据库
      */
     @Transactional
     @XxlJob("writeCommentLikesToDB")
