@@ -303,6 +303,7 @@ public class PostServiceImpl implements PostService {
         queryWrapper.orderByDesc(PostInfo::getCreateTime);
         Page<PostInfo> postInfoPage = postInfoMapper.selectPage(page, queryWrapper);
 
+        // 转换成PostInfoVo
         List<PostInfoVo> list = postInfoPage.getRecords().stream().map(this::getPostInfo).collect(Collectors.toList());
 
         return R.success(list).add("total", postInfoPage.getTotal());
