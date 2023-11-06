@@ -1,22 +1,23 @@
 package com.thinktank.generator.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotation.*;
+import com.thinktank.common.validationgroups.InsertValidation;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author pippi
- * @since 2023-10-21
+ * @since 2023-11-06
  */
 @TableName("post_reports")
 @ApiModel(value = "PostReports对象", description = "")
@@ -28,20 +29,21 @@ public class PostReports implements Serializable {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
-    @ApiModelProperty("板块id")
-    private Long blockId;
-
-    @ApiModelProperty("帖子id（若为空则举报的是评论）")
+    @NotNull(groups = {InsertValidation.class}, message = "帖子id不能为空")
+    @ApiModelProperty("帖子id")
     private Long postId;
 
-    @ApiModelProperty("评论id（若为空则举报的是帖子）")
+    @ApiModelProperty("评论id（若为0代表举报的是帖子）")
     private Long commentId;
 
     @ApiModelProperty("举报用户id")
     private Long userId;
 
+    @Min(groups = {InsertValidation.class}, value = 1, message = "举报类型非法")
+    @Max(groups = {InsertValidation.class}, value = 8, message = "举报类型非法")
+    @NotNull(groups = {InsertValidation.class}, message = "举报类型不能为空")
     @ApiModelProperty("举报类型")
-    private Byte typeId;
+    private Integer reportTypeId;
 
     @ApiModelProperty("举报原因（若举报原因不为其他，则本字段为空）")
     private String reason;
@@ -63,14 +65,6 @@ public class PostReports implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getBlockId() {
-        return blockId;
-    }
-
-    public void setBlockId(Long blockId) {
-        this.blockId = blockId;
     }
 
     public Long getPostId() {
@@ -97,12 +91,12 @@ public class PostReports implements Serializable {
         this.userId = userId;
     }
 
-    public Byte getTypeId() {
-        return typeId;
+    public Integer getReportTypeId() {
+        return reportTypeId;
     }
 
-    public void setTypeId(Byte typeId) {
-        this.typeId = typeId;
+    public void setReportTypeId(Integer reportTypeId) {
+        this.reportTypeId = reportTypeId;
     }
 
     public String getReason() {
@@ -140,16 +134,15 @@ public class PostReports implements Serializable {
     @Override
     public String toString() {
         return "PostReports{" +
-            "id = " + id +
-            ", blockId = " + blockId +
-            ", postId = " + postId +
-            ", commentId = " + commentId +
-            ", userId = " + userId +
-            ", typeId = " + typeId +
-            ", reason = " + reason +
-            ", status = " + status +
-            ", createTime = " + createTime +
-            ", updateTime = " + updateTime +
-        "}";
+                "id = " + id +
+                ", postId = " + postId +
+                ", commentId = " + commentId +
+                ", userId = " + userId +
+                ", reportTypeId = " + reportTypeId +
+                ", reason = " + reason +
+                ", status = " + status +
+                ", createTime = " + createTime +
+                ", updateTime = " + updateTime +
+                "}";
     }
 }
