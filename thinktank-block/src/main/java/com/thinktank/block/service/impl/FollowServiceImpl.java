@@ -31,23 +31,29 @@ public class FollowServiceImpl implements FollowService {
     @Autowired
     private BlockInfoMapper blockInfoMapper;
 
-    @Transactional
-    @Override
-    public void followBlock(Long id) {
-        BlockInfo blockInfo = blockInfoMapper.selectById(id);
+    // 查询板块是否存在以及是否关注过
+    private BlockFollow getBlockFollowRecord(Long blockId, Long userId) {
+        // 验证板块是否存在
+        BlockInfo blockInfo = blockInfoMapper.selectById(blockId);
         if (blockInfo == null) {
-            log.error("板块'{}'不存在", id);
+            log.error("板块'{}'不存在，操作用户'{}'", blockId, userId);
             throw new ThinkTankException("当前板块不存在！");
         }
 
+        // 查询是否已经关注过
+        LambdaQueryWrapper<BlockFollow> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(BlockFollow::getBlockId, blockId);
+        queryWrapper.eq(BlockFollow::getUserId, userId);
+        return blockFollowMapper.selectOne(queryWrapper);
+    }
+
+    @Transactional
+    @Override
+    public void followBlock(Long id) {
         // 获取登录用户id
         long loginId = StpUtil.getLoginIdAsLong();
 
-        // 查询是否已经关注过
-        LambdaQueryWrapper<BlockFollow> blockFollowLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        blockFollowLambdaQueryWrapper.eq(BlockFollow::getBlockId, id);
-        blockFollowLambdaQueryWrapper.eq(BlockFollow::getUserId, loginId);
-        BlockFollow blockFollow = blockFollowMapper.selectOne(blockFollowLambdaQueryWrapper);
+        BlockFollow blockFollow = getBlockFollowRecord(id, loginId);
 
         if (blockFollow != null) {
             throw new ThinkTankException("您已关注过当前板块，无需重复关注！");
@@ -70,7 +76,7 @@ public class FollowServiceImpl implements FollowService {
                 .stream().map(BlockFollow::getBlockId).collect(Collectors.toList());
 
         // 如果没有关注的板块则返回空
-        if (followListById.size()==0) {
+        if (followListById.size() == 0) {
             return null;
         }
 
@@ -83,5 +89,23 @@ public class FollowServiceImpl implements FollowService {
         return blockInfoList;
     }
 
+    @Transactional
+    @Override
+    public void unFollowBlock(Long id) {
+        // 获取登录用户id
+        long loginId = StpUtil.getLoginIdAsLong();
 
+        BlockFollow blockFollow = getBlockFollowRecord(id, loginId);
+
+        if (blockFollow == null) {
+            log.error("无法取消关注，用户'{}'没有关注过'{}'板块", loginId, id);
+            throw new ThinkTankException("您没有关注过该板块，无法取消关注！");
+        }
+
+        // 删除该用户关注记录
+        LambdaQueryWrapper<BlockFollow> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(BlockFollow::getBlockId, id);
+        queryWrapper.eq(BlockFollow::getUserId, loginId);
+        blockFollowMapper.delete(queryWrapper);
+    }
 }

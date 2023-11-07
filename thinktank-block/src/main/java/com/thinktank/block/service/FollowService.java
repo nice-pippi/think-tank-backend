@@ -22,4 +22,11 @@ public interface FollowService {
      * @return
      */
     List<BlockInfo> getAllFollow(Long id);
+
+    /**
+     * 取关板块
+     *
+     * @param id
+     */
+    void unFollowBlock(Long id);
 }

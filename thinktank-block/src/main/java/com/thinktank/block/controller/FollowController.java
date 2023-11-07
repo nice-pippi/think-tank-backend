@@ -36,4 +36,11 @@ public class FollowController {
     public R<List<BlockInfo>> getAllFollow(@PathVariable("id") Long id) {
         return R.success(followService.getAllFollow(id));
     }
+
+    @ApiOperation("取关板块")
+    @DeleteMapping("{id}")
+    public R<String> unFollowBlock(@PathVariable("id") Long id) {
+        followService.unFollowBlock(id);
+        return R.success("已取消关注该板块");
+    }
 }
