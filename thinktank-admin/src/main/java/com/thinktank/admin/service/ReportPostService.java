@@ -11,9 +11,25 @@ import com.thinktank.generator.vo.PostReportsVo;
  * @Version: 1.0
  */
 public interface ReportPostService {
+    /**
+     * 帖子举报记录分页查询
+     *
+     * @param postReportsDto
+     * @return
+     */
     IPage<PostReportsVo> page(PostReportsDto postReportsDto);
 
+    /**
+     * 禁言
+     *
+     * @param id
+     */
     void prohibit(Long id);
 
+    /**
+     * 驳回举报
+     *
+     * @param id
+     */
     void reject(Long id);
 }
