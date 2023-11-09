@@ -46,6 +46,12 @@ public class ReportServiceImpl implements ReportService {
             throw new ThinkTankException("当前帖子不存在！");
         }
 
+        // 验证当前帖子所属板块与用户提交的板块id是否相同
+        if (!postInfo.getBlockId().equals(postReports.getBlockId())) {
+            log.error("举报失败，帖子'{}'所属板块id与用户提交的板块id'{}'不相同，操作用户id'{}'", postReports.getPostId(), postReports.getBlockId(), loginId);
+            throw new ThinkTankException("操作非法！");
+        }
+
         // 若评论id不为空，则验证当前评论id合法性
         if (postReports.getCommentId() != null) {
             PostComments postComments = postCommentsMapper.selectById(postReports.getCommentId());

@@ -41,6 +41,6 @@ public class FollowController {
     @DeleteMapping("{id}")
     public R<String> unFollowBlock(@PathVariable("id") Long id) {
         followService.unFollowBlock(id);
-        return R.success("已取消关注该板块");
+        return R.success("已取消关注");
     }
 }
