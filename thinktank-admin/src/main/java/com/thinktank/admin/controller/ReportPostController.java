@@ -44,4 +44,11 @@ public class ReportPostController {
         reportPostService.reject(id);
         return R.success("已驳回该举报请求");
     }
+
+    @ApiOperation("删除帖子")
+    @DeleteMapping("{id}")
+    public R<String> delete(@PathVariable("id") Long id) {
+        reportPostService.delete(id);
+        return R.success("已删除该帖子");
+    }
 }

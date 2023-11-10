@@ -95,7 +95,7 @@ public class ReportPostServiceImpl implements ReportPostService {
         } else {
             // 若不为空则将角色更改为禁言角色
             sysUserRole.setRoleId(104L);
-            sysUserRoleMapper.update(sysUserRole,queryWrapper);
+            sysUserRoleMapper.update(sysUserRole, queryWrapper);
         }
 
         // 删除帖子
@@ -116,6 +116,26 @@ public class ReportPostServiceImpl implements ReportPostService {
         PostReports postReports = new PostReports();
         postReports.setId(id);
         postReports.setStatus(2);
+        postReportsMapper.updateById(postReports);
+    }
+
+    @Transactional
+    @Override
+    public void delete(Long id) {
+        // 查询该帖子信息
+        PostInfo postInfo = postInfoMapper.selectById(id);
+        if (postInfo == null) {
+            log.error("帖子'{}'不存在，可能已被删除", id);
+            throw new ThinkTankException("该帖子不存在，可能已被删除。");
+        }
+
+        // 删除帖子
+        postInfoMapper.deleteById(id);
+
+        // 更新处理记录
+        PostReports postReports = new PostReports();
+        postReports.setId(id);
+        postReports.setStatus(1);
         postReportsMapper.updateById(postReports);
     }
 }

@@ -32,4 +32,11 @@ public interface ReportPostService {
      * @param id
      */
     void reject(Long id);
+
+    /**
+     * 删除帖子
+     *
+     * @param id
+     */
+    void delete(Long id);
 }
