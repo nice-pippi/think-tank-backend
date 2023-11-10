@@ -110,7 +110,7 @@ public class ReportPostServiceImpl implements ReportPostService {
 
     @Override
     public void reject(Long id) {
-        PostInfo postInfo = validate(id);
+        validate(id);
 
         // 更新处理记录
         PostReports postReports = new PostReports();
@@ -122,15 +122,15 @@ public class ReportPostServiceImpl implements ReportPostService {
     @Transactional
     @Override
     public void delete(Long id) {
-        // 查询该帖子信息
-        PostInfo postInfo = postInfoMapper.selectById(id);
+        PostInfo postInfo = validate(id);
+
         if (postInfo == null) {
             log.error("帖子'{}'不存在，可能已被删除", id);
             throw new ThinkTankException("该帖子不存在，可能已被删除。");
         }
 
         // 删除帖子
-        postInfoMapper.deleteById(id);
+        postInfoMapper.deleteById(postInfo.getId());
 
         // 更新处理记录
         PostReports postReports = new PostReports();
