@@ -17,4 +17,7 @@ public class PostReportsVo extends PostReports {
 
     @ApiModelProperty("举报用户名称")
     private String username;
+
+    @ApiModelProperty("评论内容")
+    private String content;
 }

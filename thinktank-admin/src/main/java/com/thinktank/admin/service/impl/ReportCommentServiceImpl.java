@@ -3,13 +3,13 @@ package com.thinktank.admin.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.thinktank.admin.service.ReportPostService;
+import com.thinktank.admin.service.ReportCommentService;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.generator.dto.PostReportsDto;
-import com.thinktank.generator.entity.PostInfo;
+import com.thinktank.generator.entity.PostComments;
 import com.thinktank.generator.entity.PostReports;
 import com.thinktank.generator.entity.SysUserRole;
-import com.thinktank.generator.mapper.PostInfoMapper;
+import com.thinktank.generator.mapper.PostCommentsMapper;
 import com.thinktank.generator.mapper.PostReportsMapper;
 import com.thinktank.generator.mapper.SysUserRoleMapper;
 import com.thinktank.generator.vo.PostReportsVo;
@@ -20,18 +20,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @Author: 弘
- * @CreateTime: 2023年11⽉08⽇ 17:00
- * @Description: 帖子举报业务接口实现类
+ * @CreateTime: 2023年11⽉10⽇ 15:22
+ * @Description: 评论举报业务接口实现类
  * @Version: 1.0
  */
 @Slf4j
 @Service
-public class ReportPostServiceImpl implements ReportPostService {
+public class ReportCommentServiceImpl implements ReportCommentService {
     @Autowired
     private PostReportsMapper postReportsMapper;
 
     @Autowired
-    private PostInfoMapper postInfoMapper;
+    private PostCommentsMapper postCommentsMapper;
 
     @Autowired
     private SysUserRoleMapper sysUserRoleMapper;
@@ -39,11 +39,11 @@ public class ReportPostServiceImpl implements ReportPostService {
     @Override
     public IPage<PostReportsVo> page(PostReportsDto postReportsDto) {
         Page<PostReports> page = new Page<>(postReportsDto.getCurrentPage(), postReportsDto.getSize());
-        return postReportsMapper.getPostReportPage(page);
+        return postReportsMapper.getPostCommentReportPage(page);
     }
 
     // 举报记录验证
-    private PostInfo validate(Long id) {
+    private PostComments validate(Long id) {
         // 验证该记录是否存在
         PostReports postReports = postReportsMapper.selectById(id);
         if (postReports == null) {
@@ -57,27 +57,27 @@ public class ReportPostServiceImpl implements ReportPostService {
             throw new ThinkTankException("该记录已处理过！");
         }
 
-        // 帖子id
-        Long postId = postReports.getPostId();
+        // 帖子评论id
+        Long commentId = postReports.getCommentId();
 
-        // 查询该帖子信息
-        PostInfo postInfo = postInfoMapper.selectById(postId);
-        if (postInfo == null) {
-            log.error("帖子'{}'不存在，可能已被删除", postId);
-            throw new ThinkTankException("该帖子不存在，可能已被删除。");
+        // 查询该帖子评论记录
+        PostComments postComments = postCommentsMapper.selectById(commentId);
+        if (postComments == null) {
+            log.error("帖子评论'{}'不存在，可能已被删除", commentId);
+            throw new ThinkTankException("该帖子评论不存在，可能已被删除。");
         }
-        return postInfo;
+        return postComments;
     }
 
     @Transactional
     @Override
     public void prohibit(Long id) {
-        PostInfo postInfo = validate(id);
+        PostComments postComments = validate(id);
 
         // 被禁言用户id
-        Long userId = postInfo.getUserId();
+        Long userId = postComments.getUserId();
         // 该举报记录板块id
-        Long blockId = postInfo.getBlockId();
+        Long blockId = postComments.getBlockId();
 
         // 查询该用户所在版块身份
         LambdaQueryWrapper<SysUserRole> queryWrapper = new LambdaQueryWrapper<>();
@@ -98,8 +98,8 @@ public class ReportPostServiceImpl implements ReportPostService {
             sysUserRoleMapper.update(sysUserRole, queryWrapper);
         }
 
-        // 删除帖子
-        postInfoMapper.deleteById(postInfo.getId());
+        // 删除帖子评论
+        postCommentsMapper.deleteById(postComments.getId());
 
         // 更新处理记录
         PostReports postReports = new PostReports();
@@ -122,10 +122,10 @@ public class ReportPostServiceImpl implements ReportPostService {
     @Transactional
     @Override
     public void delete(Long id) {
-        PostInfo postInfo = validate(id);
+        PostComments postComments = validate(id);
 
-        // 删除帖子
-        postInfoMapper.deleteById(postInfo.getId());
+        // 删除帖子评论
+        postCommentsMapper.deleteById(postComments.getId());
 
         // 更新处理记录
         PostReports postReports = new PostReports();

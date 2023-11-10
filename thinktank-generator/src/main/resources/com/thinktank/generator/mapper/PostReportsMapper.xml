@@ -17,7 +17,23 @@
         WHERE t1.post_id = t2.id
           AND t1.user_id = t3.id
           AND t1.comment_id = 0
-          AND t1.STATUS = 0
+          AND t1.status = 0
           and t2.del_flag = 0
+    </select>
+    <select id="getPostCommentReportPage" resultType="com.thinktank.generator.vo.PostReportsVo">
+        SELECT t1.id,
+               t1.report_type_id,
+               t1.reason,
+               t1.create_time,
+               t1.status,
+               t2.content,
+               t3.username
+        FROM post_reports AS t1,
+             post_comments AS t2,
+             sys_user AS t3
+        WHERE t1.comment_id = t2.id
+          AND t1.user_id = t3.id
+          AND t1.comment_id != 0
+          AND t1.status = 0
     </select>
 </mapper>

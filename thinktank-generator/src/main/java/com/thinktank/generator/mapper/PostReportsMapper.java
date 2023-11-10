@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.thinktank.generator.entity.PostReports;
+import com.thinktank.generator.vo.PostCommentsVo;
 import com.thinktank.generator.vo.PostReportsVo;
 
 /**
@@ -22,4 +23,12 @@ public interface PostReportsMapper extends BaseMapper<PostReports> {
      * @return
      */
     IPage<PostReportsVo> getPostReportPage(Page<PostReports> page);
+
+    /**
+     * 帖子评论举报记录分页查询
+     *
+     * @param page
+     * @return
+     */
+    IPage<PostReportsVo> getPostCommentReportPage(Page<PostReports> page);
 }
