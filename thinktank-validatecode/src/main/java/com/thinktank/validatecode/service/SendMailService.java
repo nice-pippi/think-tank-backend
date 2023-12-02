@@ -7,5 +7,13 @@ package com.thinktank.validatecode.service;
  * @Version: 1.0
  */
 public interface SendMailService {
+    /**
+     * 发送邮件
+     *
+     * @param title       邮件标题
+     * @param acceptEmail 接收邮件的邮箱地址
+     * @param context     邮件内容
+     */
     void sendMail(String title, String acceptEmail, String context);
+
 }

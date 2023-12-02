@@ -12,17 +12,17 @@ public interface FileService {
     /**
      * 上传用户头像
      *
-     * @param file
-     * @return
+     * @param file 用户头像文件
+     * @return 用户头像地址
      */
     String uploadUserAvatar(MultipartFile file);
 
     /**
      * 上传板块头像
      *
-     * @param file
-     * @param id
-     * @return
+     * @param file 板块头像文件
+     * @param id   板块ID
+     * @return 板块头像地址
      */
     String uploadBlockAvatar(MultipartFile file, Long id);
 
@@ -30,8 +30,8 @@ public interface FileService {
     /**
      * 上传帖子图片
      *
-     * @param file
-     * @return
+     * @param file 帖子图片文件
+     * @return 帖子图片地址
      */
     String uploadPostImg(MultipartFile file);
 }

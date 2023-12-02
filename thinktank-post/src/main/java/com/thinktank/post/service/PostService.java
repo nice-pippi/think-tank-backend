@@ -16,61 +16,61 @@ public interface PostService {
     /**
      * 发布帖子
      *
-     * @param postInfoDto
+     * @param postInfoDto 发布帖子所需信息
      */
     void publish(PostInfoDto postInfoDto);
 
     /**
      * 删除帖子
      *
-     * @param postId
+     * @param postId 帖子ID
      */
     void delete(Long postId);
 
     /**
      * 首页大厅获取最新帖子
      *
-     * @return
+     * @return 最新帖子列表
      */
     List<PostInfoVo> getLatestPosts();
 
     /**
      * 根据板块id获取当前板块下帖子分页
      *
-     * @param postInfoDto
-     * @return
+     * @param postInfoDto 查询帖子信息
+     * @return 当前板块下帖子分页
      */
     R<List<PostInfoVo>> page(PostInfoDto postInfoDto);
 
     /**
      * 根据帖子id获取帖子标题
      *
-     * @param postId
-     * @return
+     * @param postId 帖子ID
+     * @return 帖子标题
      */
     String getTitle(Long postId);
 
     /**
      * 根据用户id获取已发布的帖子
      *
-     * @param id
-     * @param currentPage
-     * @return
+     * @param id          用户ID
+     * @param currentPage 当前页面
+     * @return 已发布的帖子列表
      */
     R<List<PostInfoVo>> getPageByPublishedPosts(Long id, Integer currentPage);
 
     /**
      * 收藏帖子
      *
-     * @param postId
+     * @param postId 帖子ID
      */
     void addLikePost(Long postId);
 
     /**
      * 验证当前登录用户是否收藏了当前帖子
      *
-     * @param postId
-     * @return
+     * @param postId 帖子ID
+     * @return 收藏状态，true表示已收藏，false表示未收藏
      */
     Boolean isFavorite(Long postId);
 }

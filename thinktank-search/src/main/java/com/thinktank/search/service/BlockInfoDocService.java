@@ -13,8 +13,8 @@ public interface BlockInfoDocService {
     /**
      * 添加板块信息文档
      *
-     * @param blockInfo
-     * @return
+     * @param blockInfo - 版块信息
+     * @return 添加成功的板块信息文档
      */
     BlockInfoDoc addBlockInfoDoc(BlockInfo blockInfo);
 }

@@ -19,14 +19,14 @@ public interface FollowService {
     /**
      * 根据用户id获取所有已关注板块
      *
-     * @return
+     * @return 所有已关注板块
      */
     List<BlockInfo> getAllFollow(Long id);
 
     /**
      * 取关板块
      *
-     * @param id
+     * @param id 板块id
      */
     void unFollowBlock(Long id);
 }

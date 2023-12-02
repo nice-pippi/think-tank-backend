@@ -14,29 +14,29 @@ public interface ReportCommentService {
     /**
      * 帖子评论举报记录分页查询
      *
-     * @param postReportsDto
-     * @return
+     * @param postReportsDto 传入的帖子评论举报记录查询条件
+     * @return 返回分页后的帖子评论举报记录数据集合
      */
     IPage<PostReportsVo> page(PostReportsDto postReportsDto);
 
     /**
      * 禁言
      *
-     * @param id
+     * @param id 举报记录ID
      */
     void prohibit(Long id);
 
     /**
      * 驳回举报
      *
-     * @param id
+     * @param id 举报记录ID
      */
     void reject(Long id);
 
     /**
      * 删除帖子评论
      *
-     * @param id
+     * @param id 举报记录ID
      */
     void delete(Long id);
 }

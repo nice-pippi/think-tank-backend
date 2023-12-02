@@ -1,17 +1,11 @@
 package com.thinktank.search.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.ObjectMapperUtil;
-import com.thinktank.generator.entity.BlockInfo;
 import com.thinktank.generator.entity.PostComments;
 import com.thinktank.generator.entity.PostInfo;
-import com.thinktank.generator.entity.SysUser;
-import com.thinktank.generator.mapper.BlockInfoMapper;
 import com.thinktank.generator.mapper.PostCommentsMapper;
-import com.thinktank.generator.mapper.SysUserMapper;
 import com.thinktank.generator.vo.PostCommentsVo;
-import com.thinktank.generator.vo.PostInfoVo;
 import com.thinktank.search.doc.PostInfoDoc;
 import com.thinktank.search.service.PostInfoDocService;
 import org.springframework.amqp.core.Message;
@@ -36,12 +30,6 @@ import java.util.regex.Pattern;
 public class PostInfoDocServiceImpl implements PostInfoDocService {
     @Autowired
     private PostCommentsMapper postCommentsMapper;
-
-    @Autowired
-    private BlockInfoMapper blockInfoMapper;
-
-    @Autowired
-    private SysUserMapper sysUserMapper;
 
     @Autowired
     private ElasticsearchRestTemplate elasticsearchRestTemplate;

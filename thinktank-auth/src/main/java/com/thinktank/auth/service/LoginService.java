@@ -15,7 +15,7 @@ public interface LoginService {
      *
      * @param code  微信返回的code
      * @param state 微信返回的state
-     * @return
+     * @return token以及权限码
      */
     String wxLogin(String code, String state);
 
@@ -23,7 +23,7 @@ public interface LoginService {
      * 账号密码登录
      *
      * @param sysUser
-     * @return
+     * @return 用户token以及权限码
      */
     R<String> passwordLogin(SysUser sysUser);
 
@@ -31,7 +31,7 @@ public interface LoginService {
      * 管理员登录
      *
      * @param sysUser
-     * @return
+     * @return 管理员token
      */
     String adminLogin(SysUser sysUser);
 }

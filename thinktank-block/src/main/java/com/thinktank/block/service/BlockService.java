@@ -19,34 +19,45 @@ public interface BlockService {
     /**
      * 获取所有板块分类
      *
-     * @return
+     * @return 返回板块分类的列表
      */
     List<BlockClassifyDto> getBlockClassify();
 
     /**
      * 申请创建板块
      *
-     * @param blockApplicationBlock
+     * @param blockApplicationBlock 板块申请信息
      */
     void applicationBlock(BlockApplicationBlock blockApplicationBlock);
 
     /**
      * 根据id获取板块信息
      *
-     * @param id
-     * @return
+     * @param id 板块的id
+     * @return 返回板块信息的视图对象
      */
     BlockInfoVo getBlockInfo(Long id);
 
     /**
      * 更改板块信息
      *
-     * @param blockInfo
-     * @return
+     * @param blockInfo 板块信息
+     * @return 返回更改后的板块信息的视图对象
      */
     BlockInfoVo update(BlockInfo blockInfo);
 
+    /**
+     * 获取所有板块大分类
+     *
+     * @return 返回板块大分类的列表
+     */
     List<BlockBigType> getBlockBigTypeList();
 
+    /**
+     * 获取所有板块小分类
+     *
+     * @return 返回板块小分类的列表
+     */
     List<BlockSmallType> getBlockSmallTypeList();
+
 }

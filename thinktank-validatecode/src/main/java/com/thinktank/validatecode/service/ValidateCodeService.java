@@ -1,7 +1,5 @@
 package com.thinktank.validatecode.service;
 
-import com.thinktank.common.utils.R;
-
 /**
  * @Author: 弘
  * @CreateTime: 2023年09⽉10⽇ 15:18
@@ -14,14 +12,13 @@ public interface ValidateCodeService {
      *
      * @param email 邮箱
      */
-void  generateCode(String email);
+    void generateCode(String email);
 
     /**
      * 校验验证码
      *
      * @param email        邮箱
      * @param validateCode 验证码
-     * @return
      */
     void validateCode(String email, String validateCode);
 }

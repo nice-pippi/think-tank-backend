@@ -3,9 +3,7 @@ package com.thinktank.auth.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.thinktank.auth.service.AddUserService;
 import com.thinktank.generator.entity.SysUser;
-import com.thinktank.generator.entity.SysUserRole;
 import com.thinktank.generator.mapper.SysUserMapper;
-import com.thinktank.generator.mapper.SysUserRoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,9 +20,6 @@ import java.util.Map;
 public class AddUserServiceImpl implements AddUserService {
     @Autowired
     private SysUserMapper sysUserMapper;
-
-    @Autowired
-    private SysUserRoleMapper sysUserRoleMapper;
 
     @Transactional
     @Override

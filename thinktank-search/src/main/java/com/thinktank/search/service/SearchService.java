@@ -18,16 +18,16 @@ public interface SearchService {
     /**
      * 搜索板块
      *
-     * @param blockInfoDocDto
-     * @return
+     * @param blockInfoDocDto 板块信息数据传输对象
+     * @return 板块文档信息列表
      */
     R<List<BlockInfoDoc>> searchBlock(BlockInfoDocDto blockInfoDocDto);
 
     /**
      * 搜索帖子
      *
-     * @param postInfoDocDto
-     * @return
+     * @param postInfoDocDto 帖子信息数据传输对象
+     * @return 帖子文档信息列表
      */
     R<List<PostInfoDoc>> searchPost(PostInfoDocDto postInfoDocDto);
 }

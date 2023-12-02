@@ -14,8 +14,8 @@ public interface ApplicationMasterManageService {
     /**
      * 获取板主申请板块分页
      *
-     * @param blockApplicationMasterDto
-     * @return
+     * @param blockApplicationMasterDto 包含查询条件的板主申请分页参数
+     * @return 查询结果的板主申请分页对象
      */
     IPage<BlockApplicationMasterVo> page(BlockApplicationMasterDto blockApplicationMasterDto);
 
@@ -36,7 +36,7 @@ public interface ApplicationMasterManageService {
     /**
      * 删除板主申请记录
      *
-     * @param id
+     * @param id 申请id
      */
     void delete(Long id);
 }

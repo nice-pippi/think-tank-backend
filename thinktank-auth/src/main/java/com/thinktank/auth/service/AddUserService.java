@@ -13,8 +13,9 @@ import java.util.Map;
 public interface AddUserService {
     /**
      * 添加用户
-     * @param userinfo
-     * @return
+     *
+     * @param userinfo 用户信息
+     * @return 返回添加的用户对象
      */
     SysUser addUser(Map<String, String> userinfo);
 }

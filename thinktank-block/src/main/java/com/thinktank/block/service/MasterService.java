@@ -13,15 +13,17 @@ public interface MasterService {
     /**
      * 申请板主
      *
-     * @param blockApplicationMaster
+     * @param blockApplicationMaster - 申请板主实例
+     * @return - 返回申请结果字符串
      */
     String applicationMaster(BlockApplicationMaster blockApplicationMaster);
 
     /**
      * 获取当前板块板主以及小板主信息
      *
-     * @param id
-     * @return
+     * @param id - 板块ID
+     * @return - 返回当前板块板主以及小板主信息
      */
     BlockMasterListVo getAllBlockMasterById(Long id);
+
 }

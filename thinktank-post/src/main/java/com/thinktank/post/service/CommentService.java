@@ -16,38 +16,38 @@ public interface CommentService {
     /**
      * 帖子评论分页
      *
-     * @param postId
-     * @param currentPage
-     * @return
+     * @param postId      帖子ID
+     * @param currentPage 当前页码
+     * @return 分页结果
      */
     IPage<PostCommentsVo> page(Long postId, Integer currentPage);
 
     /**
      * 对帖子发表评论
      *
-     * @param postComments
+     * @param postComments 评论内容
      */
     void replyPost(PostComments postComments);
 
     /**
      * 回复评论
      *
-     * @param postComments
-     * @return
+     * @param postComments 回复的评论
+     * @return 回复后的评论
      */
     PostComments replyComment(PostComments postComments);
 
     /**
      * 评论点赞
      *
-     * @param postCommentLikes
+     * @param postCommentLikes 点赞评论信息
      */
     void addLikeComment(PostCommentLikes postCommentLikes);
 
     /**
      * 取消评论点赞
      *
-     * @param postCommentLikes
+     * @param postCommentLikes 点赞评论信息
      */
     void removeLikeComment(PostCommentLikes postCommentLikes);
 }

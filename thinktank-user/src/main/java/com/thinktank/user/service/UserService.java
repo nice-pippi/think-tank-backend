@@ -13,15 +13,16 @@ public interface UserService {
     /**
      * 获取用户信息
      *
-     * @return
+     * @param id 用户ID
+     * @return 用户信息
      */
     SysUser getUserInfo(Long id);
 
     /**
      * 修改用户信息
      *
-     * @param sysUserDto
-     * @return
+     * @param sysUserDto 用户信息Dto对象
+     * @return 修改后的用户信息
      */
     SysUser update(SysUserDto sysUserDto);
 }

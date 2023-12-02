@@ -12,7 +12,7 @@ public interface ReportService {
     /**
      * 举报帖子/评论
      *
-     * @param postReports
+     * @param postReports 要举报的帖子/评论
      */
     void report(PostReports postReports);
 }

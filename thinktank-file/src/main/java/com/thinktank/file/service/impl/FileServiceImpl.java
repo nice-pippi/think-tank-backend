@@ -106,7 +106,7 @@ public class FileServiceImpl implements FileService {
         // 文件存储路径
         String object = String.format("/%s", UUID.randomUUID());
 
-        // 返回帖子地址
+        // 返回帖子图片地址
         return uploadToMinio(file, bucket, object);
     }
 }

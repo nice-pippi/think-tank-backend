@@ -76,8 +76,7 @@ public class LoginServiceImpl implements LoginService {
         List<String> permissionList = getPermissionList(sysUser.getId());
 
         // 返回token以及权限码给用户
-        String base = String.format("?token=%s&permissions=%s", StpUtil.getTokenValue(), permissionList);
-        return base;
+        return String.format("?token=%s&permissions=%s", StpUtil.getTokenValue(), permissionList);
     }
 
     @Override
