@@ -34,13 +34,13 @@ public class ScoreServiceImpl implements ScoreService {
 
         // 验证帖子是否存在
         if (postInfo == null) {
-            log.error("帖子'{}'不存在，操作用户id:{}", postScore.getPostId(), loginId);
+            log.warn("帖子'{}'不存在，操作用户id:{}", postScore.getPostId(), loginId);
             throw new ThinkTankException("当前帖子不存在！");
         }
 
         // 验证板块id与帖子id是否匹配
         if (!postInfo.getBlockId().equals(postScore.getBlockId())) {
-            log.error("板块id'{}'与帖子id'{}'不匹配，操作用户id:{}", postScore.getBlockId(), postScore.getPostId(), loginId);
+            log.warn("板块id'{}'与帖子id'{}'不匹配，操作用户id:{}", postScore.getBlockId(), postScore.getPostId(), loginId);
             throw new ThinkTankException("操作非法！");
         }
 

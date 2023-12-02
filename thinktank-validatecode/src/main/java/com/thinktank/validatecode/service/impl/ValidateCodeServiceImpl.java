@@ -38,7 +38,7 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
         if (ops.get(namespace) != null) {
             // 若已存在查看当前生命周期是否大于等于240，若是，则代表获取验证码间隔没到1分钟
             if (redisTemplate.getExpire(namespace) >= 240) {
-                log.error("获取验证码间隔未到1分钟,邮箱：{}", email);
+                log.warn("获取验证码间隔未到1分钟,邮箱：{}", email);
                 throw new ThinkTankException("每次发送验证码间隔为1分钟，请稍后再发送验证码！");
             }
         }

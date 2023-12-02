@@ -133,7 +133,7 @@ public class BlockServiceImpl implements BlockService {
         wrapper.eq(BlockInfo::getBlockName, blockApplicationBlock.getBlockName());
         Long count = blockInfoMapper.selectCount(wrapper);
         if (count > 0) {
-            log.error("已存在'{}'板块，申请用户id为:{}", blockApplicationBlock.getBlockName(), id);
+            log.warn("已存在'{}'板块，申请用户id为:{}", blockApplicationBlock.getBlockName(), id);
             throw new ThinkTankException("已存在同名板块！");
         }
 
@@ -182,7 +182,7 @@ public class BlockServiceImpl implements BlockService {
             BlockInfo blockInfo = blockInfoMapper.selectOne(blockInfoLambdaQueryWrapper);
 
             if (blockInfo == null) {
-                log.error("板块'{}'不存在", id);
+                log.warn("板块'{}'不存在", id);
                 throw new ThinkTankException("该板块不存在！");
             }
 

@@ -58,7 +58,7 @@ public class ApplicationBlockManageServiceImpl implements ApplicationBlockManage
         BlockApplicationBlock blockApplicationBlock = blockApplicationBlockMapper.selectById(id);
 
         if (blockApplicationBlock == null) {
-            log.error("未找到记录，该记录id为:{}", id);
+            log.warn("未找到记录，该记录id为:{}", id);
             throw new ThinkTankException("未找到该申请记录!");
         }
         return blockApplicationBlock;
@@ -71,7 +71,7 @@ public class ApplicationBlockManageServiceImpl implements ApplicationBlockManage
 
         // 若不为‘0’，则代表该申请记录已处理，无需重复处理
         if (!blockApplicationBlock.getStatus().equals(0)) {
-            log.error("该记录已处理过，申请记录id:{}", blockApplicationBlock.getId());
+            log.warn("该记录已处理过，申请记录id:{}", blockApplicationBlock.getId());
             throw new ThinkTankException("该记录已处理过！");
         }
 
@@ -114,7 +114,7 @@ public class ApplicationBlockManageServiceImpl implements ApplicationBlockManage
 
         // 若不为‘0’，则代表该申请记录已处理，无需重复处理
         if (!blockApplicationBlock.getStatus().equals(0)) {
-            log.error("该记录已处理过，申请记录id:{}", blockApplicationBlock.getId());
+            log.warn("该记录已处理过，申请记录id:{}", blockApplicationBlock.getId());
             throw new ThinkTankException("该记录已处理过！");
         }
         blockApplicationBlock.setStatus(2);

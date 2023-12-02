@@ -47,13 +47,13 @@ public class ReportCommentServiceImpl implements ReportCommentService {
         // 验证该记录是否存在
         PostReports postReports = postReportsMapper.selectById(id);
         if (postReports == null) {
-            log.error("举报记录'{}'不存在", id);
+            log.warn("举报记录'{}'不存在", id);
             throw new ThinkTankException("该记录不存在！");
         }
 
         // 验证该记录是否处理过
         if (!postReports.getStatus().equals(0)) {
-            log.error("记录'{}'已处理", id);
+            log.warn("记录'{}'已处理", id);
             throw new ThinkTankException("该记录已处理过！");
         }
 
@@ -63,7 +63,7 @@ public class ReportCommentServiceImpl implements ReportCommentService {
         // 查询该帖子评论记录
         PostComments postComments = postCommentsMapper.selectById(commentId);
         if (postComments == null) {
-            log.error("帖子评论'{}'不存在，可能已被删除", commentId);
+            log.warn("帖子评论'{}'不存在，可能已被删除", commentId);
             throw new ThinkTankException("该帖子评论不存在，可能已被删除。");
         }
         return postComments;

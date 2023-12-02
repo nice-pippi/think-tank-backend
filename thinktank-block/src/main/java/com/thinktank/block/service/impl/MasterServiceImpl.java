@@ -56,7 +56,7 @@ public class MasterServiceImpl implements MasterService {
         // 查询板块是否存在
         BlockInfo blockInfo = blockInfoMapper.selectById(blockApplicationMaster.getBlockId());
         if (blockInfo == null) {
-            log.error("板块'{}'不存在", blockApplicationMaster.getBlockId());
+            log.warn("板块'{}'不存在", blockApplicationMaster.getBlockId());
             throw new ThinkTankException(String.format("你当前申请板块id不存在！"));
         }
 
@@ -72,10 +72,10 @@ public class MasterServiceImpl implements MasterService {
         if (sysUserRole != null) {
             if (sysUserRole.getRoleId().equals(102L) || sysUserRole.getRoleId().equals(103L)) {
                 String masterType = (sysUserRole.getRoleId().equals(102L)) ? "板主" : "小板主"; // 102为版主身份
-                log.error("用户'{}'已是'{}'板块{}身份", id, sysUserRole.getBlockId(), masterType);
+                log.warn("用户'{}'已是'{}'板块{}身份", id, sysUserRole.getBlockId(), masterType);
                 throw new ThinkTankException(String.format("你已经是本板块的%s，无法重复申请本板块其他身份！", masterType));
             } else if (sysUserRole.getRoleId().equals(104L)) {
-                log.error("用户:'{}'在'{}'板块已被禁言，无法申请板主", id, blockApplicationMaster.getBlockId());
+                log.warn("用户:'{}'在'{}'板块已被禁言，无法申请板主", id, blockApplicationMaster.getBlockId());
                 throw new ThinkTankException("你在本板块已被禁言，无法申请板主身份！");
             }
         }
@@ -86,7 +86,7 @@ public class MasterServiceImpl implements MasterService {
         blockFollowLambdaQueryWrapper.eq(BlockFollow::getUserId, id);
         Long count = blockFollowMapper.selectCount(blockFollowLambdaQueryWrapper);
         if (count == 0) {
-            log.error("用户:'{}'未关注'{}'板块，无法申请板主", id, blockApplicationMaster.getBlockId());
+            log.warn("用户:'{}'未关注'{}'板块，无法申请板主", id, blockApplicationMaster.getBlockId());
             throw new ThinkTankException("你暂未关注本板块，无法申请板主身份！");
         }
 
@@ -106,11 +106,11 @@ public class MasterServiceImpl implements MasterService {
         // 查询申请状态 （0:待处理 1:已通过）
         String masterType = (one.getRoleId().equals(102L)) ? "板主" : "小板主"; // 102为版主身份
         if (one.getStatus().equals(0)) {
-            log.error("用户'{}'在'{}'板块申请{}身份还在审核中", id, one.getBlockId(), masterType);
+            log.warn("用户'{}'在'{}'板块申请{}身份还在审核中", id, one.getBlockId(), masterType);
             throw new ThinkTankException(String.format("你当前板块的%s申请还在审核当中，请勿重复申请！", masterType));
         }
         if (one.getStatus().equals(1)) {
-            log.error("用户'{}'已是'{}'板块{}身份", id, one.getBlockId(), masterType);
+            log.warn("用户'{}'已是'{}'板块{}身份", id, one.getBlockId(), masterType);
             throw new ThinkTankException(String.format("你已经是本板块的%s，无法重复申请本板块其他身份！", masterType));
         }
 
@@ -134,7 +134,7 @@ public class MasterServiceImpl implements MasterService {
         // 查询板块是否存在
         BlockInfo blockInfo = blockInfoMapper.selectById(id);
         if (blockInfo == null) {
-            log.error("板块'{}'不存在", id);
+            log.warn("板块'{}'不存在", id);
             throw new ThinkTankException(String.format("你当前申请板块id不存在！"));
         }
 

@@ -45,7 +45,7 @@ public class ApplicationMasterManageServiceImpl implements ApplicationMasterMana
         BlockApplicationMaster blockApplicationMaster = blockApplicationMasterMapper.selectById(id);
 
         if (blockApplicationMaster == null) {
-            log.error("未找到记录，该记录id为:{}", id);
+            log.warn("未找到记录，该记录id为:{}", id);
             throw new ThinkTankException("未找到该申请记录!");
         }
         return blockApplicationMaster;
@@ -58,7 +58,7 @@ public class ApplicationMasterManageServiceImpl implements ApplicationMasterMana
 
         // 若不为‘0’，则代表该申请记录已处理，无需重复处理
         if (!blockApplicationMaster.getStatus().equals(0)) {
-            log.error("该记录已处理过，申请记录id:{}", blockApplicationMaster.getId());
+            log.warn("该记录已处理过，申请记录id:{}", blockApplicationMaster.getId());
             throw new ThinkTankException("该记录已处理过！");
         }
 
@@ -84,7 +84,7 @@ public class ApplicationMasterManageServiceImpl implements ApplicationMasterMana
 
         // 若不为‘0’，则代表该申请记录已处理，无需重复处理
         if (!blockApplicationMaster.getStatus().equals(0)) {
-            log.error("该记录已处理过，申请记录id:{}", blockApplicationMaster.getId());
+            log.warn("该记录已处理过，申请记录id:{}", blockApplicationMaster.getId());
             throw new ThinkTankException("该记录已处理过！");
         }
 

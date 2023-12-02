@@ -117,7 +117,7 @@ public class CommentServiceImpl implements CommentService {
         // 验证当前帖子是否存在
         PostInfo postInfo = postInfoMapper.selectById(postComments.getPostId());
         if (postInfo == null) {
-            log.error("帖子'{}'不存在", postComments.getPostId());
+            log.warn("帖子'{}'不存在", postComments.getPostId());
             throw new ThinkTankException("当前帖子不存在！");
         }
 
@@ -126,7 +126,7 @@ public class CommentServiceImpl implements CommentService {
 
         // 验证用户提交的表单板块id与该帖子所属的板块id是否匹配
         if (!postInfo.getBlockId().equals(postComments.getBlockId())) {
-            log.error("当前帖子id'{}'不属于'{}'板块，操作用户id为'{}'", postComments.getPostId(), postComments.getBlockId(), loginId);
+            log.warn("当前帖子id'{}'不属于'{}'板块，操作用户id为'{}'", postComments.getPostId(), postComments.getBlockId(), loginId);
             throw new ThinkTankException("操作非法！");
         }
 
@@ -137,7 +137,7 @@ public class CommentServiceImpl implements CommentService {
         queryWrapper.eq(SysUserRole::getBlockId, postComments.getBlockId());
         Long count = sysUserRoleMapper.selectCount(queryWrapper);
         if (count > 0) {
-            log.error("当前板块'{}'下用户'{}'已被禁言，无法发表评论", postComments.getBlockId(), loginId);
+            log.warn("当前板块'{}'下用户'{}'已被禁言，无法发表评论", postComments.getBlockId(), loginId);
             throw new ThinkTankException("您在当前板块下已被禁言，无法发表评论！！");
         }
         return loginId;
@@ -160,7 +160,7 @@ public class CommentServiceImpl implements CommentService {
         // 验证父级评论是否存在
         PostComments parent = postCommentsMapper.selectById(postComments.getParentId());
         if (parent == null) {
-            log.error("因该评论不存在，用户评论区回复失败，用户id:{},被评论id:{}", loginId, postComments.getParentId());
+            log.warn("因该评论不存在，用户评论区回复失败，用户id:{},被评论id:{}", loginId, postComments.getParentId());
             throw new ThinkTankException("该评论不存在！");
         }
 
@@ -182,7 +182,7 @@ public class CommentServiceImpl implements CommentService {
         PostComments postComments = postCommentsMapper.selectById(commentId);
 
         if (postComments == null) {
-            log.error("当前评论id'{}'不存在，操作用户'{}'", commentId, loginId);
+            log.warn("当前评论id'{}'不存在，操作用户'{}'", commentId, loginId);
             throw new ThinkTankException("评论不存在！");
         }
 
@@ -191,7 +191,7 @@ public class CommentServiceImpl implements CommentService {
 
         // 点赞记录唯一性验证
         if (userLikes.contains(loginId)) {
-            log.error("用户重复点赞，用户id'{}'，评论id'{}'", loginId, commentId);
+            log.warn("用户重复点赞，用户id'{}'，评论id'{}'", loginId, commentId);
             throw new ThinkTankException("请勿重复点赞！");
         }
 
@@ -210,7 +210,7 @@ public class CommentServiceImpl implements CommentService {
         PostComments postComments = postCommentsMapper.selectById(commentId);
 
         if (postComments == null) {
-            log.error("当前评论id'{}'不存在，操作用户'{}'", commentId, loginId);
+            log.warn("当前评论id'{}'不存在，操作用户'{}'", commentId, loginId);
             throw new ThinkTankException("评论不存在！");
         }
 
@@ -219,7 +219,7 @@ public class CommentServiceImpl implements CommentService {
 
         // 验证是否在点赞记录里
         if (!userLikes.contains(loginId)) {
-            log.error("用户取消点赞失败，用户id'{}'，评论id'{}'", loginId, postCommentLikes.getCommentId());
+            log.warn("用户取消点赞失败，用户id'{}'，评论id'{}'", loginId, postCommentLikes.getCommentId());
             throw new ThinkTankException("取消点赞失败");
         }
 

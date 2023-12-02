@@ -42,13 +42,13 @@ public class ReportServiceImpl implements ReportService {
         // 验证当前帖子id是否存在
         PostInfo postInfo = postInfoMapper.selectById(postReports.getPostId());
         if (postInfo == null) {
-            log.error("举报失败，帖子'{}'不存在，操作用户'{}'", postReports.getPostId(), loginId);
+            log.warn("举报失败，帖子'{}'不存在，操作用户'{}'", postReports.getPostId(), loginId);
             throw new ThinkTankException("当前帖子不存在！");
         }
 
         // 验证当前帖子所属板块与用户提交的板块id是否相同
         if (!postInfo.getBlockId().equals(postReports.getBlockId())) {
-            log.error("举报失败，帖子'{}'所属板块id与用户提交的板块id'{}'不相同，操作用户id'{}'", postReports.getPostId(), postReports.getBlockId(), loginId);
+            log.warn("举报失败，帖子'{}'所属板块id与用户提交的板块id'{}'不相同，操作用户id'{}'", postReports.getPostId(), postReports.getBlockId(), loginId);
             throw new ThinkTankException("操作非法！");
         }
 
@@ -57,12 +57,12 @@ public class ReportServiceImpl implements ReportService {
             PostComments postComments = postCommentsMapper.selectById(postReports.getCommentId());
             // 验证当前评论id是否存在
             if (postComments == null) {
-                log.error("举报失败，评论'{}'不存在，操作用户'{}'", postReports.getPostId(), loginId);
+                log.warn("举报失败，评论'{}'不存在，操作用户'{}'", postReports.getPostId(), loginId);
                 throw new ThinkTankException("当前评论不存在！");
             }
             // 验证当前评论id与帖子id是否匹配
             if (!postComments.getPostId().equals(postReports.getPostId())) {
-                log.error("举报失败，当前评论'{}'与帖子'{}'不匹配，操作用户'{}'", postReports.getCommentId(), postReports.getPostId(), loginId);
+                log.warn("举报失败，当前评论'{}'与帖子'{}'不匹配，操作用户'{}'", postReports.getCommentId(), postReports.getPostId(), loginId);
                 throw new ThinkTankException("操作非法");
             }
         }
@@ -75,7 +75,7 @@ public class ReportServiceImpl implements ReportService {
         queryWrapper.eq(postReports.getCommentId() != null, PostReports::getCommentId, postReports.getCommentId());
         PostReports report = postReportsMapper.selectOne(queryWrapper);
         if (report != null) {
-            log.error("用户'{}'重复举报,举报记录id为'{}'", loginId, report.getId());
+            log.warn("用户'{}'重复举报,举报记录id为'{}'", loginId, report.getId());
             throw new ThinkTankException("请勿重复举报！");
         }
 

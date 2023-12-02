@@ -36,7 +36,7 @@ public class SendMailServiceImpl implements SendMailService {
         try {
             javaMailSender.send(message);
         } catch (Exception e) {
-            log.error("邮箱不存在:{}", acceptEmail);
+            log.warn("邮箱不存在:{}", acceptEmail);
             throw new ThinkTankException("邮箱不存在！");
         }
     }

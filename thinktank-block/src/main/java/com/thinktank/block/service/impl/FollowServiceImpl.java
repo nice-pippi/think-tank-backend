@@ -36,7 +36,7 @@ public class FollowServiceImpl implements FollowService {
         // 验证板块是否存在
         BlockInfo blockInfo = blockInfoMapper.selectById(blockId);
         if (blockInfo == null) {
-            log.error("板块'{}'不存在，操作用户'{}'", blockId, userId);
+            log.warn("板块'{}'不存在，操作用户'{}'", blockId, userId);
             throw new ThinkTankException("当前板块不存在！");
         }
 
@@ -98,7 +98,7 @@ public class FollowServiceImpl implements FollowService {
         BlockFollow blockFollow = getBlockFollowRecord(id, loginId);
 
         if (blockFollow == null) {
-            log.error("无法取消关注，用户'{}'没有关注过'{}'板块", loginId, id);
+            log.warn("无法取消关注，用户'{}'没有关注过'{}'板块", loginId, id);
             throw new ThinkTankException("您没有关注过该板块，无法取消关注！");
         }
 

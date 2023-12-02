@@ -41,7 +41,7 @@ public class FileServiceImpl implements FileService {
                     .stream(file.getInputStream(), file.getSize(), -1)
                     .build());
         } catch (Exception e) {
-            log.error("上传minio失败，桶:{}, 文件:{}", bucket, file.getOriginalFilename());
+            log.warn("上传minio失败，桶:{}, 文件:{}", bucket, file.getOriginalFilename());
             throw new ThinkTankException("上传minio失败");
         }
 
@@ -78,7 +78,7 @@ public class FileServiceImpl implements FileService {
         R<SysUser> updateResult = userClient.updateUser(sysUserDto);
 
         if (updateResult.getStatus() != 200) {
-            log.error("头像更改失败，用户id:{}", sysUserDto.getId());
+            log.warn("头像更改失败，用户id:{}", sysUserDto.getId());
             throw new ThinkTankException(updateResult.getMsg());
         }
 
