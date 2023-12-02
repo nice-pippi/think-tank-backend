@@ -72,6 +72,12 @@ public class PostController {
         return R.success("已收藏");
     }
 
+    @ApiOperation("验证当前登录用户是否收藏了当前帖子")
+    @GetMapping("/isFavorite/{postId}")
+    public R<Boolean> isFavorite(@PathVariable("postId") Long postId) {
+        return R.success(postService.isFavorite(postId));
+    }
+
 }
 
 

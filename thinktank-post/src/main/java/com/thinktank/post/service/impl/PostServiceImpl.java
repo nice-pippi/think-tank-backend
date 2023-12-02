@@ -357,8 +357,8 @@ public class PostServiceImpl implements PostService {
     /**
      * 验证帖子是否存在，若存在则返回帖子信息
      *
-     * @param postId
-     * @return
+     * @param postId 帖子ID
+     * @return 存在的帖子信息
      */
     private PostInfo getPostExists(Long postId) {
         PostInfo postInfo = postInfoMapper.selectById(postId);
@@ -370,19 +370,31 @@ public class PostServiceImpl implements PostService {
         return postInfo;
     }
 
+    /**
+     * 根据帖子ID和登录用户ID获取收藏记录
+     *
+     * @param postId  帖子ID
+     * @param loginId 登录用户ID
+     * @return 收藏记录
+     */
+    private PostLikes getPostLikes(Long postId, long loginId) {
+        // 验证该帖子是否已在收藏列表
+        LambdaQueryWrapper<PostLikes> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PostLikes::getPostId, postId);
+        queryWrapper.eq(PostLikes::getUserId, loginId);
+        return postLikesMapper.selectOne(queryWrapper);
+    }
+
     @Transactional
     @Override
     public void addLikePost(Long postId) {
+        // 验证帖子是否存在
         getPostExists(postId);
 
         // 获取当前登录用户id
         long loginId = StpUtil.getLoginIdAsLong();
 
-        // 验证该帖子是否已在收藏列表
-        LambdaQueryWrapper<PostLikes> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(PostLikes::getPostId, postId);
-        queryWrapper.eq(PostLikes::getUserId, loginId);
-        PostLikes postLikes = postLikesMapper.selectOne(queryWrapper);
+        PostLikes postLikes = getPostLikes(postId, loginId);
 
         if (postLikes != null) {
             log.warn("用户'{}'重复收藏帖子'{}'", loginId, postId);
@@ -394,6 +406,18 @@ public class PostServiceImpl implements PostService {
         postLikes.setUserId(loginId);
 
         postLikesMapper.insert(postLikes);
+    }
+
+
+    @Override
+    public Boolean isFavorite(Long postId) {
+        // 验证帖子是否存在
+        getPostExists(postId);
+
+        // 获取当前登录用户id
+        long loginId = StpUtil.getLoginIdAsLong();
+
+        return getPostLikes(postId, loginId) != null;
     }
 
 }

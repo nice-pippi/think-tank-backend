@@ -65,4 +65,12 @@ public interface PostService {
      * @param postId
      */
     void addLikePost(Long postId);
+
+    /**
+     * 验证当前登录用户是否收藏了当前帖子
+     *
+     * @param postId
+     * @return
+     */
+    Boolean isFavorite(Long postId);
 }
