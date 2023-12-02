@@ -66,10 +66,17 @@ public class PostController {
     }
 
     @ApiOperation("收藏帖子")
-    @PostMapping("{postId}")
-    public R<String> addLikePost(@PathVariable("postId") Long postId) {
-        postService.addLikePost(postId);
+    @PostMapping("/addFavorite/{postId}")
+    public R<String> addFavoritePost(@PathVariable("postId") Long postId) {
+        postService.addFavoritePost(postId);
         return R.success("已收藏");
+    }
+
+    @ApiOperation("取消收藏帖子")
+    @PostMapping("/removeFavorite/{postId}")
+    public R<String> removeFavoritePost(@PathVariable("postId") Long postId) {
+        postService.removeFavoritePost(postId);
+        return R.success("已取消收藏");
     }
 
     @ApiOperation("验证当前登录用户是否收藏了当前帖子")

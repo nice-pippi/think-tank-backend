@@ -64,7 +64,7 @@ public interface PostService {
      *
      * @param postId 帖子ID
      */
-    void addLikePost(Long postId);
+    void addFavoritePost(Long postId);
 
     /**
      * 验证当前登录用户是否收藏了当前帖子
@@ -73,4 +73,11 @@ public interface PostService {
      * @return 收藏状态，true表示已收藏，false表示未收藏
      */
     Boolean isFavorite(Long postId);
+
+    /**
+     * 移除收藏的帖子
+     *
+     * @param postId 帖子ID
+     */
+    void removeFavoritePost(Long postId);
 }

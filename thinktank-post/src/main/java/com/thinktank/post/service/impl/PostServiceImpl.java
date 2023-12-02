@@ -86,7 +86,7 @@ public class PostServiceImpl implements PostService {
     private BlockInfo getBlockExists(Long id) {
         BlockInfo blockInfo = blockInfoMapper.selectById(id);
         if (blockInfo == null) {
-            log.error("板块'{}'不存在", id);
+            log.warn("板块'{}'不存在", id);
             throw new ThinkTankException("当前板块不存在！");
         }
         return blockInfo;
@@ -107,7 +107,7 @@ public class PostServiceImpl implements PostService {
         queryWrapper.eq(SysUserRole::getBlockId, postInfoDto.getBlockId());
         queryWrapper.eq(SysUserRole::getRoleId, 104L);
         if (sysUserRoleMapper.selectCount(queryWrapper) > 0) {
-            log.error("用户'{}'在'{}'被禁言，无法发布帖子", loginId, postInfoDto.getBlockId());
+            log.warn("用户'{}'在'{}'被禁言，无法发布帖子", loginId, postInfoDto.getBlockId());
             throw new ThinkTankException("您在当前板块已被禁言，无法发布帖子！");
         }
 
@@ -152,7 +152,7 @@ public class PostServiceImpl implements PostService {
         correlationData.getFuture().addCallback(new ListenableFutureCallback<CorrelationData.Confirm>() {
             @Override
             public void onFailure(Throwable throwable) {
-                log.error("消息发送异常, ID:{}, 原因{}", correlationData.getId(), throwable.getMessage());
+                log.warn("消息发送异常, ID:{}, 原因{}", correlationData.getId(), throwable.getMessage());
             }
 
             @Override
@@ -162,7 +162,7 @@ public class PostServiceImpl implements PostService {
                     log.debug("消息发送成功, ID:{}", correlationData.getId());
                 } else {
                     // 3.2.nack，消息失败
-                    log.error("消息发送失败, ID:{}, 原因{}", correlationData.getId(), confirm.getReason());
+                    log.warn("消息发送失败, ID:{}, 原因{}", correlationData.getId(), confirm.getReason());
                 }
             }
         });
@@ -191,7 +191,7 @@ public class PostServiceImpl implements PostService {
         // 验证该帖子是否由用户自己发布的
         PostInfo postInfo = postInfoMapper.selectById(postId);
         if (postInfo == null) {
-            log.error("帖子id:'{}'不存在", postId);
+            log.warn("帖子id:'{}'不存在", postId);
             throw new ThinkTankException("该帖子id不存在！");
         }
 
@@ -335,7 +335,7 @@ public class PostServiceImpl implements PostService {
         PostInfo postInfo = postInfoMapper.selectOne(queryWrapper);
 
         if (postInfo == null) {
-            log.error("帖子'{}'不存在", postId);
+            log.warn("帖子'{}'不存在", postId);
             throw new ThinkTankException("当前帖子不存在！");
         }
         return postInfo.getTitle();
@@ -364,7 +364,7 @@ public class PostServiceImpl implements PostService {
         PostInfo postInfo = postInfoMapper.selectById(postId);
 
         if (postInfo == null) {
-            log.error("帖子'{}'不存在", postId);
+            log.warn("帖子'{}'不存在", postId);
             throw new ThinkTankException("帖子不存在！");
         }
         return postInfo;
@@ -387,7 +387,7 @@ public class PostServiceImpl implements PostService {
 
     @Transactional
     @Override
-    public void addLikePost(Long postId) {
+    public void addFavoritePost(Long postId) {
         // 验证帖子是否存在
         getPostExists(postId);
 
@@ -420,4 +420,23 @@ public class PostServiceImpl implements PostService {
         return getPostLikes(postId, loginId) != null;
     }
 
+    @Override
+    public void removeFavoritePost(Long postId) {
+        // 验证帖子是否存在
+        getPostExists(postId);
+
+        // 获取当前登录用户id
+        long loginId = StpUtil.getLoginIdAsLong();
+
+
+        PostLikes postLikes = getPostLikes(postId, loginId);
+
+        if (postLikes == null) {
+            log.warn("用户'{}'取消收藏帖子'{}'失败，该帖子不存在或未收藏！", loginId, postId);
+            throw new ThinkTankException("取消收藏失败，该帖子不存在或未收藏！");
+        }
+
+        // 删除收藏记录
+        postLikesMapper.deleteById(postLikes.getId());
+    }
 }
