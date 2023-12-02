@@ -61,6 +61,7 @@ public class Generator {
 //                    list.add("post_comment_likes");
 //                    list.add("post_comments");
 //                    list.add("post_info");
+//                    list.add("post_likes");
 //                    list.add("post_report_type");
 //                    list.add("post_reports");
 //                    list.add("post_score");
