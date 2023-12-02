@@ -58,4 +58,11 @@ public interface PostService {
      * @return
      */
     R<List<PostInfoVo>> getPageByPublishedPosts(Long id, Integer currentPage);
+
+    /**
+     * 收藏帖子
+     *
+     * @param postId
+     */
+    void addLikePost(Long postId);
 }

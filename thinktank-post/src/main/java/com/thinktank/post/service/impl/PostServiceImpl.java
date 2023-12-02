@@ -66,6 +66,9 @@ public class PostServiceImpl implements PostService {
     private MessagePrivateMapper messagePrivateMapper;
 
     @Autowired
+    private PostLikesMapper postLikesMapper;
+
+    @Autowired
     private RabbitTemplate rabbitTemplate;
 
     @Autowired
@@ -74,7 +77,12 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private RedissonClient redissonClient;
 
-    // 获取板块信息
+    /**
+     * 验证板块是否存在，若存在则返回板块信息
+     *
+     * @param id
+     * @return
+     */
     private BlockInfo getBlockExists(Long id) {
         BlockInfo blockInfo = blockInfoMapper.selectById(id);
         if (blockInfo == null) {
@@ -164,7 +172,12 @@ public class PostServiceImpl implements PostService {
         rabbitTemplate.convertAndSend(AddPostDocFanoutConfig.FANOUT_EXCHANGE, "", message, correlationData);
     }
 
-    // 细粒度验证用户身份
+    /**
+     * 细粒度验证用户身份
+     *
+     * @param postId
+     * @return
+     */
     private Boolean validateRole(Long postId) {
 
         // 验证是否超级管理员身份
@@ -218,7 +231,12 @@ public class PostServiceImpl implements PostService {
         postInfoMapper.deleteById(postId);
     }
 
-    // 根据帖子id封装vo所需信息
+    /**
+     * 根据帖子id封装vo所需信息
+     *
+     * @param postInfo
+     * @return
+     */
     private PostInfoVo getPostInfo(PostInfo postInfo) {
         // 根据帖子id获取该帖子前五条评论
         List<PostCommentsVo> postComments = postCommentsMapper.getPostCommentsVo(postInfo.getId());
@@ -334,6 +352,48 @@ public class PostServiceImpl implements PostService {
         List<PostInfoVo> list = postInfoPage.getRecords().stream().map(this::getPostInfo).collect(Collectors.toList());
 
         return R.success(list).add("total", postInfoPage.getTotal());
+    }
+
+    /**
+     * 验证帖子是否存在，若存在则返回帖子信息
+     *
+     * @param postId
+     * @return
+     */
+    private PostInfo getPostExists(Long postId) {
+        PostInfo postInfo = postInfoMapper.selectById(postId);
+
+        if (postInfo == null) {
+            log.error("帖子'{}'不存在", postId);
+            throw new ThinkTankException("帖子不存在！");
+        }
+        return postInfo;
+    }
+
+    @Transactional
+    @Override
+    public void addLikePost(Long postId) {
+        getPostExists(postId);
+
+        // 获取当前登录用户id
+        long loginId = StpUtil.getLoginIdAsLong();
+
+        // 验证该帖子是否已在收藏列表
+        LambdaQueryWrapper<PostLikes> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PostLikes::getPostId, postId);
+        queryWrapper.eq(PostLikes::getUserId, loginId);
+        PostLikes postLikes = postLikesMapper.selectOne(queryWrapper);
+
+        if (postLikes != null) {
+            log.warn("用户'{}'重复收藏帖子'{}'", loginId, postId);
+            throw new ThinkTankException("该帖子已在收藏列表中，无需重复收藏！");
+        }
+
+        postLikes = new PostLikes();
+        postLikes.setPostId(postId);
+        postLikes.setUserId(loginId);
+
+        postLikesMapper.insert(postLikes);
     }
 
 }

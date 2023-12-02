@@ -64,6 +64,14 @@ public class PostController {
     public R<List<PostInfoVo>> getPageByPublishedPosts(@PathVariable("id") Long id, @PathVariable("currentPage") Integer currentPage) {
         return postService.getPageByPublishedPosts(id, currentPage);
     }
+
+    @ApiOperation("收藏帖子")
+    @PostMapping("{postId}")
+    public R<String> addLikePost(@PathVariable("postId") Long postId) {
+        postService.addLikePost(postId);
+        return R.success("已收藏");
+    }
+
 }
 
 
