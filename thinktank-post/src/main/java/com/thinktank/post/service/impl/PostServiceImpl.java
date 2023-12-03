@@ -2,6 +2,7 @@ package com.thinktank.post.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.thinktank.common.exception.ThinkTankException;
@@ -380,8 +381,8 @@ public class PostServiceImpl implements PostService {
     private PostLikes getPostLikes(Long postId, long loginId) {
         // 验证该帖子是否已在收藏列表
         LambdaQueryWrapper<PostLikes> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(PostLikes::getPostId, postId);
         queryWrapper.eq(PostLikes::getUserId, loginId);
+        queryWrapper.eq(PostLikes::getPostId, postId);
         return postLikesMapper.selectOne(queryWrapper);
     }
 
@@ -438,5 +439,21 @@ public class PostServiceImpl implements PostService {
 
         // 删除收藏记录
         postLikesMapper.deleteById(postLikes.getId());
+    }
+
+
+    @Override
+    public IPage<PostInfo> getFavoritePage(Long userId, Integer currentPage) {
+        // 验证用户id
+        SysUser sysUser = sysUserMapper.selectById(userId);
+        if (sysUser == null) {
+            log.warn("用户'{}'不存在", userId);
+            throw new ThinkTankException("用户不存在！");
+        }
+
+        // 返回分页查询用户收藏的帖子
+        int postsPerPage = 10; // 每页帖子数量
+        Page<PostInfo> page = new Page<>(currentPage, postsPerPage);
+        return postLikesMapper.getFavoritePage(page, userId);
     }
 }

@@ -1,7 +1,9 @@
 package com.thinktank.post.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.thinktank.common.utils.R;
 import com.thinktank.generator.dto.PostInfoDto;
+import com.thinktank.generator.entity.PostInfo;
 import com.thinktank.generator.vo.PostInfoVo;
 
 import java.util.List;
@@ -80,4 +82,14 @@ public interface PostService {
      * @param postId 帖子ID
      */
     void removeFavoritePost(Long postId);
+
+
+    /**
+     * 分页查询用户收藏的帖子
+     *
+     * @param userId      用户ID
+     * @param currentPage 当前页码
+     * @return 用户收藏的帖子分页查询结果
+     */
+    IPage<PostInfo> getFavoritePage(Long userId, Integer currentPage);
 }

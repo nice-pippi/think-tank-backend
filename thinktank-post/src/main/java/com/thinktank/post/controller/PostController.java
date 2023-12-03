@@ -1,9 +1,11 @@
 package com.thinktank.post.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.thinktank.common.utils.R;
 import com.thinktank.common.validationgroups.InsertValidation;
 import com.thinktank.common.validationgroups.QueryValidation;
 import com.thinktank.generator.dto.PostInfoDto;
+import com.thinktank.generator.entity.PostInfo;
 import com.thinktank.generator.vo.PostInfoVo;
 import com.thinktank.post.service.PostService;
 import io.swagger.annotations.Api;
@@ -85,6 +87,11 @@ public class PostController {
         return R.success(postService.isFavorite(postId));
     }
 
+    @ApiOperation("分页查询用户收藏的帖子")
+    @GetMapping("/getFavoritePage/{userId}/{currentPage}")
+    public R<IPage<PostInfo>> getFavoritePage(@PathVariable("userId") Long userId, @PathVariable("currentPage") Integer currentPage) {
+        return R.success(postService.getFavoritePage(userId, currentPage));
+    }
 }
 
 
