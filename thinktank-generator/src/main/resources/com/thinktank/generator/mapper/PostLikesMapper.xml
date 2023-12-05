@@ -3,6 +3,7 @@
 <mapper namespace="com.thinktank.generator.mapper.PostLikesMapper">
     <select id="getFavoritePage" resultType="com.thinktank.generator.entity.PostInfo">
         SELECT t2.id,
+               t2.block_id,
                t2.title
         FROM post_likes AS t1,
              post_info AS t2
