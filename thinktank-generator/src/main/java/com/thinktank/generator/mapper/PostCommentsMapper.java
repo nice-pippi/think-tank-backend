@@ -18,9 +18,11 @@ import java.util.List;
  * @since 2023-10-27
  */
 public interface PostCommentsMapper extends BaseMapper<PostComments> {
-    IPage<PostCommentsVo> getPage(@Param("postId") Long postId, Page<PostCommentsVo> page);
+    IPage<PostCommentsVo> getPage(Page<PostCommentsVo> page, @Param("postId") Long postId);
 
     List<PostCommentsVo> getAllChildrenComment(Long commentId);
 
     List<PostCommentsVo> getPostCommentsVo(Long postId);
+
+    IPage<PostCommentsVo> receivedCommentsPage(Page<PostComments> page, @Param("loginId") Long loginId);
 }

@@ -27,7 +27,7 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    @ApiOperation("帖子评论分页")
+    @ApiOperation("分页查询帖子评论")
     @GetMapping("/page/{postId}/{currentPage}")
     public R<IPage<PostCommentsVo>> page(@PathVariable("postId") Long postId, @PathVariable("currentPage") Integer currentPage) {
         return R.success(commentService.page(postId, currentPage));
@@ -58,5 +58,11 @@ public class CommentController {
     public R<String> removeLikeComment(@RequestBody @Validated(DeleteValidation.class) PostCommentLikes postCommentLikes) {
         commentService.removeLikeComment(postCommentLikes);
         return R.success("已取消点赞");
+    }
+
+    @ApiOperation("分页查询收到的评论")
+    @GetMapping("/receivedCommentsPage/{currentPage}")
+    public R<IPage<PostCommentsVo>> receivedCommentsPage(@PathVariable("currentPage") Integer currentPage) {
+        return R.success(commentService.receivedCommentsPage(currentPage));
     }
 }

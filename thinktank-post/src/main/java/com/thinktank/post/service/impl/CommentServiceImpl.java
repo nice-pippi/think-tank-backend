@@ -91,7 +91,7 @@ public class CommentServiceImpl implements CommentService {
     public IPage<PostCommentsVo> page(Long postId, Integer currentPage) {
         Page<PostCommentsVo> page = new Page<>(currentPage, 15);
 
-        IPage<PostCommentsVo> commentsVoIPage = postCommentsMapper.getPage(postId, page);
+        IPage<PostCommentsVo> commentsVoIPage = postCommentsMapper.getPage(page,postId);
 
         // 获取当前用户登录状态
         boolean isLogin = StpUtil.isLogin();
@@ -228,5 +228,13 @@ public class CommentServiceImpl implements CommentService {
         String namespace = "post:comment:like";
         HashOperations<String, String, Object> ops = redisTemplate.opsForHash();
         ops.put(namespace, postCommentLikes.getCommentId().toString(), ObjectMapperUtil.toJSON(userLikes));
+    }
+
+    @Override
+    public IPage<PostCommentsVo> receivedCommentsPage(Integer currentPage) {
+        int pageSize = 10;
+        Page<PostComments> page = new Page<>(currentPage, pageSize);
+        long loginId = StpUtil.getLoginIdAsLong();
+        return postCommentsMapper.receivedCommentsPage(page, loginId);
     }
 }

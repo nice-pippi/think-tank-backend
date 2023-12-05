@@ -50,4 +50,13 @@ public interface CommentService {
      * @param postCommentLikes 点赞评论信息
      */
     void removeLikeComment(PostCommentLikes postCommentLikes);
+
+
+    /**
+     * 分页查询收到的评论
+     *
+     * @param currentPage 当前页数
+     * @return 分页结果
+     */
+    IPage<PostCommentsVo> receivedCommentsPage(Integer currentPage);
 }

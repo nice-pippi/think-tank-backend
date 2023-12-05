@@ -45,4 +45,25 @@
           and t1.del_flag = 0
         LIMIT 5
     </select>
+    <select id="receivedCommentsPage" resultType="com.thinktank.generator.vo.PostCommentsVo">
+        SELECT t1.id,
+               t1.title,
+               t2.content,
+               t2.create_time,
+               t3.id AS block_id,
+               t3.block_name,
+               t4.username,
+               t4.avatar
+        FROM post_info AS t1,
+             post_comments AS t2,
+             block_info AS t3,
+             sys_user AS t4
+        WHERE t1.id = t2.post_id
+          AND t1.block_id = t3.id
+          AND t2.user_id = t4.id
+          AND t1.user_id = #{loginId}
+          AND t2.parent_id = 0
+          AND t2.user_id != #{loginId}
+        ORDER BY t2.create_time DESC
+    </select>
 </mapper>

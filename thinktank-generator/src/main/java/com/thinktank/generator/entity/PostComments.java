@@ -45,7 +45,7 @@ public class PostComments implements Serializable {
     @ApiModelProperty("用户id")
     private Long userId;
 
-    @ApiModelProperty("父评论id（该字段若为空则代表本身就是父评论）")
+    @ApiModelProperty("父评论id（该字段若为0则代表本身就是父评论）")
     private Long parentId;
 
     @ApiModelProperty("评论内容（富文本html格式）")
