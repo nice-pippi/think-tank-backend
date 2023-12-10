@@ -79,6 +79,7 @@ public class WebSocketServer {
         MessageChatRoom messageChatRoom = messageChatRoomMapper.selectById(messagePrivate.getChatRoomId());
         if (messageChatRoom == null) {
             sendMessage(messagePrivate.getAcceptUserId(), "当前聊天室不存在");
+            return;
         }
 
         // 更新聊天室最新消息内容
