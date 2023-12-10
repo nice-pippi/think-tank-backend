@@ -57,6 +57,7 @@ public class Generator {
 //                    list.add("block_info");
 //                    list.add("block_small_type");
 //                    list.add("message_private");
+//                    list.add("message_chat_room");
 //                    list.add("mq_task");
 //                    list.add("post_comment_likes");
 //                    list.add("post_comments");

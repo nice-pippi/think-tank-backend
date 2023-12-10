@@ -20,6 +20,7 @@
         <module>thinktank-user</module>
         <module>thinktank-block</module>
         <module>thinktank-search</module>
+        <module>thinktank-message</module>
     </modules>
     <packaging>pom</packaging>
 

@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
  * </p>
  *
  * @author pippi
- * @since 2023-09-11
+ * @since 2023-12-09
  */
 @TableName("message_private")
 @ApiModel(value = "MessagePrivate对象", description = "")
@@ -43,6 +43,9 @@ public class MessagePrivate implements Serializable {
     @ApiModelProperty("发送时间")
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
+
+    @ApiModelProperty("聊天室id")
+    private Long chatRoomId;
 
     public Long getId() {
         return id;
@@ -92,6 +95,14 @@ public class MessagePrivate implements Serializable {
         this.createTime = createTime;
     }
 
+    public Long getChatRoomId() {
+        return chatRoomId;
+    }
+
+    public void setChatRoomId(Long chatRoomId) {
+        this.chatRoomId = chatRoomId;
+    }
+
     @Override
     public String toString() {
         return "MessagePrivate{" +
@@ -101,6 +112,7 @@ public class MessagePrivate implements Serializable {
             ", content = " + content +
             ", readFlag = " + readFlag +
             ", createTime = " + createTime +
+            ", chatRoomId = " + chatRoomId +
         "}";
     }
 }

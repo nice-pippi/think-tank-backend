@@ -51,7 +51,8 @@ public class SaTokenConfig implements WebMvcConfigurer {
                                     "/post/postAction/getTitle/{postId}",// 根据帖子id获取帖子标题
                                     "/post/postAction/getPageByPublishedPosts/{id}/{currentPage}", // 根据用户id获取已发布的帖子
                                     "/post/postAction/getFavoritePage/{userId}/{currentPage}", // 分页查询用户收藏的帖子
-                                    "/user/{id}" // 根据用户id获取用户信息
+                                    "/user/{id}", // 根据用户id获取用户信息
+                                    "/message/private_message/{userId}" // 消息服务模块接口
                             )
                             .check(r -> StpUtil.checkLogin());
                     // 权限认证 -- 不同模块, 校验不同权限
