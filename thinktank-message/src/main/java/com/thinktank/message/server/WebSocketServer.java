@@ -88,7 +88,9 @@ public class WebSocketServer {
 
         // 消息写入数据库
         messagePrivateMapper.insert(messagePrivate);
-        sendMessage(messagePrivate.getAcceptUserId(), ObjectMapperUtil.toJSON(messagePrivate));
+        if (onLineUsers.containsKey(messagePrivate.getAcceptUserId())) {
+            sendMessage(messagePrivate.getAcceptUserId(), ObjectMapperUtil.toJSON(messagePrivate));
+        }
     }
 
 

@@ -1,7 +1,6 @@
 package com.thinktank.message.service;
 
 import com.thinktank.generator.entity.MessagePrivate;
-import com.thinktank.generator.vo.MessageChatRoomVo;
 
 import java.util.List;
 
@@ -13,14 +12,7 @@ import java.util.List;
  */
 public interface MessagePrivateService {
     /**
-     * 获取私信列表
-     *
-     * @return 私信列表
-     */
-    List<MessageChatRoomVo> getPrivateMessageList();
-
-    /**
-     * 根聊天室id获取私聊消息
+     * 根据聊天室id获取私聊消息
      *
      * @param chatRoomId 聊天室id
      * @return 聊天记录

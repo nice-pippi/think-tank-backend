@@ -1,14 +1,11 @@
 package com.thinktank.generator.mapper;
 
-import com.thinktank.generator.entity.MessagePrivate;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.thinktank.generator.vo.MessageChatRoomVo;
-
-import java.util.List;
+import com.thinktank.generator.entity.MessagePrivate;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author pippi
@@ -16,5 +13,4 @@ import java.util.List;
  */
 public interface MessagePrivateMapper extends BaseMapper<MessagePrivate> {
 
-    List<MessageChatRoomVo> getPrivateMessageList(long loginId);
 }

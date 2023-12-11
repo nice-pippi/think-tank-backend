@@ -2,4 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thinktank.generator.mapper.MessageChatRoomMapper">
 
+    <select id="getAllChatRoom" resultType="com.thinktank.generator.vo.MessageChatRoomVo">
+        SELECT t1.id,
+               t1.latest_content,
+               t1.update_time,
+               t2.id as userId,
+               t2.username,
+               t2.avatar
+        FROM message_chat_room AS t1,
+             sys_user AS t2
+        WHERE t1.user_id_b = t2.id
+          AND user_id_a = #{loginId}
+        UNION ALL
+        SELECT t1.id,
+               t1.latest_content,
+               t1.update_time,
+               t2.id as userId,
+               t2.username,
+               t2.avatar
+        FROM message_chat_room AS t1,
+             sys_user AS t2
+        WHERE t1.user_id_a = t2.id
+          AND user_id_b = #{loginId}
+    </select>
 </mapper>

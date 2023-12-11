@@ -1,16 +1,13 @@
 package com.thinktank.message.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.thinktank.generator.entity.MessagePrivate;
 import com.thinktank.generator.mapper.MessagePrivateMapper;
-import com.thinktank.generator.vo.MessageChatRoomVo;
 import com.thinktank.message.service.MessagePrivateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -24,14 +21,6 @@ import java.util.List;
 public class MessagePrivateServiceImpl implements MessagePrivateService {
     @Autowired
     private MessagePrivateMapper messagePrivateMapper;
-
-    @Override
-    public List<MessageChatRoomVo> getPrivateMessageList() {
-        long loginId = StpUtil.getLoginIdAsLong();
-        List<MessageChatRoomVo> privateMessageList = messagePrivateMapper.getPrivateMessageList(loginId);
-        privateMessageList.sort(Comparator.comparing(MessageChatRoomVo::getUpdateTime).reversed());
-        return privateMessageList;
-    }
 
     @Override
     public List<MessagePrivate> getPrivateMessage(Long chatRoomId) {
