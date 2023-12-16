@@ -21,13 +21,13 @@ import java.util.List;
  */
 @Api(tags = "聊天室接口")
 @RestController
-@RequestMapping("chat_room")
+@RequestMapping("chatRoom")
 public class MessageChatRoomController {
     @Autowired
     private MessageChatRoomService messageChatRoomService;
 
     @ApiOperation("查询所有聊天室")
-    @GetMapping("get_all_chat_romm")
+    @GetMapping("getAllChatRoom")
     public R<List<MessageChatRoomVo>> getAllChatRoom() {
         return R.success(messageChatRoomService.getAllChatRoom());
     }

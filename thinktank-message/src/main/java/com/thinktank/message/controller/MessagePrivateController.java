@@ -22,7 +22,7 @@ import java.util.List;
 
 @Api(tags = "消息接口")
 @RestController
-@RequestMapping("private_message")
+@RequestMapping("privateMessage")
 public class MessagePrivateController {
     @Autowired
 
