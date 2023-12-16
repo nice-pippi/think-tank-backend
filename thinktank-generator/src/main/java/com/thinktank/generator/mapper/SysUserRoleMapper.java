@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author pippi
@@ -16,8 +16,10 @@ import java.util.List;
 public interface SysUserRoleMapper extends BaseMapper<SysUserRole> {
     /**
      * 获取所有角色列表
-     * @param id
-     * @return
+     *
+     * @param id 用户ID
+     * @return 所有角色列表
      */
     List<String> getRoleList(Object id);
+
 }

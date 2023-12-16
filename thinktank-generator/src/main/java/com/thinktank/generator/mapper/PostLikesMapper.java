@@ -7,8 +7,6 @@ import com.thinktank.generator.entity.PostInfo;
 import com.thinktank.generator.entity.PostLikes;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
-
 /**
  * <p>
  * Mapper 接口
@@ -19,6 +17,12 @@ import java.util.List;
  */
 public interface PostLikesMapper extends BaseMapper<PostLikes> {
 
+    /**
+     * 根据用户ID获取用户收藏页
+     *
+     * @param page   分页对象
+     * @param userId 用户ID
+     * @return 分页结果
+     */
     IPage<PostInfo> getFavoritePage(Page<PostInfo> page, @Param("userId") Long userId);
-
 }

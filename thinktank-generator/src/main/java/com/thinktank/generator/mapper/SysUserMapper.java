@@ -18,24 +18,24 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
     /**
      * 根据板块id获取当前板块所有板主
      *
-     * @param id
-     * @return
+     * @param id 板块id
+     * @return 所有板主列表
      */
     List<SysUser> getAllBlockMasterByBlockId(Long id);
 
     /**
      * 根据板块id获取当前板块所有小板主
      *
-     * @param id
+     * @param id 板块id
      * @return
      */
     List<SysUser> getAllBlockSmallMasterByBlockId(Long id);
 
     /**
-     * 新增私信记录到用户私信表中
+     * 随机抽取用户
      *
-     * @param count
-     * @return
+     * @param count 要抽取的用户数量
+     * @return 抽取的用户id列表
      */
     @Select("select id from sys_user order by rand() limit #{count}")
     List<Long> selectRandomList(Integer count);

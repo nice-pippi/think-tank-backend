@@ -30,7 +30,7 @@
           and t1.parent_id = #{commentId}
     </select>
 
-    <select id="getPostCommentsVo" resultType="com.thinktank.generator.vo.PostCommentsVo">
+    <select id="getPostCommentsVoByFive" resultType="com.thinktank.generator.vo.PostCommentsVo">
         SELECT t1.content,
                t1.topic_flag,
                t2.block_name,

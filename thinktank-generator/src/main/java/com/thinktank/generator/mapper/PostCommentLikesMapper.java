@@ -16,5 +16,12 @@ import java.util.List;
  */
 public interface PostCommentLikesMapper extends BaseMapper<PostCommentLikes> {
 
+    /**
+     * 插入多个评论点赞记录
+     *
+     * @param id        评论点赞ID
+     * @param commentId 评论ID
+     * @param userList  用户ID列表
+     */
     void insertBatch(@Param("id") Long id, @Param("commentId") String commentId, @Param("userList") List<Long> userList);
 }

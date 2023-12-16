@@ -240,7 +240,7 @@ public class PostServiceImpl implements PostService {
      */
     private PostInfoVo getPostInfo(PostInfo postInfo) {
         // 根据帖子id获取该帖子前五条评论
-        List<PostCommentsVo> postComments = postCommentsMapper.getPostCommentsVo(postInfo.getId());
+        List<PostCommentsVo> postComments = postCommentsMapper.getPostCommentsVoByFive(postInfo.getId());
 
         // 获取主题帖
         PostCommentsVo postCommentsVo = postComments.stream().filter(item -> item.getTopicFlag() == 1).findFirst().orElse(null);
