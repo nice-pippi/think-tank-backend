@@ -1,11 +1,13 @@
 package com.thinktank.generator.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.thinktank.common.validationgroups.InsertValidation;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -27,23 +29,24 @@ public class BlockSmallType implements Serializable {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
+    @NotNull(groups = {InsertValidation.class}, message = "板块大分类id不能为空")
     @ApiModelProperty("板块大分类id")
     private Long bigTypeId;
 
+    @NotEmpty(groups = {InsertValidation.class}, message = "小板块名称不能为空")
     @ApiModelProperty("板块小分类名称")
     private String smallTypeName;
 
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @ApiModelProperty("创建时间")
     @TableField(fill = FieldFill.INSERT)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @ApiModelProperty("更改时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
 
-    @TableField(exist = false)  // 设置该属性为 false，表示在查询中不使用该字段
     @ApiModelProperty("删除标志（0:未删除 1:已删除）")
     @TableLogic
     private Integer delFlag;

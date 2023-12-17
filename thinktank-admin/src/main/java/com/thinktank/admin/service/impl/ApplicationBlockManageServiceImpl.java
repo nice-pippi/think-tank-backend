@@ -20,6 +20,7 @@ import com.thinktank.generator.vo.BlockApplicationBlockVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +47,9 @@ public class ApplicationBlockManageServiceImpl implements ApplicationBlockManage
 
     @Autowired
     private SearchClient searchClient;
+
+    @Autowired
+    private RedisTemplate<String,String> redisTemplate;
 
     @Override
     public IPage<BlockApplicationBlockVo> page(BlockApplicationBlockDto blockApplicationBlockDto) {
@@ -104,6 +108,9 @@ public class ApplicationBlockManageServiceImpl implements ApplicationBlockManage
         blockFollow.setBlockId(blockInfo.getId());
         blockFollow.setUserId(blockApplicationBlock.getUserId());
         blockFollowMapper.insert(blockFollow);
+
+        // 删除redis中的键"block:classify"
+        redisTemplate.delete("block:classify");
     }
 
 
