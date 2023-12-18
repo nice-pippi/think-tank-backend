@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thinktank.generator.mapper.BlockApplicationMasterMapper">
 
-    <select id="getApplicationMasterPage" resultType="com.thinktank.generator.vo.BlockApplicationMasterVo">
+    <select id="page" resultType="com.thinktank.generator.vo.BlockApplicationMasterVo">
         SELECT t1.id,
         t1.reason,
         t1.status,

@@ -10,10 +10,10 @@ import java.util.List;
 /**
  * @Author: 弘
  * @CreateTime: 2023年12⽉16⽇ 13:58
- * @Description: 板块管理业务接口
+ * @Description: 板块分类管理业务接口
  * @Version: 1.0
  */
-public interface ManageBlockService {
+public interface ManageBlockClassifyService {
     /**
      * 获取板块分类列表
      *

@@ -20,9 +20,10 @@ public interface BlockApplicationMasterMapper extends BaseMapper<BlockApplicatio
     /**
      * 板主申请记录分页
      *
-     * @param page
-     * @param blockApplicationMasterDto
-     * @return
+     * @param page                      分页对象
+     * @param blockApplicationMasterDto 板主申请记录的查询条件对象
+     * @return 分页结果对象
      */
-    IPage<BlockApplicationMasterVo> getApplicationMasterPage(Page<BlockApplicationMaster> page, @Param("blockApplicationMasterDto") BlockApplicationMasterDto blockApplicationMasterDto);
+    IPage<BlockApplicationMasterVo> page(Page<BlockApplicationMaster> page, @Param("blockApplicationMasterDto") BlockApplicationMasterDto blockApplicationMasterDto);
+
 }

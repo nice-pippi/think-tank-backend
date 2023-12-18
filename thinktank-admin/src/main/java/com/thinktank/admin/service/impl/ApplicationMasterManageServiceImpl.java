@@ -37,7 +37,7 @@ public class ApplicationMasterManageServiceImpl implements ApplicationMasterMana
     @Override
     public IPage<BlockApplicationMasterVo> page(BlockApplicationMasterDto blockApplicationMasterDto) {
         Page<BlockApplicationMaster> page = new Page<>(blockApplicationMasterDto.getCurrentPage(), blockApplicationMasterDto.getSize());
-        return blockApplicationMasterMapper.getApplicationMasterPage(page, blockApplicationMasterDto);
+        return blockApplicationMasterMapper.page(page, blockApplicationMasterDto);
     }
 
     // 获取该id的记录是否存在

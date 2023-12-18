@@ -18,9 +18,10 @@ import org.apache.ibatis.annotations.Param;
 public interface BlockApplicationBlockMapper extends BaseMapper<BlockApplicationBlock> {
     /**
      * 板块创建申请记录分页
-     * @param page
-     * @param blockApplicationBlockDto
-     * @return
+     *
+     * @param page                     分页对象
+     * @param blockApplicationBlockDto 申请记录的板块信息对象
+     * @return 分页结果
      */
-    IPage<BlockApplicationBlockVo> getApplicationBlockPage(IPage<BlockApplicationBlock> page,@Param("blockApplicationBlockDto") BlockApplicationBlockDto blockApplicationBlockDto);
+    IPage<BlockApplicationBlockVo> page(IPage<BlockApplicationBlock> page, @Param("blockApplicationBlockDto") BlockApplicationBlockDto blockApplicationBlockDto);
 }

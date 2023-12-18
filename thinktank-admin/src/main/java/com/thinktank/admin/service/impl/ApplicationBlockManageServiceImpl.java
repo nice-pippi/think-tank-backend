@@ -54,7 +54,7 @@ public class ApplicationBlockManageServiceImpl implements ApplicationBlockManage
     @Override
     public IPage<BlockApplicationBlockVo> page(BlockApplicationBlockDto blockApplicationBlockDto) {
         Page<BlockApplicationBlock> page = new Page<>(blockApplicationBlockDto.getCurrentPage(), blockApplicationBlockDto.getSize());
-        return blockApplicationBlockMapper.getApplicationBlockPage(page, blockApplicationBlockDto);
+        return blockApplicationBlockMapper.page(page, blockApplicationBlockDto);
     }
 
     // 获取该id的记录是否存在

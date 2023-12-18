@@ -1,6 +1,6 @@
 package com.thinktank.admin.controller;
 
-import com.thinktank.admin.service.ManageBlockService;
+import com.thinktank.admin.service.ManageBlockClassifyService;
 import com.thinktank.common.utils.R;
 import com.thinktank.generator.dto.BlockClassifyDto;
 import com.thinktank.generator.entity.BlockBigType;
@@ -15,15 +15,15 @@ import java.util.List;
 /**
  * @Author: 弘
  * @CreateTime: 2023年12⽉16⽇ 13:54
- * @Description: 板块管理
+ * @Description: 板块分类管理
  * @Version: 1.0
  */
-@Api(tags = "板块管理")
+@Api(tags = "板块分类管理")
 @RestController
-@RequestMapping("applicationManage")
-public class ManageBlockController {
+@RequestMapping("blockClassifyManage")
+public class ManageBlockClassifyController {
     @Autowired
-    private ManageBlockService manageBlockService;
+    private ManageBlockClassifyService manageBlockService;
 
     @ApiOperation("获取所有板块分类")
     @GetMapping("getBlockClassify")

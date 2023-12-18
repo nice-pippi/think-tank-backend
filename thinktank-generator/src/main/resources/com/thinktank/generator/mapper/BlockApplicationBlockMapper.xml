@@ -3,7 +3,7 @@
 <mapper namespace="com.thinktank.generator.mapper.BlockApplicationBlockMapper">
 
 
-    <select id="getApplicationBlockPage" resultType="com.thinktank.generator.vo.BlockApplicationBlockVo">
+    <select id="page" resultType="com.thinktank.generator.vo.BlockApplicationBlockVo">
         SELECT t1.id,
         t1.block_name,
         t1.description,

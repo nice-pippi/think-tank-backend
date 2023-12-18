@@ -1,7 +1,7 @@
 package com.thinktank.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.thinktank.admin.service.ManageBlockService;
+import com.thinktank.admin.service.ManageBlockClassifyService;
 import com.thinktank.api.clients.BlockClient;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.R;
@@ -21,12 +21,12 @@ import java.util.List;
 /**
  * @Author: 弘
  * @CreateTime: 2023年12⽉16⽇ 13:58
- * @Description: 板块管理业务接口实现类
+ * @Description: 板块分类管理业务接口实现类
  * @Version: 1.0
  */
 @Slf4j
 @Service
-public class ManageBlockServiceImpl implements ManageBlockService {
+public class ManageBlockClassifyServiceImpl implements ManageBlockClassifyService {
     @Autowired
     private BlockClient blockClient;
 
