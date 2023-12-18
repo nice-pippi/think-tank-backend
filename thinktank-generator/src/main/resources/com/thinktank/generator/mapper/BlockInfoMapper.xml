@@ -5,6 +5,7 @@
     <select id="page" resultType="com.thinktank.generator.vo.BlockInfoVo">
         SELECT t1.id,
         t1.block_name,
+        t1.description,
         t1.create_time,
         t1.update_time,
         t2.big_type_name,
@@ -14,6 +15,12 @@
         block_small_type AS t3
         WHERE t1.big_type_id = t2.id
         AND t1.small_type_id = t3.id
+        <if test="blockInfoDto.bigTypeId != null">
+            AND t2.id = #{blockInfoDto.bigTypeId}
+        </if>
+        <if test="blockInfoDto.smallTypeId != null">
+            AND t3.id = #{blockInfoDto.smallTypeId}
+        </if>
         <if test="blockInfoDto.blockName != null">
             AND t1.block_name LIKE CONCAT('%',#{blockInfoDto.blockName},'%')
         </if>
