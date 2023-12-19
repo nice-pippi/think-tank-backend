@@ -43,7 +43,7 @@ public class ManageBlockServiceImpl implements ManageBlockService {
 
     @Override
     public IPage<BlockInfoVo> page(BlockInfoDto blockInfoDto) {
-        Page<BlockInfo> page = new Page<>(blockInfoDto.getCurrentPage(),blockInfoDto.getSize());
+        Page<BlockInfo> page = new Page<>(blockInfoDto.getCurrentPage(), blockInfoDto.getSize());
         return blockInfoMapper.page(page, blockInfoDto);
     }
 
@@ -75,20 +75,6 @@ public class ManageBlockServiceImpl implements ManageBlockService {
         // 将板块信息写入elasticsearch数据库
         R<BlockInfoDoc> result = searchClient.addBlockInfoDoc(blockInfo);
 
-        if (!result.getStatus().equals(200)) {
-            throw new ThinkTankException(result.getMsg());
-        }
-    }
-
-    @Transactional
-    @Override
-    public void updateBlock(BlockInfo blockInfo) {
-        if (blockInfoMapper.updateById(blockInfo) == 0) {
-            log.error("修改板块失败，板块可能已经被删除");
-            throw new ThinkTankException("修改板块失败，板块可能已经被删除");
-        }
-        // 将elasticsearch数据库对应的板块信息记录更新
-        R<BlockInfoDoc> result = searchClient.addBlockInfoDoc(blockInfo);
         if (!result.getStatus().equals(200)) {
             throw new ThinkTankException(result.getMsg());
         }

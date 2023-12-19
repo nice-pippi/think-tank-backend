@@ -40,11 +40,4 @@ public class ManageBlockController {
         manageBlockService.addBlock(blockInfo);
         return R.success("新增板块成功");
     }
-
-    @ApiOperation("更改板块")
-    @PutMapping
-    public R<String> updateBlock(@RequestBody @Validated(UpdateValidation.class) BlockInfo blockInfo) {
-        manageBlockService.updateBlock(blockInfo);
-        return R.success("更改板块成功");
-    }
 }

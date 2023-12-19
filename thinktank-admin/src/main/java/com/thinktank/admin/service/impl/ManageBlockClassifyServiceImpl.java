@@ -2,10 +2,7 @@ package com.thinktank.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.thinktank.admin.service.ManageBlockClassifyService;
-import com.thinktank.api.clients.BlockClient;
 import com.thinktank.common.exception.ThinkTankException;
-import com.thinktank.common.utils.R;
-import com.thinktank.generator.dto.BlockClassifyDto;
 import com.thinktank.generator.entity.BlockBigType;
 import com.thinktank.generator.entity.BlockSmallType;
 import com.thinktank.generator.mapper.BlockBigTypeMapper;
@@ -16,8 +13,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 /**
  * @Author: 弘
  * @CreateTime: 2023年12⽉16⽇ 13:58
@@ -27,9 +22,6 @@ import java.util.List;
 @Slf4j
 @Service
 public class ManageBlockClassifyServiceImpl implements ManageBlockClassifyService {
-    @Autowired
-    private BlockClient blockClient;
-
     @Autowired
     private BlockBigTypeMapper blockBigTypeMapper;
 
