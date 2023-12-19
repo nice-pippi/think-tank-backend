@@ -85,7 +85,7 @@ public class StpInterfaceImpl implements StpInterface {
         if (o != null) {
             List<String> list = RedisCacheUtil.getObjectByTypeReference(o.toString(), new TypeReference<List<String>>() {
             });
-            log.info("id={},permissionList={}", loginId, list);
+            log.info("id={},roleList={}", loginId, list);
             return list;
         }
 
