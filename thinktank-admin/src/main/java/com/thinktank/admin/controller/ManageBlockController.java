@@ -5,6 +5,7 @@ import com.thinktank.admin.service.ManageBlockService;
 import com.thinktank.common.utils.R;
 import com.thinktank.common.validationgroups.InsertValidation;
 import com.thinktank.common.validationgroups.QueryValidation;
+import com.thinktank.common.validationgroups.UpdateValidation;
 import com.thinktank.generator.dto.BlockInfoDto;
 import com.thinktank.generator.entity.BlockInfo;
 import com.thinktank.generator.vo.BlockInfoVo;
@@ -35,7 +36,15 @@ public class ManageBlockController {
 
     @ApiOperation("新增板块")
     @PostMapping
-    public R<BlockInfo> addBlock(@RequestBody @Validated(InsertValidation.class) BlockInfo blockInfo) {
-        return R.success(manageBlockService.addBlock(blockInfo));
+    public R<String> addBlock(@RequestBody @Validated(InsertValidation.class) BlockInfo blockInfo) {
+        manageBlockService.addBlock(blockInfo);
+        return R.success("新增板块成功");
+    }
+
+    @ApiOperation("更改板块")
+    @PutMapping
+    public R<String> updateBlock(@RequestBody @Validated(UpdateValidation.class) BlockInfo blockInfo) {
+        manageBlockService.updateBlock(blockInfo);
+        return R.success("更改板块成功");
     }
 }

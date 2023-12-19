@@ -1,11 +1,7 @@
 package com.thinktank.admin.service;
 
-import com.thinktank.common.utils.R;
-import com.thinktank.generator.dto.BlockClassifyDto;
 import com.thinktank.generator.entity.BlockBigType;
 import com.thinktank.generator.entity.BlockSmallType;
-
-import java.util.List;
 
 /**
  * @Author: 弘
@@ -14,13 +10,6 @@ import java.util.List;
  * @Version: 1.0
  */
 public interface ManageBlockClassifyService {
-    /**
-     * 获取板块分类列表
-     *
-     * @return 返回板块分类列表
-     */
-    R<List<BlockClassifyDto>> getBlockClassify();
-
     /**
      * 新增板块大分类
      *

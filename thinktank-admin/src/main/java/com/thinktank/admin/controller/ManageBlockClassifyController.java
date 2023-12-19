@@ -25,12 +25,6 @@ public class ManageBlockClassifyController {
     @Autowired
     private ManageBlockClassifyService manageBlockService;
 
-    @ApiOperation("获取所有板块分类")
-    @GetMapping("getBlockClassify")
-    public R<List<BlockClassifyDto>> getBlockClassify() {
-        return manageBlockService.getBlockClassify();
-    }
-
     @ApiOperation("新增板块大分类")
     @PostMapping("addBlockBigType")
     public R<BlockBigType> addBlockBigType(@RequestBody BlockBigType blockBigType) {

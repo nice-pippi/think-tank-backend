@@ -39,15 +39,6 @@ public class ManageBlockClassifyServiceImpl implements ManageBlockClassifyServic
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
-    @Override
-    public R<List<BlockClassifyDto>> getBlockClassify() {
-        R<List<BlockClassifyDto>> blockClassify = blockClient.getBlockClassify();
-        if (!blockClassify.getStatus().equals(200)) {
-            throw new ThinkTankException(blockClassify.getMsg());
-        }
-        return blockClassify;
-    }
-
     /**
      * 根据板块小分类获取板块大分类是否存在
      *

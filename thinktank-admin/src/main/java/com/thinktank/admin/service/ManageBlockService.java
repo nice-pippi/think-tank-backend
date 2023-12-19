@@ -24,7 +24,13 @@ public interface ManageBlockService {
      * 新增板块
      *
      * @param blockInfo 板块信息实体类
-     * @return 新增板块
      */
-    BlockInfo addBlock(BlockInfo blockInfo);
+    void addBlock(BlockInfo blockInfo);
+
+    /**
+     * 更新板块
+     *
+     * @param blockInfo 板块信息实体类
+     */
+    void updateBlock(BlockInfo blockInfo);
 }
