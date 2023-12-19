@@ -10,14 +10,8 @@ import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.ObjectMapperUtil;
 import com.thinktank.common.utils.RedisCacheUtil;
 import com.thinktank.generator.dto.BlockClassifyDto;
-import com.thinktank.generator.entity.BlockApplicationBlock;
-import com.thinktank.generator.entity.BlockBigType;
-import com.thinktank.generator.entity.BlockInfo;
-import com.thinktank.generator.entity.BlockSmallType;
-import com.thinktank.generator.mapper.BlockApplicationBlockMapper;
-import com.thinktank.generator.mapper.BlockBigTypeMapper;
-import com.thinktank.generator.mapper.BlockInfoMapper;
-import com.thinktank.generator.mapper.BlockSmallTypeMapper;
+import com.thinktank.generator.entity.*;
+import com.thinktank.generator.mapper.*;
 import com.thinktank.generator.vo.BlockInfoVo;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
@@ -55,6 +49,9 @@ public class BlockServiceImpl implements BlockService {
 
     @Autowired
     private BlockInfoMapper blockInfoMapper;
+
+    @Autowired
+    private SysUserRoleMapper sysUserRoleMapper;
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
@@ -214,9 +211,34 @@ public class BlockServiceImpl implements BlockService {
         return blockInfoVo;
     }
 
+    // 验证是否有权限
+    private Boolean checkPermission(Long userId,Long blockId) {
+        if (StpUtil.hasRole(userId,"super-admin")) {
+            return true;
+        }
+        if (StpUtil.hasRoleOr("big-master", "small-master")) {
+            LambdaQueryWrapper<SysUserRole> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(SysUserRole::getUserId, StpUtil.getLoginIdAsLong());
+            queryWrapper.eq(SysUserRole::getBlockId, blockId);
+            queryWrapper.select(SysUserRole::getRoleId);
+            SysUserRole sysUserRole = sysUserRoleMapper.selectOne(queryWrapper);
+            Long bigMaster = 102L;
+            Long smallMaster = 103L;
+            return bigMaster.equals(sysUserRole.getRoleId()) || smallMaster.equals(sysUserRole.getRoleId());
+        }
+        return false;
+    }
+
     @Transactional
     @Override
     public BlockInfoVo update(BlockInfo blockInfo) {
+        long loginId = StpUtil.getLoginIdAsLong();
+        System.out.println(StpUtil.getRoleList());
+        if (!checkPermission(loginId,blockInfo.getId())) {
+            log.warn("用户id为:{}没有权限修改板块id为:{}的板块", loginId, blockInfo.getId());
+            throw new ThinkTankException("没有权限修改该板块！");
+        }
+
         // 去除头像url的‘http://192.168.88.150:9000’前缀
         String baseUrl = blockInfo.getAvatar();
         if (!baseUrl.contains("/block-avatar")) {
