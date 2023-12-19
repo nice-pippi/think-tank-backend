@@ -5,6 +5,7 @@ import com.thinktank.api.doc.BlockInfoDoc;
 import com.thinktank.common.utils.R;
 import com.thinktank.generator.entity.BlockInfo;
 import feign.hystrix.FallbackFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @Author: 弘
@@ -12,10 +13,12 @@ import feign.hystrix.FallbackFactory;
  * @Description: 类描述
  * @Version: 1.0
  */
+@Slf4j
 public class SearchClientFallBackFactory implements FallbackFactory<SearchClient> {
     @Override
     public SearchClient create(Throwable throwable) {
         String message = throwable.getMessage();
+        log.error("调用搜索服务异常:{}", message);
         return new SearchClient() {
             @Override
             public R<BlockInfoDoc> addBlockInfoDoc(BlockInfo blockInfo) {

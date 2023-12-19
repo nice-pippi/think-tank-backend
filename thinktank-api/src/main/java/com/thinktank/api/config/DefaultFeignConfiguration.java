@@ -1,6 +1,5 @@
 package com.thinktank.api.config;
 
-import com.thinktank.api.fallbackfactories.BlockClientFallBackFactory;
 import com.thinktank.api.fallbackfactories.SearchClientFallBackFactory;
 import com.thinktank.api.fallbackfactories.UserClientFallBackFactory;
 import com.thinktank.api.fallbackfactories.ValidateCodeClientFallBackFactory;
@@ -36,10 +35,5 @@ public class DefaultFeignConfiguration {
     @Bean
     public SearchClientFallBackFactory searchClientFallBackFactory() {
         return new SearchClientFallBackFactory();
-    }
-
-    @Bean
-    public BlockClientFallBackFactory blockClientFallBackFactory() {
-        return new BlockClientFallBackFactory();
     }
 }
