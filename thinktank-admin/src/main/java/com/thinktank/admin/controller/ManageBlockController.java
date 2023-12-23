@@ -40,4 +40,11 @@ public class ManageBlockController {
         manageBlockService.addBlock(blockInfo);
         return R.success("新增板块成功");
     }
+
+    @ApiOperation("删除板块")
+    @DeleteMapping("/{id}")
+    public R<String> deleteBlock(@PathVariable("id") Long id) {
+        manageBlockService.deleteBlock(id);
+        return R.success("删除板块成功");
+    }
 }

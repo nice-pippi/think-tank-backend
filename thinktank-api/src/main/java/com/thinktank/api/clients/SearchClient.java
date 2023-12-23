@@ -5,9 +5,7 @@ import com.thinktank.api.fallbackfactories.SearchClientFallBackFactory;
 import com.thinktank.common.utils.R;
 import com.thinktank.generator.entity.BlockInfo;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author: 弘
@@ -20,4 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface SearchClient {
     @PostMapping
     R<BlockInfoDoc> addBlockInfoDoc(@RequestBody BlockInfo blockInfo);
+
+    @DeleteMapping("{id}")
+    R<String> deleteBlockInfoDoc(@PathVariable("id") Long id);
 }

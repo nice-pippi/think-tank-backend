@@ -24,6 +24,11 @@ public class SearchClientFallBackFactory implements FallbackFactory<SearchClient
             public R<BlockInfoDoc> addBlockInfoDoc(BlockInfo blockInfo) {
                 return R.error(message);
             }
+
+            @Override
+            public R<String> deleteBlockInfoDoc(Long id) {
+                return R.error(message);
+            }
         };
     }
 }

@@ -17,4 +17,11 @@ public interface BlockInfoDocService {
      * @return 添加成功的板块信息文档
      */
     BlockInfoDoc addBlockInfoDoc(BlockInfo blockInfo);
+
+    /**
+     * 删除板块信息文档
+     *
+     * @param id - 板块信息文档ID
+     */
+    void deleteBlockInfoDoc(Long id);
 }

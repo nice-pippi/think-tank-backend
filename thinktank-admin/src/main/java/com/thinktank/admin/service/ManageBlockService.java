@@ -26,4 +26,11 @@ public interface ManageBlockService {
      * @param blockInfo 板块信息实体类
      */
     void addBlock(BlockInfo blockInfo);
+
+    /**
+     * 删除板块
+     *
+     * @param id 板块id
+     */
+    void deleteBlock(Long id);
 }

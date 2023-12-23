@@ -79,4 +79,17 @@ public class ManageBlockServiceImpl implements ManageBlockService {
             throw new ThinkTankException(result.getMsg());
         }
     }
+
+    @Transactional
+    @Override
+    public void deleteBlock(Long id) {
+        if (blockInfoMapper.deleteById(id) == 0) {
+            log.error("删除板块失败");
+            throw new ThinkTankException("删除板块失败");
+        }
+        R<String> result = searchClient.deleteBlockInfoDoc(id);
+        if (!result.getStatus().equals(200)) {
+            throw new ThinkTankException(result.getMsg());
+        }
+    }
 }

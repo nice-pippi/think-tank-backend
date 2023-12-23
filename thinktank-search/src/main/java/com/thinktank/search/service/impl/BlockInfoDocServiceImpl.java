@@ -1,7 +1,6 @@
 package com.thinktank.search.service.impl;
 
 import com.thinktank.generator.entity.BlockInfo;
-import com.thinktank.generator.mapper.BlockInfoMapper;
 import com.thinktank.search.doc.BlockInfoDoc;
 import com.thinktank.search.service.BlockInfoDocService;
 import org.springframework.beans.BeanUtils;
@@ -29,5 +28,10 @@ public class BlockInfoDocServiceImpl implements BlockInfoDocService {
         // 保存到es文档
         blockInfoDoc = elasticsearchRestTemplate.save(blockInfoDoc);
         return blockInfoDoc;
+    }
+
+    @Override
+    public void deleteBlockInfoDoc(Long id) {
+        elasticsearchRestTemplate.delete(id.toString(), BlockInfoDoc.class);
     }
 }

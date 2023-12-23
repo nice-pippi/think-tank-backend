@@ -7,10 +7,7 @@ import com.thinktank.search.service.BlockInfoDocService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author: 弘
@@ -31,5 +28,12 @@ public class BlockInfoDocController {
     @PostMapping
     public R<BlockInfoDoc> addBlockInfoDoc(@RequestBody BlockInfo blockInfo) {
         return R.success(blockInfoDocService.addBlockInfoDoc(blockInfo));
+    }
+
+    @ApiOperation("删除板块信息文档")
+    @DeleteMapping("{id}")
+    public R<String> deleteBlockInfoDoc(@PathVariable Long id) {
+        blockInfoDocService.deleteBlockInfoDoc(id);
+        return R.success("删除成功");
     }
 }

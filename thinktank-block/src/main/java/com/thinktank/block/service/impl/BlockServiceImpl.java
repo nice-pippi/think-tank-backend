@@ -233,7 +233,6 @@ public class BlockServiceImpl implements BlockService {
     @Override
     public BlockInfoVo update(BlockInfo blockInfo) {
         long loginId = StpUtil.getLoginIdAsLong();
-        System.out.println(StpUtil.getRoleList());
         if (!checkPermission(loginId,blockInfo.getId())) {
             log.warn("用户id为:{}没有权限修改板块id为:{}的板块", loginId, blockInfo.getId());
             throw new ThinkTankException("没有权限修改该板块！");
