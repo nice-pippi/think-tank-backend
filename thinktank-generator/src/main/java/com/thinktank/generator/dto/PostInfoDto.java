@@ -38,4 +38,10 @@ public class PostInfoDto extends PostInfo {
     @NotNull(groups = {InsertValidation.class}, message = "提问人数不能为空")
     @ApiModelProperty("提问人数")
     private Integer count;
+
+    @ApiModelProperty("板块大分类ID")
+    private Long bigTypeId;
+
+    @ApiModelProperty("板块小分类ID")
+    private Long smallTypeId;
 }

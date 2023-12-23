@@ -17,6 +17,12 @@ public class PostInfoVo extends PostInfo {
     @ApiModelProperty("板块名称")
     private String blockName;
 
+    @ApiModelProperty("板块大分类名称")
+    private String bigTypeName;
+
+    @ApiModelProperty("板块小分类名称")
+    private String smallTypeName;
+
     @ApiModelProperty("帖子内容")
     private String content;
 

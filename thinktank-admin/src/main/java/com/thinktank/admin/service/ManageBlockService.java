@@ -16,7 +16,7 @@ public interface ManageBlockService {
      * 分页查询板块
      *
      * @param blockInfoDto 板块信息实体类
-     * @return 分页查询板块
+     * @return 分页查询结果
      */
     IPage<BlockInfoVo> page(BlockInfoDto blockInfoDto);
 

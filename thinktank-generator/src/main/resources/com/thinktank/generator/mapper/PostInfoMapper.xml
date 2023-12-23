@@ -2,4 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thinktank.generator.mapper.PostInfoMapper">
 
+    <select id="page" resultType="com.thinktank.generator.vo.PostInfoVo">
+        SELECT t1.id,
+        t1.title,
+        t1.block_id,
+        t1.user_id,
+        t1.create_time,
+        t2.block_name,
+        t3.big_type_name,
+        t4.small_type_name
+        FROM post_info AS t1,
+        block_info AS t2,
+        block_big_type AS t3,
+        block_small_type AS t4
+        WHERE t1.block_id = t2.id
+        AND t2.big_type_id = t3.id
+        AND t2.small_type_id = t4.id
+        <if test="postInfoDto.bigTypeId != null">
+            AND t3.id = #{postInfoDto.bigTypeId}
+        </if>
+        <if test="postInfoDto.smallTypeId != null">
+            AND t4.id = #{postInfoDto.smallTypeId}
+        </if>
+        <if test="postInfoDto.title != null and postInfoDto.title!= ''">
+            AND t1.title LIKE CONCAT('%', #{postInfoDto.title}, '%')
+        </if>
+        AND t1.del_flag = 0
+        ORDER BY t1.create_time
+    </select>
 </mapper>
