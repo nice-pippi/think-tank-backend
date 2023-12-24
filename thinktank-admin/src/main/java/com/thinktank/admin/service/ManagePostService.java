@@ -18,4 +18,11 @@ public interface ManagePostService {
      * @return 分页查询板块
      */
     IPage<PostInfoVo> page(PostInfoDto postInfoDto);
+
+    /**
+     * 删除帖子
+     *
+     * @param id 帖子id
+     */
+    void delete(Long id);
 }

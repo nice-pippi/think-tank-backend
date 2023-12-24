@@ -16,4 +16,11 @@ public interface PostInfoDocService {
      * @return
      */
     void addPostInfoDoc(Message message);
+
+    /**
+     * 删除帖子信息文档
+     *
+     * @param id 帖子ID
+     */
+    void deletePostInfoDoc(Long id);
 }

@@ -29,4 +29,11 @@ public class ManagePostController {
     public R<IPage<PostInfoVo>> page(@RequestBody PostInfoDto postInfoDto) {
         return R.success(managePostService.page(postInfoDto));
     }
+
+    @ApiOperation("删除帖子")
+    @DeleteMapping("{id}")
+    public R<String> delete(@PathVariable("id") Long id) {
+        managePostService.delete(id);
+        return R.success("删除成功");
+    }
 }

@@ -14,11 +14,14 @@ import org.springframework.web.bind.annotation.*;
  * @Version: 1.0
  */
 @FeignClient(value = "search", fallbackFactory = SearchClientFallBackFactory.class)
-@RequestMapping("/search/block")
+@RequestMapping("/search")
 public interface SearchClient {
-    @PostMapping
+    @PostMapping("block")
     R<BlockInfoDoc> addBlockInfoDoc(@RequestBody BlockInfo blockInfo);
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/block/{id}")
     R<String> deleteBlockInfoDoc(@PathVariable("id") Long id);
+
+    @DeleteMapping("/post/{id}")
+    R<String> deletePostInfoDoc(@PathVariable("id") Long id);
 }

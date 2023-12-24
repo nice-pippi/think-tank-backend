@@ -75,4 +75,9 @@ public class PostInfoDocServiceImpl implements PostInfoDocService {
         // 保存到es文档
         elasticsearchRestTemplate.save(postInfoDoc);
     }
+
+    @Override
+    public void deletePostInfoDoc(Long id) {
+        elasticsearchRestTemplate.delete(id.toString(), PostInfoDoc.class);
+    }
 }

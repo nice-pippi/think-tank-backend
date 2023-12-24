@@ -3,7 +3,9 @@ package com.thinktank.admin.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.thinktank.admin.service.ManagePostService;
+import com.thinktank.api.clients.SearchClient;
 import com.thinktank.common.exception.ThinkTankException;
+import com.thinktank.common.utils.R;
 import com.thinktank.generator.dto.PostInfoDto;
 import com.thinktank.generator.entity.PostInfo;
 import com.thinktank.generator.mapper.PostInfoMapper;
@@ -24,6 +26,9 @@ public class ManagePostServiceImpl implements ManagePostService {
     @Autowired
     private PostInfoMapper postInfoMapper;
 
+    @Autowired
+    private SearchClient searchClient;
+
     @Override
     public IPage<PostInfoVo> page(PostInfoDto postInfoDto) {
         if (postInfoDto.getCurrentPage() == null || postInfoDto.getCurrentPage() < 0) {
@@ -36,5 +41,19 @@ public class ManagePostServiceImpl implements ManagePostService {
         }
         Page<PostInfo> page = new Page<>(postInfoDto.getCurrentPage(), postInfoDto.getSize());
         return postInfoMapper.page(page, postInfoDto);
+    }
+
+    @Override
+    public void delete(Long id) {
+        if (postInfoMapper.deleteById(id) == 0) {
+            log.error("删除帖子失败");
+            throw new ThinkTankException("删除帖子失败");
+        }
+
+        R<String> result = searchClient.deletePostInfoDoc(id);
+        if (result.getStatus() != 200) {
+            log.error("删除帖子文档失败");
+            throw new ThinkTankException("删除帖子文档失败");
+        }
     }
 }
