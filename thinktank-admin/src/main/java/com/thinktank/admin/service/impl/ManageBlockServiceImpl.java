@@ -87,6 +87,8 @@ public class ManageBlockServiceImpl implements ManageBlockService {
             log.error("删除板块失败");
             throw new ThinkTankException("删除板块失败");
         }
+
+        // 将板块信息从elasticsearch数据库删除
         R<String> result = searchClient.deleteBlockInfoDoc(id);
         if (!result.getStatus().equals(200)) {
             throw new ThinkTankException(result.getMsg());
