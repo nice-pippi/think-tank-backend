@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.thinktank.admin.service.ManagePostService;
 import com.thinktank.common.utils.R;
 import com.thinktank.generator.dto.PostInfoDto;
-import com.thinktank.generator.vo.PostCommentsVo;
 import com.thinktank.generator.vo.PostInfoVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
