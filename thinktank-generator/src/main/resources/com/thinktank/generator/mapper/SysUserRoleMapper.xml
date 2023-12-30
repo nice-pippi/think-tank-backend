@@ -27,14 +27,17 @@
         AND t1.block_id = t3.id
         AND t3.small_type_id = t4.id
         AND t3.big_type_id = t5.id
-        <if test="masterInfoDto.smallTypeId!= null">
+        <if test="masterInfoDto.smallTypeId != null">
             AND t4.id = #{masterInfoDto.smallTypeId}
         </if>
-        <if test="masterInfoDto.bigTypeId!= null">
+        <if test="masterInfoDto.bigTypeId != null">
             AND t5.id = #{masterInfoDto.bigTypeId}
         </if>
+        <if test="masterInfoDto.roleId != null">
+            AND t1.role_id = #{masterInfoDto.roleId}
+        </if>
         AND t1.role_id IN (102, 103)
-        <if test="masterInfoDto.username!= null and masterInfoDto.username!= ''">
+        <if test="masterInfoDto.username != null and masterInfoDto.username != ''">
             AND t2.username LIKE CONCAT('%', #{masterInfoDto.username}, '%')
         </if>
     </select>

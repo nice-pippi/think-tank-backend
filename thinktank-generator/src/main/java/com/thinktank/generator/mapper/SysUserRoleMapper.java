@@ -27,6 +27,12 @@ public interface SysUserRoleMapper extends BaseMapper<SysUserRole> {
      */
     List<String> getRoleList(Object id);
 
-
+    /**
+     * 根据分页信息和主账号信息查询用户角色信息
+     *
+     * @param page          分页对象
+     * @param masterInfoDto 角色信息对象
+     * @return 分页结果
+     */
     IPage<MasterInfoVo> page(Page<SysUserRole> page, @Param("masterInfoDto") MasterInfoDto masterInfoDto);
 }

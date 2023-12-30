@@ -18,6 +18,9 @@ public class MasterInfoDto extends SysUser {
     @ApiModelProperty("板块小分类ID")
     private Long smallTypeId;
 
+    @ApiModelProperty("角色ID")
+    private Long roleId;
+
     @ApiModelProperty("当前页")
     private Integer currentPage;
 
