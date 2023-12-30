@@ -12,6 +12,9 @@ import lombok.Data;
  */
 @Data
 public class MasterInfoVo extends SysUser {
+    @ApiModelProperty("板块ID")
+    private String blockId;
+
     @ApiModelProperty("板块名称")
     private String blockName;
 
