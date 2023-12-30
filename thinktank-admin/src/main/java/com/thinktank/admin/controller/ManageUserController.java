@@ -39,6 +39,13 @@ public class ManageUserController {
         return R.success("更改密码成功");
     }
 
+    @ApiOperation("修改用户状态")
+    @PutMapping("updateStatus")
+    public R<String> updateStatus(@RequestBody SysUser sysUser) {
+        manageUserService.updateStatus(sysUser);
+        return R.success("更改用户状态成功");
+    }
+
     @ApiOperation("禁言用户")
     @PutMapping("prohibit")
     public R<String> prohibit(@RequestBody @Validated(UpdateValidation.class) SysUserRole sysUserRole) {

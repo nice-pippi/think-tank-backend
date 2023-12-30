@@ -2,6 +2,7 @@ package com.thinktank.admin.service.impl;
 
 import cn.dev33.satoken.secure.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.thinktank.admin.service.ManageUserService;
@@ -15,6 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @Author: 弘
@@ -48,11 +52,56 @@ public class ManageUserServiceImpl implements ManageUserService {
     @Transactional
     @Override
     public void updatePassword(SysUser sysUser) {
+        if (sysUser.getId() == null) {
+            log.error("用户id不能为空");
+            throw new ThinkTankException("用户id不能为空");
+        }
+
+        if (sysUser.getPassword() == null) {
+            log.error("密码不能为空");
+            throw new ThinkTankException("密码不能为空");
+        }
+
+        // 新密码
         String newPassword = BCrypt.hashpw(sysUser.getPassword(), BCrypt.gensalt());
-        sysUser.setPassword(newPassword);
-        if (sysUserMapper.updateById(sysUser) == 0) {
+
+        LambdaUpdateWrapper<SysUser> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.eq(SysUser::getId, sysUser.getId());
+        updateWrapper.set(SysUser::getPassword, newPassword);
+
+        if (sysUserMapper.update(null, updateWrapper) == 0) {
             log.error("修改密码失败");
             throw new ThinkTankException("修改密码失败");
+        }
+    }
+
+    @Transactional
+    @Override
+    public void updateStatus(SysUser sysUser) {
+        if (sysUser.getId() == null) {
+            log.error("用户id不能为空");
+            throw new ThinkTankException("用户id不能为空");
+        }
+
+        if (sysUser.getStatus() == null) {
+            log.error("用户状态值不能为空");
+            throw new ThinkTankException("用户状态值不能为空");
+        }
+
+        // 合法用户状态值
+        List<Integer> list = Arrays.asList(0, 1);
+
+        if (!list.contains(sysUser.getStatus())) {
+            log.error("用户状态值非法");
+            throw new ThinkTankException("用户状态值非法");
+        }
+
+        LambdaUpdateWrapper<SysUser> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.eq(SysUser::getId, sysUser.getId());
+        updateWrapper.set(SysUser::getStatus, sysUser.getStatus());
+        if (sysUserMapper.update(null, updateWrapper) == 0) {
+            log.error("修改用户状态值失败");
+            throw new ThinkTankException("修改用户状态值失败");
         }
     }
 

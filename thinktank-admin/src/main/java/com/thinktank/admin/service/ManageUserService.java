@@ -28,6 +28,13 @@ public interface ManageUserService {
     void updatePassword(SysUser sysUser);
 
     /**
+     * 更新登录类型
+     *
+     * @param sysUser 用户对象
+     */
+    void updateStatus(SysUser sysUser);
+
+    /**
      * 禁言用户
      *
      * @param sysUserRole 用户角色对象
