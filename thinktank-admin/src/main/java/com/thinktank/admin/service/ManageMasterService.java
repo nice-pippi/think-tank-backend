@@ -2,6 +2,7 @@ package com.thinktank.admin.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.thinktank.generator.dto.MasterInfoDto;
+import com.thinktank.generator.entity.SysUserRole;
 import com.thinktank.generator.vo.MasterInfoVo;
 
 /**
@@ -19,4 +20,10 @@ public interface ManageMasterService {
      */
     IPage<MasterInfoVo> page(MasterInfoDto masterInfoDto);
 
+    /**
+     * 更新角色
+     *
+     * @param sysUserRole 角色信息
+     */
+    void updateRole(SysUserRole sysUserRole);
 }

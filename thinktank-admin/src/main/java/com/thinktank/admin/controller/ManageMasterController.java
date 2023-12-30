@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.thinktank.admin.service.ManageMasterService;
 import com.thinktank.common.utils.R;
 import com.thinktank.generator.dto.MasterInfoDto;
+import com.thinktank.generator.entity.SysUserRole;
 import com.thinktank.generator.vo.MasterInfoVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,5 +31,12 @@ public class ManageMasterController {
     @RequestMapping("/page")
     public R<IPage<MasterInfoVo>> page(@RequestBody MasterInfoDto masterInfoDto) {
         return R.success(manageMasterService.page(masterInfoDto));
+    }
+
+    @ApiOperation("更新角色")
+    @PutMapping
+    public R<String> updateRole(@RequestBody SysUserRole sysUserRole) {
+        manageMasterService.updateRole(sysUserRole);
+        return R.success("更改成功");
     }
 }
