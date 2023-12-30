@@ -1,7 +1,11 @@
 package com.thinktank.generator.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.thinktank.generator.dto.SysUserDto;
 import com.thinktank.generator.entity.SysUser;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -39,4 +43,6 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      */
     @Select("select id from sys_user order by rand() limit #{count}")
     List<Long> selectRandomList(Integer count);
+
+    IPage<SysUser> page(Page<SysUser> page,@Param("sysUserDto") SysUserDto sysUserDto);
 }

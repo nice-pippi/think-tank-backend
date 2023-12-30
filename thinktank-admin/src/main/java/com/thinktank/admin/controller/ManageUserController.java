@@ -1,8 +1,11 @@
 package com.thinktank.admin.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.thinktank.admin.service.ManageUserService;
 import com.thinktank.common.utils.R;
 import com.thinktank.common.validationgroups.UpdateValidation;
+import com.thinktank.generator.dto.SysUserDto;
+import com.thinktank.generator.entity.SysUser;
 import com.thinktank.generator.entity.SysUserRole;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,6 +25,12 @@ import org.springframework.web.bind.annotation.*;
 public class ManageUserController {
     @Autowired
     private ManageUserService manageUserService;
+
+    @ApiOperation("分页查询用户")
+    @PostMapping("/page")
+    public R<IPage<SysUser>> page(@RequestBody SysUserDto sysUserDto) {
+        return R.success(manageUserService.page(sysUserDto));
+    }
 
     @ApiOperation("禁言用户")
     @PutMapping("prohibit")

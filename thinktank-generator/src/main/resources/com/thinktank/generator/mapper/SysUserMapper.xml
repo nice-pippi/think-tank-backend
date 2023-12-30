@@ -22,4 +22,21 @@
           AND t2.role_id = 103
           AND t2.block_id = #{id}
     </select>
+    <select id="page" resultType="com.thinktank.generator.entity.SysUser">
+        select *
+        from sys_user
+        where del_flag = 0
+        <if test="sysUserDto.sex !=null">
+            AND sex = #{sysUserDto.sex}
+        </if>
+        <if test="sysUserDto.status!=null">
+            AND status = #{sysUserDto.status}
+        </if>
+        <if test="sysUserDto.loginType!=null">
+            AND login_type = #{sysUserDto.loginType}
+        </if>
+        <if test="sysUserDto.username!= null and sysUserDto.username!= ''">
+            AND username LIKE CONCAT('%', #{sysUserDto.username}, '%')
+        </if>
+    </select>
 </mapper>

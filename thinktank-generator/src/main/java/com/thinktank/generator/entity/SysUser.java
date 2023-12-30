@@ -67,7 +67,7 @@ public class SysUser implements Serializable {
     @ApiModelProperty("个人签名")
     private String description;
 
-    @ApiModelProperty("用户状态（0:正常 1:禁言）")
+    @ApiModelProperty("用户状态（0:正常 1:限制登录）")
     private Integer status;
 
     @ApiModelProperty("注册时间")
