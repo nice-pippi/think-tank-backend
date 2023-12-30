@@ -1,7 +1,12 @@
 package com.thinktank.generator.mapper;
 
-import com.thinktank.generator.entity.SysUserRole;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.thinktank.generator.dto.MasterInfoDto;
+import com.thinktank.generator.entity.SysUserRole;
+import com.thinktank.generator.vo.MasterInfoVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -22,4 +27,6 @@ public interface SysUserRoleMapper extends BaseMapper<SysUserRole> {
      */
     List<String> getRoleList(Object id);
 
+
+    IPage<MasterInfoVo> page(Page<SysUserRole> page, @Param("masterInfoDto") MasterInfoDto masterInfoDto);
 }

@@ -9,4 +9,32 @@
         where t1.role_id = t2.id
           and t1.user_id = #{id}
     </select>
+    <select id="page" resultType="com.thinktank.generator.vo.MasterInfoVo">
+        SELECT t1.role_id,
+        t2.id,
+        t2.username,
+        t2.avatar,
+        t3.block_name,
+        t4.small_type_name,
+        t5.big_type_name
+        FROM sys_user_role AS t1,
+        sys_user AS t2,
+        block_info AS t3,
+        block_small_type AS t4,
+        block_big_type AS t5
+        WHERE t1.user_id = t2.id
+        AND t1.block_id = t3.id
+        AND t3.small_type_id = t4.id
+        AND t3.big_type_id = t5.id
+        <if test="masterInfoDto.smallTypeId!= null">
+            AND t4.id = #{masterInfoDto.smallTypeId}
+        </if>
+        <if test="masterInfoDto.bigTypeId!= null">
+            AND t5.id = #{masterInfoDto.bigTypeId}
+        </if>
+        AND t1.role_id IN (102, 103)
+        <if test="masterInfoDto.username!= null and masterInfoDto.username!= ''">
+            AND t2.username LIKE CONCAT('%', #{masterInfoDto.username}, '%')
+        </if>
+    </select>
 </mapper>
