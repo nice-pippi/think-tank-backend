@@ -27,9 +27,16 @@ public class ManageUserController {
     private ManageUserService manageUserService;
 
     @ApiOperation("分页查询用户")
-    @PostMapping("/page")
+    @PostMapping("page")
     public R<IPage<SysUser>> page(@RequestBody SysUserDto sysUserDto) {
         return R.success(manageUserService.page(sysUserDto));
+    }
+
+    @ApiOperation("修改用户密码")
+    @PutMapping("updatePassword")
+    public R<String> updatePassword(@RequestBody SysUser sysUser) {
+        manageUserService.updatePassword(sysUser);
+        return R.success("更改密码成功");
     }
 
     @ApiOperation("禁言用户")

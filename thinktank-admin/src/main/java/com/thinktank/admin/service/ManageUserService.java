@@ -21,6 +21,13 @@ public interface ManageUserService {
     IPage<SysUser> page(SysUserDto sysUserDto);
 
     /**
+     * 更新密码
+     *
+     * @param sysUser 用户对象
+     */
+    void updatePassword(SysUser sysUser);
+
+    /**
      * 禁言用户
      *
      * @param sysUserRole 用户角色对象

@@ -1,5 +1,6 @@
 package com.thinktank.admin.service.impl;
 
+import cn.dev33.satoken.secure.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -42,6 +43,17 @@ public class ManageUserServiceImpl implements ManageUserService {
         }
         Page<SysUser> page = new Page<>(sysUserDto.getCurrentPage(), sysUserDto.getSize());
         return sysUserMapper.page(page, sysUserDto);
+    }
+
+    @Transactional
+    @Override
+    public void updatePassword(SysUser sysUser) {
+        String newPassword = BCrypt.hashpw(sysUser.getPassword(), BCrypt.gensalt());
+        sysUser.setPassword(newPassword);
+        if (sysUserMapper.updateById(sysUser) == 0) {
+            log.error("修改密码失败");
+            throw new ThinkTankException("修改密码失败");
+        }
     }
 
     @Transactional
