@@ -49,7 +49,6 @@ public class ManageUserController {
     @ApiOperation("禁言用户")
     @PutMapping("prohibit")
     public R<String> prohibit(@RequestBody @Validated(UpdateValidation.class) SysUserRole sysUserRole) {
-        System.out.println(sysUserRole);
         manageUserService.prohibit(sysUserRole);
         return R.success("禁言成功");
     }
