@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @Author: 弘
  * @CreateTime: 2023年12⽉18⽇ 17:39
@@ -46,5 +48,11 @@ public class ManageBlockController {
     public R<String> deleteBlock(@PathVariable("id") Long id) {
         manageBlockService.deleteBlock(id);
         return R.success("删除板块成功");
+    }
+
+    @ApiOperation("根据板块小分类ID查询所有板块")
+    @GetMapping("/getAllBlockBySmallTypeId/{smallTypeId}")
+    public R<List<BlockInfo>> getAllBlockBySmallTypeId(@PathVariable("smallTypeId") Long smallTypeId) {
+        return R.success(manageBlockService.getAllBlockBySmallTypeId(smallTypeId));
     }
 }
