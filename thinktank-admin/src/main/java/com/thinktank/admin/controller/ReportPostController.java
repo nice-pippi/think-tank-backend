@@ -32,14 +32,14 @@ public class ReportPostController {
     }
 
     @ApiOperation("禁言")
-    @PutMapping("prohibit/{id}")
+    @PutMapping("/prohibit/{id}")
     public R<String> prohibit(@PathVariable("id") Long id) {
         reportPostService.prohibit(id);
         return R.success("已禁言");
     }
 
     @ApiOperation("驳回举报")
-    @PutMapping("reject/{id}")
+    @PutMapping("/reject/{id}")
     public R<String> reject(@PathVariable("id") Long id) {
         reportPostService.reject(id);
         return R.success("已驳回该举报请求");

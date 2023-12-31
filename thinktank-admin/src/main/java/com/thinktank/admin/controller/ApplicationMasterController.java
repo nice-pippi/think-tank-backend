@@ -33,14 +33,14 @@ public class ApplicationMasterController {
     }
 
     @ApiOperation("通过板主申请")
-    @PutMapping("allow/{id}")
+    @PutMapping("/allow/{id}")
     public R<String> allow(@PathVariable("id") Long id) {
         applicationMasterManageService.allow(id);
         return R.success("已通过该申请");
     }
 
     @ApiOperation("驳回板主申请")
-    @PutMapping("reject/{id}")
+    @PutMapping("/reject/{id}")
     public R<String> reject(@PathVariable("id") Long id) {
         applicationMasterManageService.reject(id);
         return R.success("已驳回该申请");

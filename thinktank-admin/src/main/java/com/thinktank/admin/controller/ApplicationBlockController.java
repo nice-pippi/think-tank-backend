@@ -33,14 +33,14 @@ public class ApplicationBlockController {
     }
 
     @ApiOperation("通过板块创建申请")
-    @PutMapping("allow/{id}")
+    @PutMapping("/allow/{id}")
     public R<String> allow(@PathVariable("id") Long id) {
         applicationBlockManageService.allow(id);
         return R.success("已通过该申请");
     }
 
     @ApiOperation("驳回板块创建申请")
-    @PutMapping("reject/{id}")
+    @PutMapping("/reject/{id}")
     public R<String> reject(@PathVariable("id") Long id) {
         applicationBlockManageService.reject(id);
         return R.success("已驳回该申请");

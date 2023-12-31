@@ -24,7 +24,7 @@ public class ManagePostController {
     private ManagePostService managePostService;
 
     @ApiOperation("分页查询帖子")
-    @RequestMapping("/page")
+    @RequestMapping("page")
     public R<IPage<PostInfoVo>> page(@RequestBody PostInfoDto postInfoDto) {
         return R.success(managePostService.page(postInfoDto));
     }

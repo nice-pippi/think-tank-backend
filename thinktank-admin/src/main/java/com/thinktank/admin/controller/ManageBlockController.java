@@ -29,7 +29,7 @@ public class ManageBlockController {
     private ManageBlockService manageBlockService;
 
     @ApiOperation("查询所有板块")
-    @PostMapping("/page")
+    @PostMapping("page")
     public R<IPage<BlockInfoVo>> page(@RequestBody @Validated(QueryValidation.class) BlockInfoDto blockInfoDto) {
         return R.success(manageBlockService.page(blockInfoDto));
     }
@@ -42,7 +42,7 @@ public class ManageBlockController {
     }
 
     @ApiOperation("删除板块")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     public R<String> deleteBlock(@PathVariable("id") Long id) {
         manageBlockService.deleteBlock(id);
         return R.success("删除板块成功");

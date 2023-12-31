@@ -28,7 +28,7 @@ public class ManageMasterController {
     private ManageMasterService manageMasterService;
 
     @ApiOperation("分页查询板主")
-    @RequestMapping("/page")
+    @RequestMapping("page")
     public R<IPage<MasterInfoVo>> page(@RequestBody MasterInfoDto masterInfoDto) {
         return R.success(manageMasterService.page(masterInfoDto));
     }
