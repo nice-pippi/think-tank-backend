@@ -120,4 +120,12 @@ public class ManageUserServiceImpl implements ManageUserService {
             sysUserRoleMapper.insert(sysUserRole);
         }
     }
+
+    @Override
+    public void delete(Long id) {
+        if (sysUserMapper.deleteById(id) == 0) {
+            log.error("删除用户失败");
+            throw new ThinkTankException("删除用户失败");
+        }
+    }
 }

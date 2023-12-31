@@ -40,4 +40,11 @@ public interface ManageUserService {
      * @param sysUserRole 用户角色对象
      */
     void prohibit(SysUserRole sysUserRole);
+
+    /**
+     * 删除用户
+     *
+     * @param id 用户ID
+     */
+    void delete(Long id);
 }

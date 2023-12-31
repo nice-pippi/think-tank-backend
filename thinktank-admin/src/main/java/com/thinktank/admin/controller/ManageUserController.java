@@ -52,4 +52,11 @@ public class ManageUserController {
         manageUserService.prohibit(sysUserRole);
         return R.success("禁言成功");
     }
+
+    @ApiOperation("删除用户")
+    @DeleteMapping("{id}")
+    public R<String> delete(@PathVariable("id") Long id) {
+        manageUserService.delete(id);
+        return R.success("删除成功");
+    }
 }
