@@ -70,6 +70,9 @@ public class ManageBlockServiceImpl implements ManageBlockService {
             throw new ThinkTankException("板块小分类不存在");
         }
 
+        String avatar = "/block-avatar/default_avatar.png";
+        blockInfo.setAvatar(avatar);
+
         if (blockInfoMapper.insert(blockInfo) == 0) {
             log.error("新增板块失败，可能存在同名板块");
             throw new ThinkTankException("新增板块失败，可能存在同名板块");
