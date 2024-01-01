@@ -302,7 +302,7 @@ public class PostServiceImpl implements PostService {
             // 查数据库
             LambdaQueryWrapper<PostInfo> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.orderByDesc(PostInfo::getCreateTime);
-            queryWrapper.last("limit 20");
+            queryWrapper.last("limit 30");
             List<PostInfo> postInfoList = postInfoMapper.selectList(queryWrapper);
             list = postInfoList.stream().map(this::getPostInfo).collect(Collectors.toList());
 
