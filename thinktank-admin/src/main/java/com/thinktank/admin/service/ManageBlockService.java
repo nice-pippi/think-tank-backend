@@ -5,8 +5,6 @@ import com.thinktank.generator.dto.BlockInfoDto;
 import com.thinktank.generator.entity.BlockInfo;
 import com.thinktank.generator.vo.BlockInfoVo;
 
-import java.util.List;
-
 /**
  * @Author: 弘
  * @CreateTime: 2023年12⽉18⽇ 17:44
@@ -35,12 +33,4 @@ public interface ManageBlockService {
      * @param id 板块id
      */
     void deleteBlock(Long id);
-
-    /**
-     * 根据小分类id查询所有板块
-     *
-     * @param smallTypeId 小分类id
-     * @return 板块集合
-     */
-    List<BlockInfo> getAllBlockBySmallTypeId(Long smallTypeId);
 }

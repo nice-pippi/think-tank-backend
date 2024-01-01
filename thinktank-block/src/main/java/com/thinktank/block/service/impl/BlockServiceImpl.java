@@ -352,4 +352,12 @@ public class BlockServiceImpl implements BlockService {
         }
         return list;
     }
+
+    @Override
+    public List<BlockInfo> getAllBlockBySmallTypeId(Long smallTypeId) {
+        LambdaQueryWrapper<BlockInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(BlockInfo::getSmallTypeId, smallTypeId);
+        queryWrapper.select(BlockInfo::getId, BlockInfo::getBlockName);
+        return blockInfoMapper.selectList(queryWrapper);
+    }
 }

@@ -1,6 +1,5 @@
 package com.thinktank.admin.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.thinktank.admin.service.ManageBlockService;
@@ -20,8 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * @Author: 弘
@@ -99,13 +96,5 @@ public class ManageBlockServiceImpl implements ManageBlockService {
         if (!result.getStatus().equals(200)) {
             throw new ThinkTankException(result.getMsg());
         }
-    }
-
-    @Override
-    public List<BlockInfo> getAllBlockBySmallTypeId(Long smallTypeId) {
-        LambdaQueryWrapper<BlockInfo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(BlockInfo::getSmallTypeId, smallTypeId);
-        queryWrapper.select(BlockInfo::getId, BlockInfo::getBlockName);
-        return blockInfoMapper.selectList(queryWrapper);
     }
 }

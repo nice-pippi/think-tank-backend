@@ -66,4 +66,10 @@ public class BlockController {
     public R<List<BlockSmallType>> getBlockSmallTypeList() {
         return R.success(blockService.getBlockSmallTypeList());
     }
+
+    @ApiOperation("根据板块小分类ID查询所有板块")
+    @GetMapping("/getAllBlockBySmallTypeId/{smallTypeId}")
+    public R<List<BlockInfo>> getAllBlockBySmallTypeId(@PathVariable("smallTypeId") Long smallTypeId) {
+        return R.success(blockService.getAllBlockBySmallTypeId(smallTypeId));
+    }
 }

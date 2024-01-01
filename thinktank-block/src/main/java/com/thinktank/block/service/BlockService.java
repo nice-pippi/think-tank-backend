@@ -60,4 +60,11 @@ public interface BlockService {
      */
     List<BlockSmallType> getBlockSmallTypeList();
 
+    /**
+     * 根据小分类ID获取所有板块
+     *
+     * @param smallTypeId 小分类ID
+     * @return 返回板块的列表
+     */
+    List<BlockInfo> getAllBlockBySmallTypeId(Long smallTypeId);
 }
