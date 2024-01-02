@@ -67,6 +67,9 @@ public class PostServiceImpl implements PostService {
     private MessagePrivateMapper messagePrivateMapper;
 
     @Autowired
+    private MessageChatRoomMapper messageChatRoomMapper;
+
+    @Autowired
     private PostLikesMapper postLikesMapper;
 
     @Autowired
@@ -136,12 +139,20 @@ public class PostServiceImpl implements PostService {
             }
 
             // 遍历随机用户，将提问信息记录到用户私信表中
-            String content = postInfoDto.getContent();
+            String url = String.format("http://localhost:8585/postIndex/%s/%s", postComments.getBlockId(), postComments.getPostId());
+            String context = String.format("我向您提问了一个问题:%s，快来为我解答吧~(%s)", postInfoDto.getTitle(), url); // 消息内容
             for (Long acceptUserId : randomList) {
+                MessageChatRoom messageChatRoom = new MessageChatRoom();
+                messageChatRoom.setUserIdA(loginId);
+                messageChatRoom.setUserIdB(acceptUserId);
+                messageChatRoom.setLatestContent(context);
+                messageChatRoomMapper.insert(messageChatRoom);
+
                 MessagePrivate messagePrivate = new MessagePrivate();
                 messagePrivate.setSendUserId(loginId);
                 messagePrivate.setAcceptUserId(acceptUserId);
-                messagePrivate.setContent(content);
+                messagePrivate.setContent(context);
+                messagePrivate.setChatRoomId(messageChatRoom.getId());
                 messagePrivateMapper.insert(messagePrivate);
             }
         }
