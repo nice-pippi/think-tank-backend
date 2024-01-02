@@ -1,7 +1,6 @@
 package com.thinktank.auth.service.impl;
 
 import cn.dev33.satoken.secure.BCrypt;
-import cn.dev33.satoken.stp.SaLoginConfig;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.thinktank.auth.service.AddUserService;
@@ -69,6 +68,11 @@ public class LoginServiceImpl implements LoginService {
         // 添加到数据库
         SysUser sysUser = addUserService.addUser(userinfo);
 
+        if (sysUser.getStatus().equals(1)) {
+            log.error("用户{}已被限制登录", sysUser.getId());
+            throw new ThinkTankException("您已被限制登录！");
+        }
+
         // 会话登录
         StpUtil.login(sysUser.getId().toString());
 
@@ -131,6 +135,11 @@ public class LoginServiceImpl implements LoginService {
         // 如果为false，抛出异常提示用户账号或密码错误
         if (!result) {
             throw new ThinkTankException("账号或密码错误！");
+        }
+
+        if (user.getStatus().equals(1)) {
+            log.error("用户{}已被限制登录", sysUser.getId());
+            throw new ThinkTankException("您已被限制登录！");
         }
 
         // 为该用户创建会话登录
