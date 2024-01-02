@@ -35,6 +35,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -318,7 +319,7 @@ public class PostServiceImpl implements PostService {
             list = postInfoList.stream().map(this::getPostInfo).collect(Collectors.toList());
 
             // 写入缓存
-            ops.set(namespace, ObjectMapperUtil.toJSON(list));
+            ops.set(namespace, ObjectMapperUtil.toJSON(list),10, TimeUnit.MINUTES);
         } finally {
             lock.unlock();
         }
