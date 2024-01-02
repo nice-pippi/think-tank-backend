@@ -26,6 +26,7 @@ public class MessagePrivateServiceImpl implements MessagePrivateService {
     public List<MessagePrivate> getPrivateMessage(Long chatRoomId) {
         LambdaQueryWrapper<MessagePrivate> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(MessagePrivate::getChatRoomId, chatRoomId);
+        queryWrapper.orderByAsc(MessagePrivate::getCreateTime);
         return messagePrivateMapper.selectList(queryWrapper);
     }
 
