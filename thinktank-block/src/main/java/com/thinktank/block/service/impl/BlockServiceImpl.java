@@ -212,8 +212,8 @@ public class BlockServiceImpl implements BlockService {
     }
 
     // 验证是否有权限
-    private Boolean checkPermission(Long userId,Long blockId) {
-        if (StpUtil.hasRole(userId,"super-admin")) {
+    private Boolean checkPermission(Long userId, Long blockId) {
+        if (StpUtil.hasRole(userId, "super-admin")) {
             return true;
         }
         if (StpUtil.hasRoleOr("big-master", "small-master")) {
@@ -233,7 +233,7 @@ public class BlockServiceImpl implements BlockService {
     @Override
     public BlockInfoVo update(BlockInfo blockInfo) {
         long loginId = StpUtil.getLoginIdAsLong();
-        if (!checkPermission(loginId,blockInfo.getId())) {
+        if (!checkPermission(loginId, blockInfo.getId())) {
             log.warn("用户id为:{}没有权限修改板块id为:{}的板块", loginId, blockInfo.getId());
             throw new ThinkTankException("没有权限修改该板块！");
         }
@@ -284,7 +284,7 @@ public class BlockServiceImpl implements BlockService {
         }
 
         // 为不同板块信息分配一个锁
-        RLock lock = redissonClient.getLock(namespace + ":lock:");
+        RLock lock = redissonClient.getLock(namespace + ":lock");
 
         // 开启锁
         lock.lock();
@@ -326,7 +326,7 @@ public class BlockServiceImpl implements BlockService {
         }
 
         // 为不同板块信息分配一个锁
-        RLock lock = redissonClient.getLock(namespace + ":lock:");
+        RLock lock = redissonClient.getLock(namespace + ":lock");
 
         // 开启锁
         lock.lock();
@@ -359,5 +359,37 @@ public class BlockServiceImpl implements BlockService {
         queryWrapper.eq(BlockInfo::getSmallTypeId, smallTypeId);
         queryWrapper.select(BlockInfo::getId, BlockInfo::getBlockName);
         return blockInfoMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<BlockInfo> getHotBlock() {
+        String namespace = "block:hot";
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+        String result = ops.get(namespace);
+
+        // 若命中缓存，则直接返回数据
+        if (result != null) {
+            return RedisCacheUtil.getObjectByTypeReference(result, new TypeReference<List<BlockInfo>>() {
+            });
+        }
+
+        // 为查询热门板块分配一个锁
+        RLock lock = redissonClient.getLock(namespace + ":lock");
+        lock.lock();
+        try {
+            // 若命中缓存，则直接返回数据
+            result = ops.get(namespace);
+            if (result != null) {
+                return RedisCacheUtil.getObjectByTypeReference(result, new TypeReference<List<BlockInfo>>() {
+                });
+            }
+            List<BlockInfo> list = blockInfoMapper.getHotBlock();
+
+            // 写入redis
+            ops.set(namespace, ObjectMapperUtil.toJSON(list));
+            return list;
+        } finally {
+            lock.unlock();
+        }
     }
 }

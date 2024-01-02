@@ -44,6 +44,7 @@ public class SaTokenConfig implements WebMvcConfigurer {
                                     "/block/{id}", // 获取板块信息
                                     "/block/master/{id}", // 查看当前板块板主以及小板主信息
                                     "/block/getAllBlockBySmallTypeId/{smallTypeId}", // 根据板块小分类ID查询所有板块
+                                    "/block/getHotBlock", // 获取10个热门板块
                                     "/search/searchBlock", // 搜索板块
                                     "/search/searchPost", // 搜索帖子
                                     "/post/comment/page/{postId}/{currentPage}", // 帖子评论分页

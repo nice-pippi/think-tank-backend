@@ -27,4 +27,12 @@
         AND t1.del_flag = 0
         ORDER BY t1.create_time
     </select>
+
+    <select id="getHotBlock" resultType="com.thinktank.generator.entity.BlockInfo">
+        SELECT id,
+               block_name
+        FROM block_info
+        WHERE id IN (SELECT block_id FROM block_follow GROUP BY block_id ORDER BY COUNT(*) DESC)
+        LIMIT 10
+    </select>
 </mapper>

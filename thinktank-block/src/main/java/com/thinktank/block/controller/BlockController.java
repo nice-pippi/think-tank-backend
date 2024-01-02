@@ -72,4 +72,10 @@ public class BlockController {
     public R<List<BlockInfo>> getAllBlockBySmallTypeId(@PathVariable("smallTypeId") Long smallTypeId) {
         return R.success(blockService.getAllBlockBySmallTypeId(smallTypeId));
     }
+
+    @ApiOperation("获取10个热门板块")
+    @GetMapping("getHotBlock")
+    public R<List<BlockInfo>> getHotBlock() {
+        return R.success(blockService.getHotBlock());
+    }
 }

@@ -67,4 +67,11 @@ public interface BlockService {
      * @return 返回板块的列表
      */
     List<BlockInfo> getAllBlockBySmallTypeId(Long smallTypeId);
+
+    /**
+     * 获取10个热门板块
+     *
+     * @return 返回热门板块的列表
+     */
+    List<BlockInfo> getHotBlock();
 }
