@@ -41,6 +41,7 @@ public class CommentLikeJob {
     public void writeCommentLikesToDB() {
         String namespace = "post:comment:like";
         HashOperations<String, String, Object> ops = redisTemplate.opsForHash();
+        // 获取指定命名空间下的所有Hash键值对
         Map<String, Object> entries = ops.entries(namespace);
 
         for (Map.Entry<String, Object> entry : entries.entrySet()) {
