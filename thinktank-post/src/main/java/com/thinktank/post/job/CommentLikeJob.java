@@ -39,6 +39,7 @@ public class CommentLikeJob {
     @Transactional
     @XxlJob("writeCommentLikesToDB")
     public void writeCommentLikesToDB() {
+        log.info("更新点赞记录帖子任务开始执行");
         String namespace = "post:comment:like";
         HashOperations<String, String, Object> ops = redisTemplate.opsForHash();
         // 获取指定命名空间下的所有Hash键值对
@@ -79,5 +80,6 @@ public class CommentLikeJob {
                 postCommentLikesMapper.delete(queryWrapper2);
             }
         }
+        log.info("更新点赞记录帖子任务执行结束");
     }
 }
