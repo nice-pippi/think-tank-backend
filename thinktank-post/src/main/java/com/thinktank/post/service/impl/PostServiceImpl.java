@@ -13,6 +13,7 @@ import com.thinktank.generator.dto.PostInfoDto;
 import com.thinktank.generator.entity.*;
 import com.thinktank.generator.mapper.*;
 import com.thinktank.generator.vo.PostCommentsVo;
+import com.thinktank.generator.vo.PostHotVo;
 import com.thinktank.generator.vo.PostInfoVo;
 import com.thinktank.post.config.AddPostDocFanoutConfig;
 import com.thinktank.post.service.PostService;
@@ -72,6 +73,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private PostLikesMapper postLikesMapper;
+
+    @Autowired
+    private PostScoreMapper postScoreMapper;
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
@@ -319,7 +323,7 @@ public class PostServiceImpl implements PostService {
             list = postInfoList.stream().map(this::getPostInfo).collect(Collectors.toList());
 
             // 写入缓存
-            ops.set(namespace, ObjectMapperUtil.toJSON(list),10, TimeUnit.MINUTES);
+            ops.set(namespace, ObjectMapperUtil.toJSON(list), 10, TimeUnit.MINUTES);
         } finally {
             lock.unlock();
         }
@@ -467,5 +471,75 @@ public class PostServiceImpl implements PostService {
         int postsPerPage = 10; // 每页帖子数量
         Page<PostInfo> page = new Page<>(currentPage, postsPerPage);
         return postLikesMapper.getFavoritePage(page, userId);
+    }
+
+    @Override
+    public List<PostHotVo> getHotPostByTop5() {
+        // 先查缓存
+        String namespace = "post:hot:top5";
+
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+
+        // 查询redis中是否存在数据，若存在直接返回
+        String result = ops.get(namespace);
+        if (result != null) {
+            return RedisCacheUtil.getObjectByTypeReference(result, new TypeReference<List<PostHotVo>>() {
+            });
+        }
+
+        // 为最新帖子分配锁
+        RLock lock = redissonClient.getLock(namespace + ":lock");
+        try {
+            // 查询redis中是否存在数据，若存在直接返回
+            result = ops.get(namespace);
+            if (result != null) {
+                return RedisCacheUtil.getObjectByTypeReference(result, new TypeReference<List<PostHotVo>>() {
+                });
+            }
+
+            // 查询数据库
+            List<PostHotVo> list = postScoreMapper.getHotPostByTop5();
+
+            // 取top5写入缓存，用于首页显示
+            redisTemplate.opsForValue().set(namespace, ObjectMapperUtil.toJSON(list));
+            return list;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public List<PostHotVo> getHotPostByTop30() {
+        // 先查缓存
+        String namespace = "post:hot:top30";
+
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+
+        // 查询redis中是否存在数据，若存在直接返回
+        String result = ops.get(namespace);
+        if (result != null) {
+            return RedisCacheUtil.getObjectByTypeReference(result, new TypeReference<List<PostHotVo>>() {
+            });
+        }
+
+        // 为最新帖子分配锁
+        RLock lock = redissonClient.getLock(namespace + ":lock");
+        try {
+            // 查询redis中是否存在数据，若存在直接返回
+            result = ops.get(namespace);
+            if (result != null) {
+                return RedisCacheUtil.getObjectByTypeReference(result, new TypeReference<List<PostHotVo>>() {
+                });
+            }
+
+            // 查询数据库
+            List<PostHotVo> list = postScoreMapper.getHotPostByTop30();
+
+            // 取top5写入缓存，用于首页显示
+            redisTemplate.opsForValue().set(namespace, ObjectMapperUtil.toJSON(list));
+            return list;
+        } finally {
+            lock.unlock();
+        }
     }
 }

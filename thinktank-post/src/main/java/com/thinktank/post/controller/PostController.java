@@ -6,6 +6,7 @@ import com.thinktank.common.validationgroups.InsertValidation;
 import com.thinktank.common.validationgroups.QueryValidation;
 import com.thinktank.generator.dto.PostInfoDto;
 import com.thinktank.generator.entity.PostInfo;
+import com.thinktank.generator.vo.PostHotVo;
 import com.thinktank.generator.vo.PostInfoVo;
 import com.thinktank.post.service.PostService;
 import io.swagger.annotations.Api;
@@ -49,8 +50,8 @@ public class PostController {
         return R.success(postService.getLatestPosts());
     }
 
-    @ApiOperation(("根据板块id获取当前板块下帖子分页"))
-    @PostMapping("/page")
+    @ApiOperation(("当前板块下帖子分页查询"))
+    @PostMapping("page")
     public R<List<PostInfoVo>> page(@RequestBody @Validated(QueryValidation.class) PostInfoDto postInfoDto) {
         return postService.page(postInfoDto);
     }
@@ -91,6 +92,18 @@ public class PostController {
     @GetMapping("/getFavoritePage/{userId}/{currentPage}")
     public R<IPage<PostInfo>> getFavoritePage(@PathVariable("userId") Long userId, @PathVariable("currentPage") Integer currentPage) {
         return R.success(postService.getFavoritePage(userId, currentPage));
+    }
+
+    @ApiOperation("获取热门帖子top5")
+    @GetMapping("getHotPostByTop5")
+    public R<List<PostHotVo>> getHotPostByTop5() {
+        return R.success(postService.getHotPostByTop5());
+    }
+
+    @ApiOperation("获取热门帖子top30")
+    @GetMapping("getHotPostByTop30")
+    public R<List<PostHotVo>> getHotPostByTop30() {
+        return R.success(postService.getHotPostByTop30());
     }
 }
 

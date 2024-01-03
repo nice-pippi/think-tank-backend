@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.thinktank.common.utils.R;
 import com.thinktank.generator.dto.PostInfoDto;
 import com.thinktank.generator.entity.PostInfo;
+import com.thinktank.generator.vo.PostHotVo;
 import com.thinktank.generator.vo.PostInfoVo;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public interface PostService {
     List<PostInfoVo> getLatestPosts();
 
     /**
-     * 根据板块id获取当前板块下帖子分页
+     * 当前板块下帖子分页查询
      *
      * @param postInfoDto 查询帖子信息
      * @return 当前板块下帖子分页
@@ -92,4 +93,18 @@ public interface PostService {
      * @return 用户收藏的帖子分页查询结果
      */
     IPage<PostInfo> getFavoritePage(Long userId, Integer currentPage);
+
+    /**
+     * 获取热门帖子top5
+     *
+     * @return 热门帖子列表
+     */
+    List<PostHotVo> getHotPostByTop5();
+
+    /**
+     * 获取热门帖子top30
+     *
+     * @return 热门帖子列表
+     */
+    List<PostHotVo> getHotPostByTop30();
 }

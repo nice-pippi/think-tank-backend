@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thinktank.generator.mapper.PostScoreMapper">
-
+    <select id="getHotPostByTop5" resultType="com.thinktank.generator.vo.PostHotVo">
+        SELECT t1.id,
+               t1.title,
+               t1.block_id,
+               avg(t2.score) AS avg_score
+        FROM post_info AS t1,
+             post_score AS t2
+        WHERE t1.id = t2.post_id
+          AND t1.del_flag = 0
+        GROUP BY t2.post_id
+        ORDER BY avg(t2.score) DESC,
+                 count(post_id) DESC
+        LIMIT 5
+    </select>
+    <select id="getHotPostByTop30" resultType="com.thinktank.generator.vo.PostHotVo">
+        SELECT t1.id,
+               t1.title,
+               t1.block_id,
+               avg(t2.score) AS avg_score
+        FROM post_info AS t1,
+             post_score AS t2
+        WHERE t1.id = t2.post_id
+          AND t1.del_flag = 0
+        GROUP BY t2.post_id
+        ORDER BY avg(t2.score) DESC,
+                 count(post_id) DESC
+        LIMIT 30
+    </select>
 </mapper>
