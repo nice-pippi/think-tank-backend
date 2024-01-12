@@ -489,6 +489,7 @@ public class PostServiceImpl implements PostService {
 
         // 为最新帖子分配锁
         RLock lock = redissonClient.getLock(namespace + ":lock");
+        lock.lock();
         try {
             // 查询redis中是否存在数据，若存在直接返回
             result = ops.get(namespace);
@@ -524,6 +525,7 @@ public class PostServiceImpl implements PostService {
 
         // 为最新帖子分配锁
         RLock lock = redissonClient.getLock(namespace + ":lock");
+        lock.lock();
         try {
             // 查询redis中是否存在数据，若存在直接返回
             result = ops.get(namespace);
