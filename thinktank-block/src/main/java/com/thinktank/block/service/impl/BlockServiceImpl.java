@@ -27,6 +27,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -386,7 +387,7 @@ public class BlockServiceImpl implements BlockService {
             List<BlockInfo> list = blockInfoMapper.getHotBlock();
 
             // 写入redis
-            ops.set(namespace, ObjectMapperUtil.toJSON(list));
+            ops.set(namespace, ObjectMapperUtil.toJSON(list),1, TimeUnit.HOURS);
             return list;
         } finally {
             lock.unlock();
