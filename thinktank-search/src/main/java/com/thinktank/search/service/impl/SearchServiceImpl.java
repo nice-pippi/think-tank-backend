@@ -60,7 +60,6 @@ public class SearchServiceImpl implements SearchService {
         NativeSearchQuery query = new NativeSearchQueryBuilder()
                 .withHighlightBuilder(new HighlightBuilder().field("title").preTags("<em>").postTags("</em>"))
                 .withQuery(QueryBuilders.matchQuery("title", postInfoDocDto.getTitle()))
-                .withSort(SortBuilders.fieldSort("createTime").order(SortOrder.DESC))
                 .withPageable(PageRequest.of(postInfoDocDto.getCurrentPage() - 1, postInfoDocDto.getSize()))
                 .build();
 
