@@ -18,6 +18,7 @@ import com.thinktank.generator.vo.PostInfoVo;
 import com.thinktank.post.config.AddPostDocFanoutConfig;
 import com.thinktank.post.service.PostService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.amqp.core.Message;
@@ -335,6 +336,7 @@ public class PostServiceImpl implements PostService {
         Page<PostInfo> page = new Page<>(postInfoDto.getCurrentPage(), postInfoDto.getSize());
         LambdaQueryWrapper<PostInfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(PostInfo::getBlockId, postInfoDto.getBlockId());
+        queryWrapper.like(StringUtils.isNotEmpty(postInfoDto.getTitle()),PostInfo::getTitle,postInfoDto.getTitle());
         queryWrapper.orderByDesc(PostInfo::getCreateTime);
         Page<PostInfo> postInfoPage = postInfoMapper.selectPage(page, queryWrapper);
 
