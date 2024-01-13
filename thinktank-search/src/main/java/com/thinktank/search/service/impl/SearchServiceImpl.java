@@ -38,7 +38,6 @@ public class SearchServiceImpl implements SearchService {
         NativeSearchQuery query = new NativeSearchQueryBuilder()
                 .withHighlightBuilder(new HighlightBuilder().field("blockName").preTags("<em>").postTags("</em>")) // 高亮
                 .withQuery(QueryBuilders.matchQuery("blockName", blockInfoDocDto.getBlockName())) // 按照板块名称进行分词查询
-                .withSort(SortBuilders.fieldSort("createTime").order(SortOrder.DESC)) // 按板块创建时间降序排序
                 .withPageable(PageRequest.of(blockInfoDocDto.getCurrentPage() - 1, blockInfoDocDto.getSize()))  // 分页查询
                 .build();
 
