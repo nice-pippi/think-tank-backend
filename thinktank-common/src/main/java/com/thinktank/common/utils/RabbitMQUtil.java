@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
-import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
@@ -26,23 +25,18 @@ public class RabbitMQUtil {
         // 1.生成全局唯一的消息ID，并封装到CorrelationData中
         CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
         // 2.添加回调函数
-        correlationData.getFuture().addCallback(new ListenableFutureCallback<CorrelationData.Confirm>() {
-            @Override
-            public void onFailure(Throwable throwable) {
-                log.warn("消息发送异常, ID:{}, 原因{}", correlationData.getId(), throwable.getMessage());
-            }
-
-            @Override
-            public void onSuccess(CorrelationData.Confirm confirm) {
-                if (confirm.isAck()) {
-                    // 3.1.ack表示消息成功
-                    log.debug("消息发送成功, ID:{}", correlationData.getId());
-                } else {
-                    // 3.2.nack表示消息失败
-                    log.warn("消息发送失败, ID:{}, 原因{}", correlationData.getId(), confirm.getReason());
-                }
-            }
-        });
+        correlationData.getFuture().addCallback(
+                confirm -> {
+                    if (confirm.isAck()) {
+                        // 3.1.ack，消息成功
+                        log.debug("消息发送成功, ID:{}", correlationData.getId());
+                    } else {
+                        // 3.2.nack，消息失败
+                        log.error("消息发送失败, ID:{}, 原因{}", correlationData.getId(), confirm.getReason());
+                    }
+                },
+                throwable -> log.error("消息发送异常, ID:{}, 原因{}", correlationData.getId(), throwable.getMessage())
+        );
         return correlationData;
     }
 
