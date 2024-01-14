@@ -59,6 +59,7 @@ public class Generator {
 //                    list.add("message_private");
 //                    list.add("message_chat_room");
 //                    list.add("mq_task");
+                    list.add("post_click_record");
 //                    list.add("post_comment_likes");
 //                    list.add("post_comments");
 //                    list.add("post_info");
@@ -77,6 +78,7 @@ public class Generator {
                             .idType(IdType.ASSIGN_ID) // id采用雪花算法生成
                             .addTableFills(new Column("create_time", FieldFill.INSERT))
                             .addTableFills(new Column("update_time", FieldFill.INSERT_UPDATE))
+                            .enableFileOverride() // 设置为覆盖已有文件
                             .logicDeleteColumnName("del_flag"); // 逻辑删除
                 })
                 .templateEngine(new FreemarkerTemplateEngine()) // 使用Freemarker引擎模板，默认的是Velocity引擎模板
