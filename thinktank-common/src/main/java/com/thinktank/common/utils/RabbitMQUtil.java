@@ -29,13 +29,13 @@ public class RabbitMQUtil {
                 confirm -> {
                     if (confirm.isAck()) {
                         // 3.1.ack，消息成功
-                        log.debug("消息发送成功, ID:{}", correlationData.getId());
+                        log.debug("消息成功投递到交换机, ID:{}", correlationData.getId());
                     } else {
                         // 3.2.nack，消息失败
-                        log.error("消息发送失败, ID:{}, 原因{}", correlationData.getId(), confirm.getReason());
+                        log.error("消息投递交换机失败, ID:{}, 原因{}", correlationData.getId(), confirm.getReason());
                     }
                 },
-                throwable -> log.error("消息发送异常, ID:{}, 原因{}", correlationData.getId(), throwable.getMessage())
+                throwable -> log.error("消息投递交换机过程中发生异常, ID:{}, 原因{}", correlationData.getId(), throwable.getMessage())
         );
         return correlationData;
     }
