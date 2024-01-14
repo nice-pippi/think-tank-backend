@@ -56,4 +56,17 @@ public class RabbitMQUtil {
         String json = ObjectMapperUtil.toJSON(object);
         return MessageBuilder.withBody(json.getBytes(StandardCharsets.UTF_8)).build(); // 消息内容
     }
+
+    /**
+     * 获取指定类型的对象
+     *
+     * @param message 消息
+     * @param clazz   类型
+     * @return 对象
+     */
+    public static <T> T getObject(Message message, Class<T> clazz) {
+        byte[] bytes = message.getBody();
+        String json = new String(bytes);
+        return ObjectMapperUtil.toObject(json, clazz);
+    }
 }
