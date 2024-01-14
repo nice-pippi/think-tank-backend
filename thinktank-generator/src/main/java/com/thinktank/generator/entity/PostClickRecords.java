@@ -19,9 +19,9 @@ import java.time.LocalDateTime;
  * @author pippi
  * @since 2024-01-14
  */
-@TableName("post_click_record")
-@ApiModel(value = "PostClickRecord对象", description = "")
-public class PostClickRecord implements Serializable {
+@TableName("post_click_records")
+@ApiModel(value = "PostClickRecords对象", description = "")
+public class PostClickRecords implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,6 +39,9 @@ public class PostClickRecord implements Serializable {
 
     @ApiModelProperty("浏览用户id")
     private Long userId;
+
+    @ApiModelProperty("点击次数")
+    private Integer clickCount;
 
     @Min(groups = {InsertValidation.class}, value = 0, message = "当前页码最小不能低于0")
     @Max(groups = {InsertValidation.class}, value = 1, message = "当前页码最大不能高于1")
@@ -89,6 +92,14 @@ public class PostClickRecord implements Serializable {
         this.userId = userId;
     }
 
+    public Integer getClickCount() {
+        return clickCount;
+    }
+
+    public void setClickCount(Integer clickCount) {
+        this.clickCount = clickCount;
+    }
+
     public Integer getClickType() {
         return clickType;
     }
@@ -123,11 +134,12 @@ public class PostClickRecord implements Serializable {
 
     @Override
     public String toString() {
-        return "PostClickRecord{" +
+        return "PostClickRecords{" +
                 "id = " + id +
                 ", blockId = " + blockId +
                 ", postId = " + postId +
                 ", userId = " + userId +
+                ", clickCount = " + clickCount +
                 ", clickType = " + clickType +
                 ", title = " + title +
                 ", createTime = " + createTime +

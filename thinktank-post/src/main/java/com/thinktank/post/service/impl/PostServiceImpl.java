@@ -76,9 +76,6 @@ public class PostServiceImpl implements PostService {
     private PostScoreMapper postScoreMapper;
 
     @Autowired
-    private PostClickRecordMapper postClickRecordMapper;
-
-    @Autowired
     private RabbitTemplate rabbitTemplate;
 
     @Autowired
@@ -502,16 +499,16 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void addPostClickRecord(PostClickRecord postClickRecord) {
+    public void addPostClickRecord(PostClickRecords postClickRecords) {
         // 获取登录用户ID
         long loginId = StpUtil.getLoginIdAsLong();
-        postClickRecord.setUserId(loginId);
+        postClickRecords.setUserId(loginId);
 
         // 获取CorrelationData对象
         CorrelationData correlationData = RabbitMQUtil.getCorrelationData();
 
         // 将PostClickRecord对象转换为Message对象
-        Message message = RabbitMQUtil.transformMessage(postClickRecord);
+        Message message = RabbitMQUtil.transformMessage(postClickRecords);
 
         // 发送消息
         rabbitTemplate.convertAndSend(AddPostClickRecordFanoutConfig.FANOUT_EXCHANGE, "", message, correlationData);

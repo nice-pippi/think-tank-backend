@@ -1,9 +1,10 @@
 package com.thinktank.post.mq;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.thinktank.common.utils.RabbitMQUtil;
-import com.thinktank.generator.entity.PostClickRecord;
+import com.thinktank.generator.entity.PostClickRecords;
 import com.thinktank.generator.entity.PostInfo;
-import com.thinktank.generator.mapper.PostClickRecordMapper;
+import com.thinktank.generator.mapper.PostClickRecordsMapper;
 import com.thinktank.generator.mapper.PostInfoMapper;
 import com.thinktank.post.config.AddPostClickRecordFanoutConfig;
 import lombok.extern.slf4j.Slf4j;
@@ -26,23 +27,47 @@ public class PostClickRecordListener {
     private PostInfoMapper postInfoMapper;
 
     @Autowired
-    private PostClickRecordMapper postClickRecordMapper;
+    private PostClickRecordsMapper postClickRecordsMapper;
 
+    /**
+     * 处理点击帖子记录
+     *
+     * @param message 消息内容
+     */
     @Transactional
     @RabbitListener(queues = AddPostClickRecordFanoutConfig.Queue_Name)
     public void addPostClickRecord(Message message) {
-        PostClickRecord postClickRecord = RabbitMQUtil.getObject(message, PostClickRecord.class);
+        // 获取消息对象
+        PostClickRecords postClickRecords = RabbitMQUtil.getObject(message, PostClickRecords.class);
 
-        PostInfo postInfo = postInfoMapper.selectById(postClickRecord.getPostId());
+        // 根据帖子ID获取帖子信息
+        PostInfo postInfo = postInfoMapper.selectById(postClickRecords.getPostId());
 
+        // 若帖子信息为空，则输出错误日志并结束写入操作
         if (postInfo == null) {
             log.error("当前帖子不存在，停止写入帖子点击记录表操作");
             return;
         }
 
-        postClickRecord.setTitle(postInfo.getTitle());
-        if (postClickRecordMapper.insert(postClickRecord) == 0) {
-            log.error("当前帖子点击记录写入失败，帖子id:{}", postClickRecord.getPostId());
+        // 设置帖子标题
+        postClickRecords.setTitle(postInfo.getTitle());
+
+        // 构造查询条件
+        LambdaQueryWrapper<PostClickRecords> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PostClickRecords::getBlockId, postClickRecords.getBlockId());
+        queryWrapper.eq(PostClickRecords::getPostId, postClickRecords.getPostId());
+        queryWrapper.eq(PostClickRecords::getUserId, postClickRecords.getUserId());
+
+        // 查询点击记录
+        PostClickRecords clickRecords = postClickRecordsMapper.selectOne(queryWrapper);
+
+        // 若点击记录为空，则插入点击记录；否则更新点击次数
+        if (clickRecords == null) {
+            postClickRecordsMapper.insert(postClickRecords);
+        } else {
+            clickRecords.setClickCount(clickRecords.getClickCount() + 1);
+            postClickRecordsMapper.updateById(clickRecords);
         }
     }
+
 }

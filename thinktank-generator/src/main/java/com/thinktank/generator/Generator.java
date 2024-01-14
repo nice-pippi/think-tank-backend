@@ -59,7 +59,7 @@ public class Generator {
 //                    list.add("message_private");
 //                    list.add("message_chat_room");
 //                    list.add("mq_task");
-                    list.add("post_click_record");
+//                    list.add("post_click_records");
 //                    list.add("post_comment_likes");
 //                    list.add("post_comments");
 //                    list.add("post_info");

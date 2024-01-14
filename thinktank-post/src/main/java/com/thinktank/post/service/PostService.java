@@ -3,7 +3,7 @@ package com.thinktank.post.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.thinktank.common.utils.R;
 import com.thinktank.generator.dto.PostInfoDto;
-import com.thinktank.generator.entity.PostClickRecord;
+import com.thinktank.generator.entity.PostClickRecords;
 import com.thinktank.generator.entity.PostInfo;
 import com.thinktank.generator.vo.PostHotVo;
 import com.thinktank.generator.vo.PostInfoVo;
@@ -119,7 +119,7 @@ public interface PostService {
     /**
      * 新增点击帖子记录
      *
-     * @param postClickRecord 点击帖子记录信息
+     * @param postClickRecords 点击帖子记录信息
      */
-    void addPostClickRecord(PostClickRecord postClickRecord);
+    void addPostClickRecord(PostClickRecords postClickRecords);
 }

@@ -5,7 +5,7 @@ import com.thinktank.common.utils.R;
 import com.thinktank.common.validationgroups.InsertValidation;
 import com.thinktank.common.validationgroups.QueryValidation;
 import com.thinktank.generator.dto.PostInfoDto;
-import com.thinktank.generator.entity.PostClickRecord;
+import com.thinktank.generator.entity.PostClickRecords;
 import com.thinktank.generator.entity.PostInfo;
 import com.thinktank.generator.vo.PostHotVo;
 import com.thinktank.generator.vo.PostInfoVo;
@@ -109,8 +109,8 @@ public class PostController {
 
     @ApiOperation("新增点击帖子记录")
     @PostMapping("addPostClickRecord")
-    public R<String> addPostClickRecord(@RequestBody @Validated(InsertValidation.class) PostClickRecord postClickRecord) {
-        postService.addPostClickRecord(postClickRecord);
+    public R<String> addPostClickRecord(@RequestBody @Validated(InsertValidation.class) PostClickRecords postClickRecords) {
+        postService.addPostClickRecord(postClickRecords);
         return R.success("新增成功");
     }
 }
