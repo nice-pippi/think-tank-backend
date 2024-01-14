@@ -47,12 +47,12 @@ public class RabbitMQUtil {
     }
 
     /**
-     * 获取消息对象
+     * 转换消息对象
      *
      * @param object 对象
      * @return 消息对象
      */
-    public static Message getMessage(Object object) {
+    public static Message transformMessage(Object object) {
         String json = ObjectMapperUtil.toJSON(object);
         return MessageBuilder.withBody(json.getBytes(StandardCharsets.UTF_8)).build(); // 消息内容
     }
