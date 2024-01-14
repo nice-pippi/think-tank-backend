@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.ObjectMapperUtil;
 import com.thinktank.common.utils.R;
+import com.thinktank.common.utils.RabbitMQUtil;
 import com.thinktank.common.utils.RedisCacheUtil;
 import com.thinktank.generator.dto.PostInfoDto;
 import com.thinktank.generator.entity.*;
@@ -15,6 +16,7 @@ import com.thinktank.generator.mapper.*;
 import com.thinktank.generator.vo.PostCommentsVo;
 import com.thinktank.generator.vo.PostHotVo;
 import com.thinktank.generator.vo.PostInfoVo;
+import com.thinktank.post.config.AddPostClickRecordFanoutConfig;
 import com.thinktank.post.config.AddPostDocFanoutConfig;
 import com.thinktank.post.service.PostService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +24,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
@@ -31,13 +32,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.concurrent.ListenableFutureCallback;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -77,6 +74,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private PostScoreMapper postScoreMapper;
+
+    @Autowired
+    private PostClickRecordMapper postClickRecordMapper;
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
@@ -163,30 +163,9 @@ public class PostServiceImpl implements PostService {
             }
         }
 
-        // 提交待处理帖子id到mq队列，由队列异步处理写入es文档操作
-        // 1.全局唯一的消息ID，需要封装到CorrelationData中
-        CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
-        // 2.添加callback
-        correlationData.getFuture().addCallback(new ListenableFutureCallback<CorrelationData.Confirm>() {
-            @Override
-            public void onFailure(Throwable throwable) {
-                log.warn("消息发送异常, ID:{}, 原因{}", correlationData.getId(), throwable.getMessage());
-            }
-
-            @Override
-            public void onSuccess(CorrelationData.Confirm confirm) {
-                if (confirm.isAck()) {
-                    // 3.1.ack，消息成功
-                    log.debug("消息发送成功, ID:{}", correlationData.getId());
-                } else {
-                    // 3.2.nack，消息失败
-                    log.warn("消息发送失败, ID:{}, 原因{}", correlationData.getId(), confirm.getReason());
-                }
-            }
-        });
-        // 3.发送消息
-        String json = ObjectMapperUtil.toJSON(postInfo);
-        Message message = MessageBuilder.withBody(json.getBytes(StandardCharsets.UTF_8)).build(); // 消息内容
+        // 提交待处理帖子信息到mq队列，由队列异步处理写入es文档操作
+        CorrelationData correlationData = RabbitMQUtil.getCorrelationData();
+        Message message = RabbitMQUtil.transformMessage(postInfo);
         rabbitTemplate.convertAndSend(AddPostDocFanoutConfig.FANOUT_EXCHANGE, "", message, correlationData);
     }
 
@@ -249,6 +228,24 @@ public class PostServiceImpl implements PostService {
         postInfoMapper.deleteById(postId);
     }
 
+    @Override
+    public List<PostInfoVo> getRecommendedPostsByCollaborativeFiltering() {
+
+        return null;
+    }
+
+    @Override
+    public List<PostInfoVo> getLatestPosts() {
+        // 查数据库
+        LambdaQueryWrapper<PostInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByDesc(PostInfo::getCreateTime);
+        queryWrapper.last("limit 30");
+        List<PostInfo> postInfoList = postInfoMapper.selectList(queryWrapper);
+
+        // 使用stream流将postInfoList转换为PostInfoVo
+        return postInfoList.stream().map(this::getPostInfo).collect(Collectors.toList());
+    }
+
     /**
      * 根据帖子id封装vo所需信息
      *
@@ -289,54 +286,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostInfoVo> getLatestPosts() {
-        // 先查缓存
-        String namespace = "post:latest";
-
-        ValueOperations<String, String> ops = redisTemplate.opsForValue();
-
-        // 查询redis中是否存在数据，若存在直接返回
-        String result = ops.get(namespace);
-        if (result != null) {
-            return RedisCacheUtil.getObjectByTypeReference(result, new TypeReference<List<PostInfoVo>>() {
-            });
-        }
-
-        // 为最新帖子分配锁
-        RLock lock = redissonClient.getLock(namespace + ":lock");
-        List<PostInfoVo> list;
-
-        // 开启锁
-        lock.lock();
-        try {
-            // 查询redis中是否存在数据，若存在直接返回
-            result = ops.get(namespace);
-            if (result != null) {
-                return RedisCacheUtil.getObjectByTypeReference(result, new TypeReference<List<PostInfoVo>>() {
-                });
-            }
-
-            // 查数据库
-            LambdaQueryWrapper<PostInfo> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.orderByDesc(PostInfo::getCreateTime);
-            queryWrapper.last("limit 30");
-            List<PostInfo> postInfoList = postInfoMapper.selectList(queryWrapper);
-            list = postInfoList.stream().map(this::getPostInfo).collect(Collectors.toList());
-
-            // 写入缓存
-            ops.set(namespace, ObjectMapperUtil.toJSON(list), 10, TimeUnit.MINUTES);
-        } finally {
-            lock.unlock();
-        }
-        return list;
-    }
-
-    @Override
     public R<List<PostInfoVo>> page(PostInfoDto postInfoDto) {
         Page<PostInfo> page = new Page<>(postInfoDto.getCurrentPage(), postInfoDto.getSize());
         LambdaQueryWrapper<PostInfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(PostInfo::getBlockId, postInfoDto.getBlockId());
-        queryWrapper.like(StringUtils.isNotEmpty(postInfoDto.getTitle()),PostInfo::getTitle,postInfoDto.getTitle());
+        queryWrapper.like(StringUtils.isNotEmpty(postInfoDto.getTitle()), PostInfo::getTitle, postInfoDto.getTitle());
         queryWrapper.orderByDesc(PostInfo::getCreateTime);
         Page<PostInfo> postInfoPage = postInfoMapper.selectPage(page, queryWrapper);
 
@@ -546,4 +500,21 @@ public class PostServiceImpl implements PostService {
             lock.unlock();
         }
     }
+
+    @Override
+    public void addPostClickRecord(PostClickRecord postClickRecord) {
+        // 获取登录用户ID
+        long loginId = StpUtil.getLoginIdAsLong();
+        postClickRecord.setUserId(loginId);
+
+        // 获取CorrelationData对象
+        CorrelationData correlationData = RabbitMQUtil.getCorrelationData();
+
+        // 将PostClickRecord对象转换为Message对象
+        Message message = RabbitMQUtil.transformMessage(postClickRecord);
+
+        // 发送消息
+        rabbitTemplate.convertAndSend(AddPostClickRecordFanoutConfig.FANOUT_EXCHANGE, "", message, correlationData);
+    }
+
 }

@@ -3,6 +3,7 @@ package com.thinktank.post.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.thinktank.common.utils.R;
 import com.thinktank.generator.dto.PostInfoDto;
+import com.thinktank.generator.entity.PostClickRecord;
 import com.thinktank.generator.entity.PostInfo;
 import com.thinktank.generator.vo.PostHotVo;
 import com.thinktank.generator.vo.PostInfoVo;
@@ -29,6 +30,13 @@ public interface PostService {
      * @param postId 帖子ID
      */
     void delete(Long postId);
+
+    /**
+     * 据基于用户的协同过滤算法推荐帖子
+     *
+     * @return 推荐帖子列表
+     */
+    List<PostInfoVo> getRecommendedPostsByCollaborativeFiltering();
 
     /**
      * 首页大厅获取最新帖子
@@ -107,4 +115,11 @@ public interface PostService {
      * @return 热门帖子列表
      */
     List<PostHotVo> getHotPostByTop30();
+
+    /**
+     * 新增点击帖子记录
+     *
+     * @param postClickRecord 点击帖子记录信息
+     */
+    void addPostClickRecord(PostClickRecord postClickRecord);
 }

@@ -5,6 +5,7 @@ import com.thinktank.common.utils.R;
 import com.thinktank.common.validationgroups.InsertValidation;
 import com.thinktank.common.validationgroups.QueryValidation;
 import com.thinktank.generator.dto.PostInfoDto;
+import com.thinktank.generator.entity.PostClickRecord;
 import com.thinktank.generator.entity.PostInfo;
 import com.thinktank.generator.vo.PostHotVo;
 import com.thinktank.generator.vo.PostInfoVo;
@@ -44,9 +45,9 @@ public class PostController {
         return R.success("删除成功");
     }
 
-    @ApiOperation("首页大厅获取最新帖子")
-    @GetMapping("getLatestPosts")
-    public R<List<PostInfoVo>> getLatestPosts() {
+    @ApiOperation("首页大厅帖子推荐")
+    @GetMapping("getIndexPosts")
+    public R<List<PostInfoVo>> getIndexPosts() {
         return R.success(postService.getLatestPosts());
     }
 
@@ -104,6 +105,13 @@ public class PostController {
     @GetMapping("getHotPostByTop30")
     public R<List<PostHotVo>> getHotPostByTop30() {
         return R.success(postService.getHotPostByTop30());
+    }
+
+    @ApiOperation("新增点击帖子记录")
+    @PostMapping("addPostClickRecord")
+    public R<String> addPostClickRecord(@RequestBody @Validated(InsertValidation.class) PostClickRecord postClickRecord) {
+        postService.addPostClickRecord(postClickRecord);
+        return R.success("新增成功");
     }
 }
 

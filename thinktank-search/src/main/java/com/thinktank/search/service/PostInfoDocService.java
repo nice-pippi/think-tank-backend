@@ -10,14 +10,6 @@ import org.springframework.amqp.core.Message;
  */
 public interface PostInfoDocService {
     /**
-     * 添加帖子信息文档
-     *
-     * @param message
-     * @return
-     */
-    void addPostInfoDoc(Message message);
-
-    /**
      * 删除帖子信息文档
      *
      * @param id 帖子ID

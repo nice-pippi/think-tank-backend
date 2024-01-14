@@ -10,20 +10,20 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @Author: 弘
- * @CreateTime: 2023年10⽉26⽇ 15:47
- * @Description: 用于添加帖子信息文档的Fanout类型交换机
+ * @CreateTime: 2024年01⽉14⽇ 16:37
+ * @Description: 用于添加帖子点击记录的Fanout类型交换机
  * @Version: 1.0
  */
 @Slf4j
 @Configuration
-public class AddPostDocFanoutConfig {
-    public static final String FANOUT_EXCHANGE = "postdoc.fanout";
+public class AddPostClickRecordFanoutConfig {
+    public static final String FANOUT_EXCHANGE = "post.click.record.fanout";
 
-    public static final String Queue_Name = "fanout.queue.postdoc";
+    public static final String Queue_Name = "fanout.queue.post.click.record";
 
-    public static final String DIRECT_EXCHANGE_ERROR = "postdoc.error.direct";
+    public static final String DIRECT_EXCHANGE_ERROR = "post.click.record.error.direct";
 
-    private static final String ERROR_QUEUE = "direct.queue.postdoc.error";
+    private static final String ERROR_QUEUE = "direct.queue.post.click.record.error";
 
     /**
      * 声明交换机
@@ -31,7 +31,7 @@ public class AddPostDocFanoutConfig {
      * @return Fanout类型交换机
      */
     @Bean
-    public FanoutExchange fanoutExchangeByAddPostDoc() {
+    public FanoutExchange fanoutExchangeByAddPostClickRecord() {
         return new FanoutExchange(FANOUT_EXCHANGE);
     }
 
@@ -41,20 +41,20 @@ public class AddPostDocFanoutConfig {
      * @return 返回一个队列对象
      */
     @Bean
-    public Queue fanoutQueueByAddPostDoc() {
+    public Queue fanoutQueueByAddPostClickRecord() {
         return new Queue(Queue_Name);
     }
 
     /**
      * 创建一个绑定队列和泛洪交换机的绑定
      *
-     * @param fanoutQueueByAddPostDoc    泛洪队列
-     * @param fanoutExchangeByAddPostDoc 泛洪交换机
+     * @param fanoutQueueByAddPostClickRecord    泛洪队列
+     * @param fanoutExchangeByAddPostClickRecord 泛洪交换机
      * @return 绑定对象
      */
     @Bean
-    public Binding bindingQueueByAddPostDoc(Queue fanoutQueueByAddPostDoc, FanoutExchange fanoutExchangeByAddPostDoc) {
-        return BindingBuilder.bind(fanoutQueueByAddPostDoc).to(fanoutExchangeByAddPostDoc);
+    public Binding bindingQueueByAddPostClickRecord(Queue fanoutQueueByAddPostClickRecord, FanoutExchange fanoutExchangeByAddPostClickRecord) {
+        return BindingBuilder.bind(fanoutQueueByAddPostClickRecord).to(fanoutExchangeByAddPostClickRecord);
     }
 
     /**
@@ -63,7 +63,7 @@ public class AddPostDocFanoutConfig {
      * @return 返回一个DirectExchange对象
      */
     @Bean
-    public DirectExchange errorMessageExchangeByAddPostDoc() {
+    public DirectExchange errorMessageExchangeByAddPostClickRecord() {
         return new DirectExchange(DIRECT_EXCHANGE_ERROR);
     }
 
@@ -73,20 +73,20 @@ public class AddPostDocFanoutConfig {
      * @return 处理失败消息的队列
      */
     @Bean
-    public Queue errorQueueByAddPostDoc() {
+    public Queue errorQueueByAddPostClickRecord() {
         return new Queue(ERROR_QUEUE, true);
     }
 
     /**
      * 绑定队列和交换机
      *
-     * @param errorQueueByAddPostDoc           需要绑定的队列
-     * @param errorMessageExchangeByAddPostDoc 需要绑定的交换机
+     * @param errorQueueByAddPostClickRecord           需要绑定的队列
+     * @param errorMessageExchangeByAddPostClickRecord 需要绑定的交换机
      * @return 绑定结果
      */
     @Bean
-    public Binding errorBindingByAddPostDoc(Queue errorQueueByAddPostDoc, DirectExchange errorMessageExchangeByAddPostDoc) {
-        return BindingBuilder.bind(errorQueueByAddPostDoc).to(errorMessageExchangeByAddPostDoc).with("error");
+    public Binding errorBindingByAddPostClickRecord(Queue errorQueueByAddPostClickRecord, DirectExchange errorMessageExchangeByAddPostClickRecord) {
+        return BindingBuilder.bind(errorQueueByAddPostClickRecord).to(errorMessageExchangeByAddPostClickRecord).with("error");
     }
 
     /**
@@ -96,7 +96,7 @@ public class AddPostDocFanoutConfig {
      * @return 返回一个MessageRecoverer对象，用于消息恢复
      */
     @Bean
-    public MessageRecoverer republishMessageRecovererByAddPostDoc(RabbitTemplate rabbitTemplate) {
+    public MessageRecoverer republishMessageRecovererByAddPostClickRecord(RabbitTemplate rabbitTemplate) {
         return new RepublishMessageRecoverer(rabbitTemplate, DIRECT_EXCHANGE_ERROR, "error");
     }
 }

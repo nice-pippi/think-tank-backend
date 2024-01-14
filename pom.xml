@@ -36,6 +36,7 @@
         <swagger.version>3.0.0</swagger.version>
         <elasticsearch.version>7.12.1</elasticsearch.version>
         <commons.lang3.version>3.13.0</commons.lang3.version>
+        <commons.math3.version>3.6.1</commons.math3.version>
         <sa.token.all.version>1.37.0</sa.token.all.version>
         <okhttp.version>4.10.0</okhttp.version>
         <minio.version>8.5.5</minio.version>
@@ -98,11 +99,17 @@
                 <artifactId>elasticsearch</artifactId>
                 <version>${elasticsearch.version}</version>
             </dependency>
-            <!--commons-lang3-->
+            <!--Apache Commons Lang3工具类库-->
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons.lang3.version}</version>
+            </dependency>
+            <!--Apache Commons Math3数学函数库-->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-math3</artifactId>
+                <version>${commons.math3.version}</version>
             </dependency>
             <!--连接池-->
             <dependency>
