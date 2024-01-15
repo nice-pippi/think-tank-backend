@@ -203,7 +203,7 @@ public class BlockServiceImpl implements BlockService {
             blockInfoVo.setBigTypeName(blockBigType.getBigTypeName());
 
             // 写入redis缓存，不同的key设置不同的生命周期，防止出现缓存雪崩的问题
-            ops.set(namespace, ObjectMapperUtil.toJSON(blockInfoVo), Duration.ofHours(new Random().nextInt(20)));
+            ops.set(namespace, ObjectMapperUtil.toJSON(blockInfoVo), Duration.ofHours(new Random().nextInt(20) + 1));
         } finally {
             // 释放锁
             lock.unlock();
@@ -264,7 +264,7 @@ public class BlockServiceImpl implements BlockService {
 
         // 写入redis
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
-        ops.set(namespace, ObjectMapperUtil.toJSON(blockInfoVo), Duration.ofHours(new Random().nextInt(20)));
+        ops.set(namespace, ObjectMapperUtil.toJSON(blockInfoVo), Duration.ofHours(new Random().nextInt(20) + 1));
 
         // 返回板块信息给用户
         return blockInfoVo;
@@ -387,7 +387,7 @@ public class BlockServiceImpl implements BlockService {
             List<BlockInfo> list = blockInfoMapper.getHotBlock();
 
             // 写入redis
-            ops.set(namespace, ObjectMapperUtil.toJSON(list),1, TimeUnit.HOURS);
+            ops.set(namespace, ObjectMapperUtil.toJSON(list), 1, TimeUnit.HOURS);
             return list;
         } finally {
             lock.unlock();
