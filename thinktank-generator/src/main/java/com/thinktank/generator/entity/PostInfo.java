@@ -41,7 +41,7 @@ public class PostInfo implements Serializable {
     @ApiModelProperty("帖子标题")
     private String title;
 
-    @Size(groups = {InsertValidation.class}, min = 0, max = 110, message = "标签长度非法")
+    @Size(groups = {InsertValidation.class}, max = 110, message = "标签长度非法")
     @ApiModelProperty("标签")
     private String tag;
 
