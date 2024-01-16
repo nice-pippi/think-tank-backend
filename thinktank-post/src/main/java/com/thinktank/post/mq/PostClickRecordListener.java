@@ -49,9 +49,6 @@ public class PostClickRecordListener {
             return;
         }
 
-        // 设置帖子标题
-        postClickRecords.setTitle(postInfo.getTitle());
-
         // 构造查询条件
         LambdaQueryWrapper<PostClickRecords> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(PostClickRecords::getBlockId, postClickRecords.getBlockId());
@@ -63,9 +60,13 @@ public class PostClickRecordListener {
 
         // 若点击记录为空，则插入点击记录；否则更新点击次数
         if (clickRecords == null) {
+            // 设置帖子标题
+            postClickRecords.setTitle(postInfo.getTitle());
+            postClickRecords.setTag(postInfo.getTag());
             postClickRecordsMapper.insert(postClickRecords);
         } else {
             clickRecords.setClickCount(clickRecords.getClickCount() + 1);
+            clickRecords.setTag(postInfo.getTag());
             postClickRecordsMapper.updateById(clickRecords);
         }
     }

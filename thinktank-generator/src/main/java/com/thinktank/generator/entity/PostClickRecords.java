@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author pippi
- * @since 2024-01-14
+ * @since 2024-01-16
  */
 @TableName("post_click_records")
 @ApiModel(value = "PostClickRecords对象", description = "")
@@ -51,6 +51,9 @@ public class PostClickRecords implements Serializable {
 
     @ApiModelProperty("帖子标题")
     private String title;
+
+    @ApiModelProperty("帖子标签")
+    private String tag;
 
     @ApiModelProperty("点击帖子时间")
     @TableField(fill = FieldFill.INSERT)
@@ -116,6 +119,14 @@ public class PostClickRecords implements Serializable {
         this.title = title;
     }
 
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
     public LocalDateTime getCreateTime() {
         return createTime;
     }
@@ -142,6 +153,7 @@ public class PostClickRecords implements Serializable {
                 ", clickCount = " + clickCount +
                 ", clickType = " + clickType +
                 ", title = " + title +
+                ", tag = " + tag +
                 ", createTime = " + createTime +
                 ", updateTime = " + updateTime +
                 "}";
