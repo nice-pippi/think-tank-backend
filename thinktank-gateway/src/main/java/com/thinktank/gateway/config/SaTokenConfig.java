@@ -50,7 +50,7 @@ public class SaTokenConfig implements WebMvcConfigurer {
                                     "/post/comment/page/{postId}/{currentPage}", // 帖子评论分页
                                     "/post/postAction/getIndexPosts", // 首页大厅帖子推荐
                                     "/post/postAction/page", // 根据板块id获取当前板块下帖子分页
-                                    "/post/postAction/getTitle/{postId}",// 根据帖子id获取帖子标题
+                                    "/post/postAction/getTitleAndTag/{postId}",// 根据帖子id获取帖子标题以及tag标签
                                     "/post/postAction/getPageByPublishedPosts/{id}/{currentPage}", // 根据用户id获取已发布的帖子
                                     "/post/postAction/getFavoritePage/{userId}/{currentPage}", // 分页查询用户收藏的帖子
                                     "/post/postAction/getHotPostByTop5", // 获取热门帖子top5

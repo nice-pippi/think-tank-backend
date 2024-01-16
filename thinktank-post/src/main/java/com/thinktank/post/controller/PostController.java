@@ -57,10 +57,10 @@ public class PostController {
         return postService.page(postInfoDto);
     }
 
-    @ApiOperation("根据帖子id获取帖子标题")
-    @GetMapping("/getTitle/{postId}")
-    public R<String> getTitle(@PathVariable("postId") Long postId) {
-        return R.success(postService.getTitle(postId));
+    @ApiOperation("根据帖子id获取帖子标题以及tag标签")
+    @GetMapping("/getTitleAndTag/{postId}")
+    public R<PostInfo> getTitleAndTag(@PathVariable("postId") Long postId) {
+        return R.success(postService.getTitleAndTag(postId));
     }
 
     @ApiOperation("根据用户id获取已发布的帖子")

@@ -298,9 +298,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public String getTitle(Long postId) {
+    public PostInfo getTitleAndTag(Long postId) {
         LambdaQueryWrapper<PostInfo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(PostInfo::getTitle);
+        queryWrapper.select(PostInfo::getTitle, PostInfo::getTag);
         queryWrapper.eq(PostInfo::getId, postId);
         PostInfo postInfo = postInfoMapper.selectOne(queryWrapper);
 
@@ -308,7 +308,7 @@ public class PostServiceImpl implements PostService {
             log.warn("帖子'{}'不存在", postId);
             throw new ThinkTankException("当前帖子不存在！");
         }
-        return postInfo.getTitle();
+        return postInfo;
     }
 
     @Override

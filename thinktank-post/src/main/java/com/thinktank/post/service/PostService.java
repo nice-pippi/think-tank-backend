@@ -59,7 +59,7 @@ public interface PostService {
      * @param postId 帖子ID
      * @return 帖子标题
      */
-    String getTitle(Long postId);
+    PostInfo getTitleAndTag(Long postId);
 
     /**
      * 根据用户id获取已发布的帖子
