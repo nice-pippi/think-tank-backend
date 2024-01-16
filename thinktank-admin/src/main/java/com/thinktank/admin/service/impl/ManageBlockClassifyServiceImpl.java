@@ -55,6 +55,7 @@ public class ManageBlockClassifyServiceImpl implements ManageBlockClassifyServic
         }
         if (blockBigTypeMapper.insert(blockBigType) > 0) {
             redisTemplate.delete("block:classify");
+            redisTemplate.delete("block:classify:big");
             return blockBigType;
         }
         log.error("新增板块大分类失败");
@@ -75,6 +76,7 @@ public class ManageBlockClassifyServiceImpl implements ManageBlockClassifyServic
 
         if (blockSmallTypeMapper.insert(blockSmallType) > 0) {
             redisTemplate.delete("block:classify");
+            redisTemplate.delete("block:classify:small");
             return blockSmallType;
         }
         log.error("新增板块小分类失败");
