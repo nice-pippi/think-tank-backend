@@ -48,7 +48,7 @@ public class SaTokenConfig implements WebMvcConfigurer {
                                     "/search/searchBlock", // 搜索板块
                                     "/search/searchPost", // 搜索帖子
                                     "/post/comment/page/{postId}/{currentPage}", // 帖子评论分页
-                                    "/post/postAction/getLatestPosts", // 获取最新帖子
+                                    "/post/postAction/getIndexPosts", // 首页大厅帖子推荐
                                     "/post/postAction/page", // 根据板块id获取当前板块下帖子分页
                                     "/post/postAction/getTitle/{postId}",// 根据帖子id获取帖子标题
                                     "/post/postAction/getPageByPublishedPosts/{id}/{currentPage}", // 根据用户id获取已发布的帖子
