@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author pippi
- * @since 2023-09-11
+ * @since 2024-01-15
  */
 @TableName("post_info")
 @ApiModel(value = "PostInfo对象", description = "")
@@ -39,6 +40,10 @@ public class PostInfo implements Serializable {
     @NotEmpty(groups = {InsertValidation.class}, message = "帖子标题不能为空")
     @ApiModelProperty("帖子标题")
     private String title;
+
+    @Size(groups = {InsertValidation.class}, min = 0, max = 110, message = "标签长度非法")
+    @ApiModelProperty("标签")
+    private String tag;
 
     @ApiModelProperty("发帖时间")
     @TableField(fill = FieldFill.INSERT)
@@ -80,6 +85,14 @@ public class PostInfo implements Serializable {
         this.title = title;
     }
 
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
     public LocalDateTime getCreateTime() {
         return createTime;
     }
@@ -103,6 +116,7 @@ public class PostInfo implements Serializable {
                 ", userId = " + userId +
                 ", blockId = " + blockId +
                 ", title = " + title +
+                ", tag = " + tag +
                 ", createTime = " + createTime +
                 ", delFlag = " + delFlag +
                 "}";
