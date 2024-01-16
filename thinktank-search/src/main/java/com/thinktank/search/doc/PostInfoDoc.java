@@ -38,6 +38,9 @@ public class PostInfoDoc {
     @Field(type = FieldType.Text, searchAnalyzer = "ik_max_word")
     private String title;
 
+    @Field(type = FieldType.Keyword, index = false)
+    private String tag;
+
     @Field(type = FieldType.Text, searchAnalyzer = "ik_max_word")
     private String content;
 
