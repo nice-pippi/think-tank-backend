@@ -22,7 +22,4 @@ public class UserStatisticsVo {
 
     @ApiModelProperty("男女比例情况")
     private String sexRatio;
-
-    @ApiModelProperty("微信登录/密码登录比例情况")
-    private String loginTypeRatio;
 }

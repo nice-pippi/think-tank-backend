@@ -43,15 +43,10 @@ public class AnalysisServiceImpl implements AnalysisService {
         long maleCount = list.stream().filter(item -> item.getSex() == 1).count();
         long femaleCount = list.stream().filter(item -> item.getSex() == 0).count();
 
-        // 统计微信登录和密码登录比例情况
-        long weChatCount = list.stream().filter(item -> item.getLoginType() == 1).count();
-        long passwordCount = list.stream().filter(item -> item.getLoginType() == 0).count();
-
         UserStatisticsVo userStatisticsVo = new UserStatisticsVo();
         userStatisticsVo.setUserCount(list.size());
         userStatisticsVo.setNewUserCount(newUserCount);
         userStatisticsVo.setSexRatio(maleCount + "/" + femaleCount);
-        userStatisticsVo.setLoginTypeRatio(weChatCount + "/" + passwordCount);
 
         // 获取在线人数
         // 1.1 获取所有已登录的会话id
