@@ -2,7 +2,6 @@ package com.thinktank.auth.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
-import com.thinktank.api.clients.ValidateCodeClient;
 import com.thinktank.auth.service.LoginService;
 import com.thinktank.common.utils.R;
 import com.thinktank.common.validationgroups.QueryValidation;
@@ -32,12 +31,6 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
-    @ApiOperation("账号密码登录")
-    @PostMapping("passwordLogin")
-    public R<String> passwordLogin(@RequestBody @Validated({QueryValidation.class}) SysUser sysUser) {
-        return loginService.passwordLogin(sysUser);
-    }
-
     @ApiOperation("微信扫码登录")
     @GetMapping("wxLogin")
     public void wxLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -46,6 +39,12 @@ public class LoginController {
 
         String auth = loginService.wxLogin(code, state);
         response.sendRedirect("http://localhost:8585/Result" + auth);
+    }
+
+    @ApiOperation("账号密码登录")
+    @PostMapping("passwordLogin")
+    public R<String> passwordLogin(@RequestBody @Validated({QueryValidation.class}) SysUser sysUser) {
+        return loginService.passwordLogin(sysUser);
     }
 
     @ApiOperation("验证登录状态")

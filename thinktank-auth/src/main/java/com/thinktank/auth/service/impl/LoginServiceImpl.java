@@ -3,15 +3,22 @@ package com.thinktank.auth.service.impl;
 import cn.dev33.satoken.secure.BCrypt;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.thinktank.auth.config.AddUserLoginRecordsFanoutConfig;
 import com.thinktank.auth.service.AddUserService;
 import com.thinktank.auth.service.LoginService;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.ObjectMapperUtil;
 import com.thinktank.common.utils.R;
+import com.thinktank.common.utils.RabbitMQUtil;
+import com.thinktank.generator.entity.SysLoginRecords;
 import com.thinktank.generator.entity.SysUser;
 import com.thinktank.generator.mapper.SysRoleMenuMapper;
 import com.thinktank.generator.mapper.SysUserMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -50,6 +57,9 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     @Value("${weixin.appid}")
     private String appid;
 
@@ -76,6 +86,9 @@ public class LoginServiceImpl implements LoginService {
         // 会话登录
         StpUtil.login(sysUser.getId().toString());
 
+        // 将用户登录记录发送到队列，由队列进行异步写入数据库操作
+        sendLoginRecordToMQ(sysUser.getId(), 1, 1, null);
+
         // 根据获取用户所有权限
         List<String> permissionList = getPermissionList(sysUser.getId());
 
@@ -89,6 +102,9 @@ public class LoginServiceImpl implements LoginService {
         LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SysUser::getEmail, sysUser.getEmail());
         SysUser user = validateUser(sysUser, wrapper);
+
+        // 将用户登录记录发送到队列，由队列进行异步写入数据库操作
+        sendLoginRecordToMQ(user.getId(), 0, 1, null);
 
         // 根据获取用户所有权限
         List<String> permissionList = getPermissionList(user.getId());
@@ -121,7 +137,13 @@ public class LoginServiceImpl implements LoginService {
         return StpUtil.getTokenValue();
     }
 
-    // 校验用户是否存在
+    /**
+     * 校验用户是否存在
+     *
+     * @param sysUser 用户信息
+     * @param wrapper 查询条件
+     * @return
+     */
     private SysUser validateUser(SysUser sysUser, LambdaQueryWrapper<SysUser> wrapper) {
         SysUser user = sysUserMapper.selectOne(wrapper);
 
@@ -134,10 +156,14 @@ public class LoginServiceImpl implements LoginService {
 
         // 如果为false，抛出异常提示用户账号或密码错误
         if (!result) {
+            // 将用户登录记录发送到队列，由队列进行异步写入数据库操作
+            sendLoginRecordToMQ(user.getId(), 0, 0, "账号或密码错误");
             throw new ThinkTankException("账号或密码错误！");
         }
 
         if (user.getStatus().equals(1)) {
+            // 将用户登录记录发送到队列，由队列进行异步写入数据库操作
+            sendLoginRecordToMQ(user.getId(), 0, 0, "已被限制登录");
             log.error("用户{}已被限制登录", sysUser.getId());
             throw new ThinkTankException("您已被限制登录！");
         }
@@ -179,6 +205,13 @@ public class LoginServiceImpl implements LoginService {
         return map;
     }
 
+    /**
+     * 根据access_token和openid请求微信接口获取用户信息
+     *
+     * @param access_token 用户的access_token
+     * @param openid       用户的openid
+     * @return 用户信息的Map集合
+     */
     private Map<String, String> getUserinfo(String access_token, String openid) {
         // 请求微信地址
         String wxUrlTemplate = "https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s";
@@ -197,4 +230,32 @@ public class LoginServiceImpl implements LoginService {
         Map<String, String> map = ObjectMapperUtil.toObject(newResult, Map.class);
         return map;
     }
+
+
+    /**
+     * 将用户登录记录发送到队列，由队列进行异步写入数据库操作
+     *
+     * @param userId    用户id
+     * @param loginType 登录类型
+     * @param status    登录状态（0:登录失败 1:登录成功）
+     */
+    private void sendLoginRecordToMQ(Long userId, Integer loginType, Integer status, String reason) {
+        // 创建用户登录记录对象
+        SysLoginRecords sysLoginRecords = new SysLoginRecords();
+        sysLoginRecords.setUserId(userId);
+        sysLoginRecords.setLoginType(loginType);
+        sysLoginRecords.setStatus(status);
+        if (StringUtils.isNotEmpty(reason)) {
+            sysLoginRecords.setReason(reason);
+        }
+
+        // 获取CorrelationData对象
+        CorrelationData correlationData = RabbitMQUtil.getCorrelationData();
+        // 将PostClickRecord对象转换为Message对象
+        Message message = RabbitMQUtil.transformMessage(sysLoginRecords);
+
+        // 发送消息
+        rabbitTemplate.convertAndSend(AddUserLoginRecordsFanoutConfig.FANOUT_EXCHANGE, "", message, correlationData);
+    }
+
 }

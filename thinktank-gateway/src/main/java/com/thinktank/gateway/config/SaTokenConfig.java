@@ -31,7 +31,7 @@ public class SaTokenConfig implements WebMvcConfigurer {
                 .setAuth(obj -> {
                     // 所有地址都需要登录校验
                     SaRouter.match("/**")
-                            // 排除登录校验
+                            // 排除校验
                             .notMatch(
                                     "/auth/register", // 用户注册
                                     "/auth/passwordLogin", // 密码登录

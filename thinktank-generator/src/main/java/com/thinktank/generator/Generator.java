@@ -67,6 +67,7 @@ public class Generator {
 //                    list.add("post_report_type");
 //                    list.add("post_reports");
 //                    list.add("post_score");
+//                    list.add("sys_login_records");
 //                    list.add("sys_menu");
 //                    list.add("sys_role");
 //                    list.add("sys_role_menu");
