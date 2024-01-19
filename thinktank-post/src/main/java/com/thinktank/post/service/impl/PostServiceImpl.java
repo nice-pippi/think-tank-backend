@@ -16,7 +16,7 @@ import com.thinktank.generator.mapper.*;
 import com.thinktank.generator.vo.PostCommentsVo;
 import com.thinktank.generator.vo.PostHotVo;
 import com.thinktank.generator.vo.PostInfoVo;
-import com.thinktank.post.config.AddPostClickRecordFanoutConfig;
+import com.thinktank.post.config.AddPostClickRecordsFanoutConfig;
 import com.thinktank.post.config.AddPostDocFanoutConfig;
 import com.thinktank.post.service.PostService;
 import lombok.extern.slf4j.Slf4j;
@@ -511,7 +511,7 @@ public class PostServiceImpl implements PostService {
         Message message = RabbitMQUtil.transformMessage(postClickRecords);
 
         // 发送消息
-        rabbitTemplate.convertAndSend(AddPostClickRecordFanoutConfig.FANOUT_EXCHANGE, "", message, correlationData);
+        rabbitTemplate.convertAndSend(AddPostClickRecordsFanoutConfig.FANOUT_EXCHANGE, "", message, correlationData);
     }
 
 }

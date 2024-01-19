@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Slf4j
 @Configuration
-public class AddPostClickRecordFanoutConfig {
+public class AddPostClickRecordsFanoutConfig {
     public static final String FANOUT_EXCHANGE = "post.click.record.fanout";
 
     public static final String Queue_Name = "fanout.queue.post.click.record";

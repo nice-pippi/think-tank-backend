@@ -6,7 +6,7 @@ import com.thinktank.generator.entity.PostClickRecords;
 import com.thinktank.generator.entity.PostInfo;
 import com.thinktank.generator.mapper.PostClickRecordsMapper;
 import com.thinktank.generator.mapper.PostInfoMapper;
-import com.thinktank.post.config.AddPostClickRecordFanoutConfig;
+import com.thinktank.post.config.AddPostClickRecordsFanoutConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -35,7 +35,7 @@ public class PostClickRecordListener {
      * @param message 消息内容
      */
     @Transactional
-    @RabbitListener(queues = AddPostClickRecordFanoutConfig.Queue_Name)
+    @RabbitListener(queues = AddPostClickRecordsFanoutConfig.Queue_Name)
     public void addPostClickRecord(Message message) {
         // 获取消息对象
         PostClickRecords postClickRecords = RabbitMQUtil.getObject(message, PostClickRecords.class);
