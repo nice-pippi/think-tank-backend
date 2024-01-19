@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * @Author: 弘
  * @CreateTime: 2023年10⽉26⽇ 15:47
- * @Description: 用于添加帖子信息文档的Fanout类型交换机
+ * @Description: 用于处理添加帖子信息文档的Fanout类型交换机
  * @Version: 1.0
  */
 @Slf4j
