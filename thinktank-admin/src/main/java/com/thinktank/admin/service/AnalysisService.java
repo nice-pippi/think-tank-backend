@@ -1,6 +1,9 @@
 package com.thinktank.admin.service;
 
-import com.thinktank.admin.vo.UserStatisticsVo;
+import com.thinktank.generator.vo.UserLoginCountBySevenDayVo;
+import com.thinktank.generator.vo.UserStatisticsVo;
+
+import java.util.List;
 
 /**
  * @Author: 弘
@@ -10,4 +13,6 @@ import com.thinktank.admin.vo.UserStatisticsVo;
  */
 public interface AnalysisService {
     UserStatisticsVo getUserStatistics();
+
+    List<UserLoginCountBySevenDayVo> getUserLoginCountBySevenDay();
 }

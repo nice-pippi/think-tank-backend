@@ -1,17 +1,19 @@
 package com.thinktank.admin.service.impl;
 
-import cn.dev33.satoken.SaManager;
 import cn.dev33.satoken.stp.StpUtil;
 import com.thinktank.admin.service.AnalysisService;
-import com.thinktank.admin.vo.UserStatisticsVo;
 import com.thinktank.generator.entity.SysUser;
+import com.thinktank.generator.mapper.SysLoginRecordsMapper;
 import com.thinktank.generator.mapper.SysUserMapper;
+import com.thinktank.generator.vo.UserLoginCountBySevenDayVo;
+import com.thinktank.generator.vo.UserStatisticsVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +29,7 @@ public class AnalysisServiceImpl implements AnalysisService {
     private SysUserMapper sysUserMapper;
 
     @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private SysLoginRecordsMapper sysLoginRecordsMapper;
 
     @Override
     public UserStatisticsVo getUserStatistics() {
@@ -56,5 +58,35 @@ public class AnalysisServiceImpl implements AnalysisService {
         userStatisticsVo.setOnlineCount(sessionIdList.size());
 
         return userStatisticsVo;
+    }
+
+    @Override
+    public List<UserLoginCountBySevenDayVo> getUserLoginCountBySevenDay() {
+        // 构造7天数据的list
+        List<UserLoginCountBySevenDayVo> list = new ArrayList<>();
+        LocalDate currentDate = LocalDate.now();
+        for (int i = 6; i >= 0; i--) {
+            LocalDate date = currentDate.minusDays(i);
+            int month = date.getMonthValue();
+            int day = date.getDayOfMonth();
+            UserLoginCountBySevenDayVo userLoginCountBySevenDayVo = new UserLoginCountBySevenDayVo();
+            userLoginCountBySevenDayVo.setLoginDate(month + "-" + day);
+            userLoginCountBySevenDayVo.setUserCount(0);
+            list.add(userLoginCountBySevenDayVo);
+        }
+
+        // 获取近一周每日用户登录人数情况
+        List<UserLoginCountBySevenDayVo> userLoginCountBySevenDayVoList = sysLoginRecordsMapper.getUserLoginCountBySevenDay();
+
+        // 匹配日期，日期相同的则set对应日期的登录人数
+        for (UserLoginCountBySevenDayVo vo : list) {
+            for (UserLoginCountBySevenDayVo dbVo : userLoginCountBySevenDayVoList) {
+                if (vo.getLoginDate().equals(dbVo.getLoginDate())) {
+                    vo.setUserCount(dbVo.getUserCount());
+                    break;
+                }
+            }
+        }
+        return list;
     }
 }

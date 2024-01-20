@@ -1,4 +1,4 @@
-package com.thinktank.admin.vo;
+package com.thinktank.generator.vo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thinktank.generator.mapper.SysLoginRecordsMapper">
-
+    <select id="getUserLoginCountBySevenDay" resultType="com.thinktank.generator.vo.UserLoginCountBySevenDayVo">
+        SELECT DATE_FORMAT(create_time, "%c-%d") AS login_date,
+               COUNT(*)                             user_count
+        FROM sys_login_records
+        WHERE STATUS = 1
+        <![CDATA[
+          AND create_time >= CURDATE() - INTERVAL 7 DAY
+          AND create_time < CURDATE()
+        ]]>
+        GROUP BY login_date;
+    </select>
 </mapper>
