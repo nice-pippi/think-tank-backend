@@ -15,7 +15,7 @@ public class UserStatisticsVo {
     private Integer userCount;
 
     @ApiModelProperty("新用户数量")
-    private Long newUserCount;
+    private Integer newUserCount;
 
     @ApiModelProperty("在线人数")
     private Integer onlineCount;

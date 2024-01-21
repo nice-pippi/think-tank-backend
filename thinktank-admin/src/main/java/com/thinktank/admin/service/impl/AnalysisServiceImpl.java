@@ -1,10 +1,13 @@
 package com.thinktank.admin.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.thinktank.admin.service.AnalysisService;
+import com.thinktank.generator.entity.BlockApplicationBlock;
+import com.thinktank.generator.entity.BlockApplicationMaster;
+import com.thinktank.generator.entity.PostReports;
 import com.thinktank.generator.entity.SysUser;
-import com.thinktank.generator.mapper.SysLoginRecordsMapper;
-import com.thinktank.generator.mapper.SysUserMapper;
+import com.thinktank.generator.mapper.*;
 import com.thinktank.generator.vo.UserLoginCountBySevenDayVo;
 import com.thinktank.generator.vo.UserStatisticsVo;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,15 +33,23 @@ public class AnalysisServiceImpl implements AnalysisService {
     @Autowired
     private SysLoginRecordsMapper sysLoginRecordsMapper;
 
+    @Autowired
+    private BlockApplicationBlockMapper blockApplicationBlockMapper;
+
+    @Autowired
+    private BlockApplicationMasterMapper blockApplicationMasterMapper;
+
+    @Autowired
+    private PostReportsMapper postReportsMapper;
+
     @Override
     public UserStatisticsVo getUserStatistics() {
         List<SysUser> list = sysUserMapper.selectList(null);
 
-        // 统计新用户数量，当天注册的用户数量为新用户
-        long newUserCount = list.stream().filter(item -> {
-            LocalDateTime createTime = item.getCreateTime();
-            return createTime.getDayOfYear() == LocalDateTime.now().getDayOfYear();
-        }).count();
+        // 统计今新用户注册数量
+        long newUserCount = list.stream()
+                .filter(user -> user.getCreateTime().toLocalDate().equals(LocalDate.now()))
+                .count();
 
         // 统计男女比例情况
         long maleCount = list.stream().filter(item -> item.getSex() == 1).count();
@@ -47,7 +57,7 @@ public class AnalysisServiceImpl implements AnalysisService {
 
         UserStatisticsVo userStatisticsVo = new UserStatisticsVo();
         userStatisticsVo.setUserCount(list.size());
-        userStatisticsVo.setNewUserCount(newUserCount);
+        userStatisticsVo.setNewUserCount((int) newUserCount);
         userStatisticsVo.setSexRatio(maleCount + "/" + femaleCount);
 
         // 获取在线人数
@@ -88,5 +98,35 @@ public class AnalysisServiceImpl implements AnalysisService {
             }
         }
         return list;
+    }
+
+    @Override
+    public Integer getTodoBlockApplyCount() {
+        LambdaQueryWrapper<BlockApplicationBlock> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(BlockApplicationBlock::getStatus, 0);
+        return blockApplicationBlockMapper.selectCount(queryWrapper).intValue();
+    }
+
+    @Override
+    public Integer getTodoMasterApplyCount() {
+        LambdaQueryWrapper<BlockApplicationMaster> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(BlockApplicationMaster::getStatus, 0);
+        return blockApplicationMasterMapper.selectCount(queryWrapper).intValue();
+    }
+
+    @Override
+    public Integer getTodoReportPostCount() {
+        LambdaQueryWrapper<PostReports> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PostReports::getStatus, 0);
+        queryWrapper.eq(PostReports::getCommentId, 0);
+        return postReportsMapper.selectCount(queryWrapper).intValue();
+    }
+
+    @Override
+    public Integer getTodoReportCommentCount() {
+        LambdaQueryWrapper<PostReports> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PostReports::getStatus, 0);
+        queryWrapper.ne(PostReports::getCommentId, 0);
+        return postReportsMapper.selectCount(queryWrapper).intValue();
     }
 }

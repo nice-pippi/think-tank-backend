@@ -37,4 +37,28 @@ public class AnalysisController {
     public R<List<UserLoginCountBySevenDayVo>> getUserLoginCountBySevenDay() {
         return R.success(analysisService.getUserLoginCountBySevenDay());
     }
+
+    @ApiOperation("获取待处理板块申请记录数量")
+    @GetMapping("getTodoBlockApplyCount")
+    public R<Integer> getTodoBlockApplyCount() {
+        return R.success(analysisService.getTodoBlockApplyCount());
+    }
+
+    @ApiOperation("获取待处理板主申请数量")
+    @GetMapping("getTodoMasterApplyCount")
+    public R<Integer> getTodoBoardMasterApplyCount() {
+        return R.success(analysisService.getTodoMasterApplyCount());
+    }
+
+    @ApiOperation("获取待处理举报帖子数量")
+    @GetMapping("getTodoReportPostCount")
+    public R<Integer> getTodoReportPostCount() {
+        return R.success(analysisService.getTodoReportPostCount());
+    }
+
+    @ApiOperation("获取待处理举报评论数量")
+    @GetMapping("getTodoReportCommentCount")
+    public R<Integer> getTodoReportCommentCount() {
+        return R.success(analysisService.getTodoReportCommentCount());
+    }
 }

@@ -12,7 +12,45 @@ import java.util.List;
  * @Version: 1.0
  */
 public interface AnalysisService {
+    /**
+     * 用户统计分析
+     *
+     * @return 用户统计分析结果
+     */
     UserStatisticsVo getUserStatistics();
 
+    /**
+     * 统计近一周每日用户登录人数情况
+     *
+     * @return 近一周每日用户登录人数情况
+     */
     List<UserLoginCountBySevenDayVo> getUserLoginCountBySevenDay();
+
+    /**
+     * 获取待处理板块申请记录数量
+     *
+     * @return 待处理板块申请记录数量
+     */
+    Integer getTodoBlockApplyCount();
+
+    /**
+     * 获取待处理板主申请数量
+     *
+     * @return 待处理板主申请数量
+     */
+    Integer getTodoMasterApplyCount();
+
+    /**
+     * 获取待处理举报帖子数量
+     *
+     * @return 待处理举报帖子数量
+     */
+    Integer getTodoReportPostCount();
+
+    /**
+     * 获取待处理举报评论数量
+     *
+     * @return 待处理举报评论数量
+     */
+    Integer getTodoReportCommentCount();
 }
