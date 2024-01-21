@@ -62,10 +62,10 @@ public class AnalysisServiceImpl implements AnalysisService {
 
     @Override
     public List<UserLoginCountBySevenDayVo> getUserLoginCountBySevenDay() {
-        // 构造7天数据的list
+        // 构造前7天数据的list
         List<UserLoginCountBySevenDayVo> list = new ArrayList<>();
         LocalDate currentDate = LocalDate.now();
-        for (int i = 6; i >= 0; i--) {
+        for (int i = 7; i > 0; i--) {
             LocalDate date = currentDate.minusDays(i);
             int month = date.getMonthValue();
             int day = date.getDayOfMonth();
