@@ -212,7 +212,13 @@ public class BlockServiceImpl implements BlockService {
         return blockInfoVo;
     }
 
-    // 验证是否有权限
+    /**
+     * 验证是否有权限
+     *
+     * @param userId  用户id
+     * @param blockId 板块id
+     * @return true:有权限 false:无权限
+     */
     private Boolean checkPermission(Long userId, Long blockId) {
         if (StpUtil.hasRole(userId, "super-admin")) {
             return true;
@@ -223,6 +229,9 @@ public class BlockServiceImpl implements BlockService {
             queryWrapper.eq(SysUserRole::getBlockId, blockId);
             queryWrapper.select(SysUserRole::getRoleId);
             SysUserRole sysUserRole = sysUserRoleMapper.selectOne(queryWrapper);
+            if (sysUserRole == null) {
+                return false;
+            }
             Long bigMaster = 102L;
             Long smallMaster = 103L;
             return bigMaster.equals(sysUserRole.getRoleId()) || smallMaster.equals(sysUserRole.getRoleId());
