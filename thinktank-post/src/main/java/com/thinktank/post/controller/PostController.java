@@ -1,5 +1,6 @@
 package com.thinktank.post.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.thinktank.common.utils.R;
 import com.thinktank.common.validationgroups.InsertValidation;
@@ -48,7 +49,11 @@ public class PostController {
     @ApiOperation("首页大厅帖子推荐")
     @GetMapping("getIndexPosts")
     public R<List<PostInfoVo>> getIndexPosts() {
-        return R.success(postService.getLatestPosts());
+        if (StpUtil.isLogin()) {
+            return R.success(postService.getRecommendedPostsByCollaborativeFiltering());
+        }else {
+            return R.success(postService.getLatestPosts());
+        }
     }
 
     @ApiOperation(("当前板块下帖子分页查询"))

@@ -51,9 +51,9 @@ public class PostClickRecordListener {
 
         // 构造查询条件
         LambdaQueryWrapper<PostClickRecords> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(PostClickRecords::getBlockId, postClickRecords.getBlockId());
-        queryWrapper.eq(PostClickRecords::getPostId, postClickRecords.getPostId());
         queryWrapper.eq(PostClickRecords::getUserId, postClickRecords.getUserId());
+        queryWrapper.eq(PostClickRecords::getPostId, postClickRecords.getPostId());
+        queryWrapper.eq(PostClickRecords::getBlockId, postClickRecords.getBlockId());
 
         // 查询点击记录
         PostClickRecords clickRecords = postClickRecordsMapper.selectOne(queryWrapper);

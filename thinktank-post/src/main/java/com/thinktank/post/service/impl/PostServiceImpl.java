@@ -21,6 +21,8 @@ import com.thinktank.post.config.AddPostDocFanoutConfig;
 import com.thinktank.post.service.PostService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.math3.linear.ArrayRealVector;
+import org.apache.commons.math3.linear.RealVector;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.amqp.core.Message;
@@ -33,8 +35,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -74,6 +75,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private PostScoreMapper postScoreMapper;
+
+    @Autowired
+    private PostClickRecordsMapper postClickRecordsMapper;
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
@@ -227,8 +231,154 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostInfoVo> getRecommendedPostsByCollaborativeFiltering() {
+        // 获取所有用户帖子评分矩阵
+        Map<Long, Map<Long, Integer>> matrix = getPostScoreMatrix();
 
-        return null;
+        // 计算用户相似度，取出与当前登录用户相似度高的其他用户id
+        List<Long> similarUsers = getSimilarUsers(matrix);
+
+        // 从相似度高的其他用户中取出评分较高并且当前用户未看过的帖子
+        return getRecommendedPosts(similarUsers);
+    }
+
+    /**
+     * 获取用户帖子评分矩阵
+     *
+     * @return 用户帖子评分矩阵
+     */
+    private Map<Long, Map<Long, Integer>> getPostScoreMatrix() {
+        // 取出所有用户评分数据
+        List<PostScore> postScores = postScoreMapper.selectList(null);
+
+        // 构造用户帖子评分矩阵
+        Map<Long, Map<Long, Integer>> matrix = new HashMap<>();
+        for (PostScore postScore : postScores) {
+            matrix.computeIfAbsent(postScore.getUserId(), k -> new HashMap<>())
+                    .putIfAbsent(postScore.getPostId(), postScore.getScore());
+        }
+        return matrix;
+    }
+
+    /**
+     * 获取相似度高的用户id列表
+     *
+     * @param matrix 用户帖子评分矩阵
+     * @return 相似度高的用户id列表
+     */
+    private List<Long> getSimilarUsers(Map<Long, Map<Long, Integer>> matrix) {
+        // 当前登录用户id
+        long loginId = StpUtil.getLoginIdAsLong();
+
+        // 取出当前登录用户的帖子评分记录
+        Map<Long, Integer> currentUserScores = matrix.get(loginId);
+
+        // 判断当前登录用户是否有帖子评分记录，若无则返回空列表
+        if (currentUserScores == null || currentUserScores.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // 相似度高的用户id列表
+        List<Long> userList = new LinkedList<>();
+
+        // 相似度基准线
+        float threshold = 0.8f;
+
+        // 遍历其他用户，计算相似度
+        for (Map.Entry<Long, Map<Long, Integer>> entry : matrix.entrySet()) {
+            // 获取其他用户id
+            Long otherUserId = entry.getKey();
+            if (otherUserId.equals(loginId)) {
+                continue;
+            }
+
+            // 获取其他用户帖子评分
+            Map<Long, Integer> otherUserScores = entry.getValue();
+            List<Integer> x = new ArrayList<>();
+            List<Integer> y = new ArrayList<>();
+            for (Map.Entry<Long, Integer> scoreEntry : currentUserScores.entrySet()) {
+                Long postId = scoreEntry.getKey();
+                if (otherUserScores.containsKey(postId)) {
+                    x.add(scoreEntry.getValue());
+                    y.add(otherUserScores.get(postId));
+                }
+            }
+            // 使用余弦相似度计算
+            Double similarity = cosineSimilarityList(x, y);
+
+            // 如果相似度大于阈值，添加到相似用户列表中
+            if (similarity >= threshold) {
+                userList.add(otherUserId);
+            }
+        }
+        return userList;
+    }
+
+    /**
+     * 计算余弦相似度
+     */
+    private Double cosineSimilarityList(List<Integer> x, List<Integer> y) {
+        // 转换为double数组
+        double[] xArrays = x.stream().mapToDouble(Integer::doubleValue).toArray();
+        double[] yArrays = y.stream().mapToDouble(Integer::doubleValue).toArray();
+
+        //  计算余弦相似度
+        RealVector a = new ArrayRealVector(xArrays);
+        RealVector b = new ArrayRealVector(yArrays);
+        if (xArrays.length != yArrays.length) {
+            log.warn("两个向量长度不一致！");
+            throw new ThinkTankException("两个向量长度不一致！");
+        }
+        return (a.dotProduct(b)) / (a.getNorm() * b.getNorm());
+    }
+
+    /**
+     * 从相似度高的其他用户中取出评分较高并且当前用户未看过的帖子id
+     *
+     * @param similarUsers 相似用户id列表
+     * @return 推荐帖子列表
+     */
+    private List<PostInfoVo> getRecommendedPosts(List<Long> similarUsers) {
+
+        // 判断当前相似用户集合是否为空
+        if (similarUsers == null || similarUsers.isEmpty()) {
+            return getLatestPosts();
+        }
+
+        // 当前登录用户id
+        long loginId = StpUtil.getLoginIdAsLong();
+
+        // 评分基准线
+        int threshold = 3;
+
+        // 取出所有相似用户评分高于基准线的帖子id集合
+        LambdaQueryWrapper<PostScore> postScoreLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        postScoreLambdaQueryWrapper.in(PostScore::getUserId, similarUsers);
+        postScoreLambdaQueryWrapper.ge(PostScore::getScore, threshold);
+        postScoreLambdaQueryWrapper.select(PostScore::getPostId);
+        List<Long> postIdList = postScoreMapper.selectList(postScoreLambdaQueryWrapper).stream().map(PostScore::getPostId).collect(Collectors.toList());
+
+
+        // 获取当前登录用户已经点击过的帖子id列表
+        LambdaQueryWrapper<PostClickRecords> postClickRecordsLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        postClickRecordsLambdaQueryWrapper.eq(PostClickRecords::getUserId, loginId);
+        postClickRecordsLambdaQueryWrapper.select(PostClickRecords::getPostId);
+        List<Long> clickPostIdList = postClickRecordsMapper.selectList(postClickRecordsLambdaQueryWrapper).stream().map(PostClickRecords::getPostId).collect(Collectors.toList());
+
+        // 过滤出当前登录用户未点击过的帖子id
+        List<Long> filteredPostIdList = postIdList.stream()
+                .filter(postId -> !clickPostIdList.contains(postId))
+                .collect(Collectors.toList());
+
+        if (!filteredPostIdList.isEmpty()) {
+            // 根据过滤后的帖子id集合，查询并获取对应的帖子信息
+            LambdaQueryWrapper<PostInfo> postInfoLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            postInfoLambdaQueryWrapper.in(PostInfo::getId, filteredPostIdList);
+            List<PostInfo> postInfoList = postInfoMapper.selectList(postInfoLambdaQueryWrapper);
+
+            return postInfoList.stream().map(this::getPostInfo).collect(Collectors.toList());
+        }
+
+        return getLatestPosts();
     }
 
     @Override
