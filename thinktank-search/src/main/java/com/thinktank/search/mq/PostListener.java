@@ -34,7 +34,7 @@ public class PostListener {
     private ElasticsearchRestTemplate elasticsearchRestTemplate;
 
     /**
-     * 监听消息
+     * 监听添加帖子文档消息
      *
      * @param message 消息体
      */
@@ -75,5 +75,15 @@ public class PostListener {
 
         // 保存到es文档
         elasticsearchRestTemplate.save(postInfoDoc);
+    }
+
+    /**
+     * 监听删除帖子文档消息
+     *
+     * @param postId 帖子id
+     */
+    @RabbitListener(queues = "fanout.queue.post.delete")
+    public void deletePostInfoDoc(String postId) {
+        elasticsearchRestTemplate.delete(postId, PostInfoDoc.class);
     }
 }

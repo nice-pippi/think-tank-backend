@@ -18,6 +18,7 @@ import com.thinktank.generator.vo.PostHotVo;
 import com.thinktank.generator.vo.PostInfoVo;
 import com.thinktank.post.config.AddPostClickRecordsFanoutConfig;
 import com.thinktank.post.config.AddPostDocFanoutConfig;
+import com.thinktank.post.config.DeletePostFanoutConfig;
 import com.thinktank.post.service.PostService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -227,6 +228,10 @@ public class PostServiceImpl implements PostService {
 
         // 删除该帖子
         postInfoMapper.deleteById(postId);
+
+        // 提交待处理帖子id到mq队列，由队列异步处理删除es文档操作
+        CorrelationData correlationData = RabbitMQUtil.getCorrelationData();
+        rabbitTemplate.convertAndSend(DeletePostFanoutConfig.FANOUT_EXCHANGE, "", postId, correlationData);
     }
 
     @Override
