@@ -38,7 +38,7 @@ public class LoginController {
         String state = request.getParameter("state");
 
         String auth = loginService.wxLogin(code, state);
-        response.sendRedirect("http://localhost:8585/Result" + auth);
+        response.sendRedirect("http://www.think-tank.cn/Result" + auth);
     }
 
     @ApiOperation("账号密码登录")
