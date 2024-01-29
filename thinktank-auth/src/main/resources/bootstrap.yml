@@ -13,9 +13,6 @@ spring:
         namespace: 6bf46565-fbaa-46b7-aba7-0371acfbe01f
         group: thinktank-project
         file-extension: yaml # 文件后缀名
-    sentinel:
-      transport:
-        dashboard: 192.168.88.150:8080 # sentinel控制台地址
 
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
