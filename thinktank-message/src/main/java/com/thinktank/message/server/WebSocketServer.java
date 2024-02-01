@@ -38,11 +38,6 @@ public class WebSocketServer {
      */
     private Session session;
 
-    /**
-     * 当前用户ID
-     */
-    private Long userId;
-
     @Autowired
     private MessagePrivateMapper messagePrivateMapper;
 
@@ -57,8 +52,6 @@ public class WebSocketServer {
      */
     @OnOpen
     public void onOpen(Session session, @PathParam("userId") Long userId) {
-        this.session = session;
-        this.userId = userId;
         onLineUsers.put(userId, session);
         log.info("当前在线人数:" + onLineUsers.size());
     }
@@ -70,7 +63,7 @@ public class WebSocketServer {
      * @param message 消息内容
      */
     @OnMessage
-    public void onMessage(String message) {
+    public void onMessage(String message, @PathParam("userId") Long userId) {
         log.info("用户'{}'发送消息:{}", userId, message);
         MessagePrivate messagePrivate = ObjectMapperUtil.toObject(message, MessagePrivate.class);
 
@@ -98,11 +91,10 @@ public class WebSocketServer {
      * 当连接关闭时被调用的方法
      */
     @OnClose
-    public void onClose() {
+    public void onClose(@PathParam("userId") Long userId) {
         onLineUsers.remove(userId);
-        log.info("当前在线人数:" + onLineUsers.size());
+        log.info("断开连接，当前在线人数:" + onLineUsers.size());
     }
-
 
     /**
      * 当发生错误时调用的方法
@@ -110,15 +102,14 @@ public class WebSocketServer {
      * @param error 异常对象
      */
     @OnError
-    public void onError(Throwable error) {
+    public void onError(Throwable error, @PathParam("userId") Long userId) {
         log.error("用户'{}'错误,原因:{}", userId, error.getMessage());
     }
-
 
     /**
      * 推送消息给指定用户
      */
-    public void sendMessage(Long acceptUserId, String message) {
+    private void sendMessage(Long acceptUserId, String message) {
         try {
             onLineUsers.get(acceptUserId).getBasicRemote().sendText(message);
         } catch (IOException e) {
