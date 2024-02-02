@@ -79,9 +79,9 @@ public class BlockController {
         return R.success(blockService.getHotBlock());
     }
 
-    @ApiOperation("验证当前登录用户是否拥有指定板块编辑权限")
-    @GetMapping("hasEditPermissionByBlockId/{id}")
-    public R<Boolean> hasEditPermissionByBlockId(@PathVariable("id") Long id) {
-        return R.success(blockService.hasEditPermissionByBlockId(id));
+    @ApiOperation("验证当前登录是否指定板块的板主")
+    @GetMapping("/isMaster/{id}")
+    public R<Boolean> isMaster(@PathVariable("id") Long id) {
+        return R.success(blockService.isMaster(id));
     }
 }

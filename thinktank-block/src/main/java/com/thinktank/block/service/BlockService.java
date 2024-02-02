@@ -76,10 +76,10 @@ public interface BlockService {
     List<BlockInfo> getHotBlock();
 
     /**
-     * 验证当前登录用户是否拥有编辑指定板块权限
+     * 验证当前登录是否指定板块的板主
      *
      * @param id 板块ID
-     * @return true:有权限 false:没有权限
+     * @return true: 是 false: 否
      */
-    Boolean hasEditPermissionByBlockId(Long id);
+    Boolean isMaster(Long id);
 }

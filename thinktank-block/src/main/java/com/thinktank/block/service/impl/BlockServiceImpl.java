@@ -409,7 +409,7 @@ public class BlockServiceImpl implements BlockService {
     }
 
     @Override
-    public Boolean hasEditPermissionByBlockId(Long blockId) {
+    public Boolean isMaster(Long blockId) {
         // 验证当前登录是否指定板块的板主
         Long loginId = StpUtil.getLoginIdAsLong();
         BlockMasterListVo blockMasterListVo = masterService.getAllBlockMasterById(blockId);
