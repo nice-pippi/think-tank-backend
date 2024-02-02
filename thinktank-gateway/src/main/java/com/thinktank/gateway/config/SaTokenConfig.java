@@ -34,9 +34,10 @@ public class SaTokenConfig implements WebMvcConfigurer {
                             // 排除校验
                             .notMatch(
                                     "/auth/register", // 用户注册
-                                    "/auth/passwordLogin", // 密码登录
-                                    "/auth/adminLogin", // 管理员登录
-                                    "/auth/wxLogin", // 微信登录
+                                    "/auth/login/passwordLogin", // 密码登录
+                                    "/auth/login/adminLogin", // 管理员登录
+                                    "/auth/login/wxLogin", // 微信登录
+                                    "/auth/login/logout", // 注销
                                     "/validatecode/generate", // 生成验证码
                                     "/validatecode/validate", // 校验验证码
                                     "/block/getBlockClassify", // 获取板块分类

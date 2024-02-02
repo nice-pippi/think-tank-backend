@@ -28,6 +28,11 @@ public interface LoginService {
     R<String> passwordLogin(SysUser sysUser);
 
     /**
+     * 注销登录
+     */
+    void logout();
+
+    /**
      * 管理员登录
      *
      * @param sysUser

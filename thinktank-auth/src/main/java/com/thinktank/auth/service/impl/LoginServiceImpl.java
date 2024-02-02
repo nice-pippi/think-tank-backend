@@ -113,6 +113,12 @@ public class LoginServiceImpl implements LoginService {
         return R.success(StpUtil.getTokenValue()).add("permissions", permissionList);
     }
 
+    @Override
+    public void logout() {
+        StpUtil.checkLogin();
+        StpUtil.logout();
+    }
+
     // 根据用户id获取用户所有权限
     private List<String> getPermissionList(Long id) {
         // 1.获取用户所有权限
