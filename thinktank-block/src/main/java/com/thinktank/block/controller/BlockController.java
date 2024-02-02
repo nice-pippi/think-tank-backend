@@ -78,4 +78,10 @@ public class BlockController {
     public R<List<BlockInfo>> getHotBlock() {
         return R.success(blockService.getHotBlock());
     }
+
+    @ApiOperation("验证当前登录用户是否拥有指定板块编辑权限")
+    @GetMapping("hasEditPermissionByBlockId/{id}")
+    public R<Boolean> hasEditPermissionByBlockId(@PathVariable("id") Long id) {
+        return R.success(blockService.hasEditPermissionByBlockId(id));
+    }
 }

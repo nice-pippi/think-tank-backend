@@ -74,4 +74,12 @@ public interface BlockService {
      * @return 返回热门板块的列表
      */
     List<BlockInfo> getHotBlock();
+
+    /**
+     * 验证当前登录用户是否拥有编辑指定板块权限
+     *
+     * @param id 板块ID
+     * @return true:有权限 false:没有权限
+     */
+    Boolean hasEditPermissionByBlockId(Long id);
 }
