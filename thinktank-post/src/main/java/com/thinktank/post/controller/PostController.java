@@ -51,7 +51,7 @@ public class PostController {
     public R<List<PostInfoVo>> getIndexPosts() {
         if (StpUtil.isLogin()) {
             return R.success(postService.getRecommendedPostsByCollaborativeFiltering());
-        }else {
+        } else {
             return R.success(postService.getLatestPosts());
         }
     }
@@ -117,6 +117,12 @@ public class PostController {
     public R<String> addPostClickRecord(@RequestBody @Validated(InsertValidation.class) PostClickRecords postClickRecords) {
         postService.addPostClickRecord(postClickRecords);
         return R.success("新增成功");
+    }
+
+    @ApiOperation("验证当前登录用户是否拥有删除帖子权限")
+    @GetMapping("/hasDeletePermission/{id}")
+    public R<Boolean> hasDeletePermission(@PathVariable("id") Long id) {
+        return R.success(postService.hasDeletePermission(id));
     }
 }
 

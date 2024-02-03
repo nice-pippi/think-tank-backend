@@ -135,7 +135,7 @@ public class MasterServiceImpl implements MasterService {
         BlockInfo blockInfo = blockInfoMapper.selectById(id);
         if (blockInfo == null) {
             log.warn("板块'{}'不存在", id);
-            throw new ThinkTankException(String.format("你当前申请板块id不存在！"));
+            throw new ThinkTankException(String.format("板块'{}'不存在", id));
         }
 
         // 为当前板块板主集合信息分配锁

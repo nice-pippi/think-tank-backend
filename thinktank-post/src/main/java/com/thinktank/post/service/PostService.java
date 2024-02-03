@@ -122,4 +122,12 @@ public interface PostService {
      * @param postClickRecords 点击帖子记录信息
      */
     void addPostClickRecord(PostClickRecords postClickRecords);
+
+    /**
+     * 验证当前登录用户是否拥有删除帖子权限
+     *
+     * @param id 帖子ID
+     * @return 删除帖子权限，true表示拥有，false表示不拥有
+     */
+    Boolean hasDeletePermission(Long id);
 }

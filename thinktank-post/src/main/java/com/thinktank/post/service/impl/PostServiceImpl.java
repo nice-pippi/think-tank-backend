@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.thinktank.api.clients.BlockClient;
 import com.thinktank.common.exception.ThinkTankException;
 import com.thinktank.common.utils.ObjectMapperUtil;
 import com.thinktank.common.utils.R;
@@ -13,6 +14,7 @@ import com.thinktank.common.utils.RedisCacheUtil;
 import com.thinktank.generator.dto.PostInfoDto;
 import com.thinktank.generator.entity.*;
 import com.thinktank.generator.mapper.*;
+import com.thinktank.generator.vo.BlockMasterListVo;
 import com.thinktank.generator.vo.PostCommentsVo;
 import com.thinktank.generator.vo.PostHotVo;
 import com.thinktank.generator.vo.PostInfoVo;
@@ -88,6 +90,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private RedissonClient redissonClient;
+
+    @Autowired
+    private BlockClient blockClient;
 
     /**
      * 验证板块是否存在，若存在则返回板块信息
@@ -669,4 +674,36 @@ public class PostServiceImpl implements PostService {
         rabbitTemplate.convertAndSend(AddPostClickRecordsFanoutConfig.FANOUT_EXCHANGE, "", message, correlationData);
     }
 
+    @Override
+    public Boolean hasDeletePermission(Long id) {
+        // 验证当帖子是否是当前登录用户发布的
+        long loginId = StpUtil.getLoginIdAsLong();
+        PostInfo postInfo = postInfoMapper.selectById(id);
+
+        if (postInfo == null) {
+            log.warn("帖子id'{}'不存在,操作用户id'{}'", id, loginId);
+            throw new ThinkTankException("帖子id不存在");
+        }
+
+        if (postInfo.getUserId().equals(loginId)) {
+            return true;
+        }
+
+        // 远程调用获取当前板块所有板主以及小板主信息
+        R<BlockMasterListVo> result = blockClient.getAllBlockMasterById(postInfo.getBlockId());
+        if (!result.getStatus().equals(200)) {
+            throw new ThinkTankException(result.getMsg());
+        }
+
+        // 判断是否是板主
+        if (result.getData().getMasterList().stream().anyMatch(item -> item.getId().equals(loginId))) {
+            return true;
+        }
+
+        // 判断是否是小板主
+        if (result.getData().getSmallMasterList().stream().anyMatch(item -> item.getId().equals(loginId))) {
+            return true;
+        }
+        return false;
+    }
 }

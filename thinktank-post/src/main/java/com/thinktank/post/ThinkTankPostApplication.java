@@ -6,6 +6,7 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Import;
  * @Description: 帖子服务
  * @Version: 1.0
  */
+@EnableFeignClients(basePackages = "com.thinktank.api.clients")
 @Import({SaTokenConfig.class, SentinelExceptionHandler.class})
 @SpringBootApplication(scanBasePackages = "com.thinktank")
 public class ThinkTankPostApplication {
@@ -24,10 +26,11 @@ public class ThinkTankPostApplication {
 
     /**
      * 修改MQ默认消息转换器，采用JSON转换器
+     *
      * @return
      */
     @Bean
-    public MessageConverter jsonMessageConverter(){
+    public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 }
