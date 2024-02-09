@@ -65,30 +65,30 @@ think-tank是一个类似于贴吧的交流平台，包括客户端和后台管�
 
 ```
 think-tank
-├── think-tank-auth								// 认证模块	[8160]
-├── think-tank-gateway							// 网关模块 [60100]
-├── think-tank-user								// 用户模块	[60101]
-├── think-tank-admin							// 后台模块	[60102]
-├── think-tank-validatecode 					// 验证模块	[60103]
-├── think-tank-search							// 搜索模块	[60104]
-├── think-tank-block							// 板块模块	[60105]
-├── think-tank-post								// 帖子模块	[60106]
-├── think-tank-file								// 文件模块	[60107]
-├── think-tank-message							// 消息模块	[60108]
-├── think-tank-api								// 将feign的client抽取为独立模块
-├── think-tank-generator						// mybatis-plus-generator代码生成器
-└── thinktank-common							// 工具类以及通用代码
+├── think-tank-auth                             // 认证模块	[8160]
+├── think-tank-gateway                          // 网关模块 [60100]
+├── think-tank-user                             // 用户模块	[60101]
+├── think-tank-admin                            // 后台模块	[60102]
+├── think-tank-validatecode                     // 验证模块	[60103]
+├── think-tank-search                           // 搜索模块	[60104]
+├── think-tank-block                            // 板块模块	[60105]
+├── think-tank-post                             // 帖子模块	[60106]
+├── think-tank-file                             // 文件模块	[60107]
+├── think-tank-message                          // 消息模块	[60108]
+├── think-tank-api                              // 将feign的client抽取为独立模块
+├── think-tank-generator                        // mybatis-plus-generator代码生成器
+└── thinktank-common                            // 工具类以及通用代码
 ```
 
 
 
 ## 系统架构图
 
-![](D:\Desktop\think-tank\文档\微服务架构.png)
+![](https://github.com/nice-pippi/think-tank-backend/blob/09bfa675d7b05ecba92fb643a5130312dee7b9d7/document/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84.png)
 
 ## 业务框架图
 
-![业务框架图](D:\Desktop\think-tank\文档\业务框架图.png)
+![业务框架图](https://github.com/nice-pippi/think-tank-backend/blob/09bfa675d7b05ecba92fb643a5130312dee7b9d7/document/%E4%B8%9A%E5%8A%A1%E6%A1%86%E6%9E%B6%E5%9B%BE.png)
 
 
 
