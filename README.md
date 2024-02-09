@@ -84,11 +84,11 @@ think-tank
 
 ## 系统架构图
 
-![](https://github.com/nice-pippi/think-tank-backend/blob/09bfa675d7b05ecba92fb643a5130312dee7b9d7/document/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84.png)
+![](https://github.com/nice-pippi/think-tank-backend/blob/08ba50dcfacaa094909122380fb2981ba7872968/document/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84.jpg)
 
 ## 业务框架图
 
-![业务框架图](https://github.com/nice-pippi/think-tank-backend/blob/09bfa675d7b05ecba92fb643a5130312dee7b9d7/document/%E4%B8%9A%E5%8A%A1%E6%A1%86%E6%9E%B6%E5%9B%BE.png)
+![业务框架图](https://github.com/nice-pippi/think-tank-backend/blob/08ba50dcfacaa094909122380fb2981ba7872968/document/%E4%B8%9A%E5%8A%A1%E6%A1%86%E6%9E%B6%E5%9B%BE.jpg)
 
 
 
