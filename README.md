@@ -66,7 +66,7 @@ think-tank是一个类似于贴吧的交流平台，包括客户端和后台管�
 ```
 think-tank
 ├── think-tank-auth                             // 认证模块	[8160]
-├── think-tank-gateway                          // 网关模块 [60100]
+├── think-tank-gateway                          // 网关模块	[60100]
 ├── think-tank-user                             // 用户模块	[60101]
 ├── think-tank-admin                            // 后台模块	[60102]
 ├── think-tank-validatecode                     // 验证模块	[60103]
@@ -460,42 +460,6 @@ http {
             root   html;
         }
     }
-
-    # another virtual host using mix of IP-, name-, and port-based configuration
-    #
-    #server {
-    #    listen       8000;
-    #    listen       somename:8080;
-    #    server_name  somename  alias  another.alias;
-
-    #    location / {
-    #        root   html;
-    #        index  index.html index.htm;
-    #    }
-    #}
-
-
-    # HTTPS server
-    #
-    #server {
-    #    listen       443 ssl;
-    #    server_name  localhost;
-
-    #    ssl_certificate      cert.pem;
-    #    ssl_certificate_key  cert.key;
-
-    #    ssl_session_cache    shared:SSL:1m;
-    #    ssl_session_timeout  5m;
-
-    #    ssl_ciphers  HIGH:!aNULL:!MD5;
-    #    ssl_prefer_server_ciphers  on;
-
-    #    location / {
-    #        root   html;
-    #        index  index.html index.htm;
-    #    }
-    #}
-
 }
 ```
 
