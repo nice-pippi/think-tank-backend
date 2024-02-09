@@ -339,6 +339,10 @@ exit;
 docker restart mysql
 ```
 
+**Nacos**
+
+服务无法读取到配置，需要打开Nacos网页控制台创建dev命名空间，然后将提供的nacos_config压缩包导入即可，具体步骤网上自行了解。
+
 **Kibana**
 
 如果启动后网页打开kibana控制台显示：`Kibana server is not ready yet`，需要执行如下命令
