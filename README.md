@@ -96,78 +96,89 @@ think-tank
 
 ### 1.镜像准备
 
+其中所涉及到的ip地址均要修改为Linux服务器地址，可通过`ip address`命令查看
+
 **Mysql**
 
-```sh
+```bash
 docker pull mysql:8.0.31
 ```
 
 **Nacos**
 
-```sh
+```bash
 docker pull nacos/nacos-server:1.4.2
+```
 
 控制台：http://192.168.88.150:8848/nacos
-```
 
 **Elasticsearch、kibana**
 
-```sh
+```bash
 docker pull elasticsearch:7.12.1
 docker pull kibana:7.12.1
 
 docker network create elastic
+```
 
 控制台：http://192.168.88.150:5601/app/dev_tools#/console
-```
 
 **Redis**
 
-```sh
+```bash
 docker pull redis:5.0.14
 ```
 
 **minIO**
 
-```sh
+```bash
 docker pull minio/minio:RELEASE.2023-09-07T02-05-02Z.hotfix.2befe55d4
-     
-账号、密码统一：minioadmin
-控制台：http://192.168.88.150:9000
 ```
+
+控制台：http://192.168.88.150:9000
+
+账号、密码统一：minioadmin
 
 **Sentinel**
 
-```
-将sentinel-dashboard-1.8.1.jar上传到Linux上
+将提供的`/document/resource/sentinel-dashboard-1.8.1.jar`包上传到Linux上
 
 编写Dockerfile,内容如下:
+
+```dockerfile
 FROM openjdk:8
 COPY sentinel-dashboard-1.8.1.jar /sentinel.jar
 EXPOSE 8080
 CMD ["java", "-jar", "/sentinel.jar"]
+```
 
 build命令构建镜像
+
+```bash
 docker build -t sentinel-dashboard-1.8.1 .
+```
 
 控制台：http://192.168.88.150:8080/#/dashboard
-```
 
 **Rabbit MQ**
 
-```sh
+```bash
 docker pull rabbitmq:3-management
 ```
 
+控制台：http://192.168.88.150:15672/#/
+
 **XXL-JOB**
 
-```sh
+```bash
 docker pull xuxueli/xxl-job-admin:2.4.0
 ```
 
+控制台：http://192.168.88.150:9090/browser
+
 **Nginx**
 
-```shell
+```bash
 docker pull nginx:1.24.0
 ```
 
@@ -341,7 +352,7 @@ docker restart mysql
 
 **Nacos**
 
-服务无法读取到配置，需要打开Nacos网页控制台创建dev命名空间，然后将提供的nacos_config压缩包导入即可，具体步骤网上自行了解。
+服务无法读取到配置，需要打开Nacos网页控制台创建dev命名空间，然后将提供的`nacos_config`压缩包导入即可，具体步骤网上自行了解。（配置包在`/document/resource/document/resource/nacos_config`路径下）
 
 **Kibana**
 
