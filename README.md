@@ -96,7 +96,7 @@ think-tank
 
 ### 1.镜像准备
 
-其中所涉及到的ip地址均要修改为Linux服务器地址，可通过`ip address`命令查看
+其中所涉及到的ip地址均要修改为Linux服务器地址，可通过`ip address`命令查看。
 
 **Mysql**
 
@@ -477,59 +477,15 @@ http {
 **打包前端工程项目**
 
 1. 使用：`npm run build` 打包前端工程
-2. 将dist目录重命名为 ”think-tank-front“
+2. 将dist目录重命名为 `think-tank-front`
 3. 上传目录到Linux服务器的 `/docker/nginx/html` 路径
 4. 重启nginx：`docker restart nginx`
 
 **打包后端工程**
 
-1.需要打包的工程加上如下配置
+1. 将有Dockerfile文件的工程制作成镜像，具体步骤网上自行查找（IDEA制作docker镜像）
+2. docker-compose追加配置
 
-```xml
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring.boot.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-```
-
-2.根项目（think-tank）执行：clean install package
-
-3.编写Dockerfile
-
-```dockerfile
-#使用java环境
-FROM java:8
-
-# 切换到容器内部的 /thinktank目录
-WORKDIR /thinktank
-
-# 添加要运行的jar文件
-COPY target/thinktank-gateway-1.0-SNAPSHOT.jar /thinktank/gateway.jar
-
-# 端口暴露
-EXPOSE 60100
-
-# 容器启动后运行的命令
-ENTRYPOINT ["java","-jar","/thinktank/gateway.jar"]
-```
-
-4.不同工程重复3操作，只要修改服务名和端口号即可
-
-5.推送镜像到docker
-
-6.docker-compose追加配置
 
 ```yaml
   auth:  
@@ -625,6 +581,13 @@ ENTRYPOINT ["java","-jar","/thinktank/gateway.jar"]
 
 ### 5.项目运行
 
-客户端：http://www.think-tank.cn/
+```bash
+# 启动所有容器
+docker-compose up -d
+```
 
-后台端：http://192.168.88.150:8888/#/login?redirect=%2Fdashboard
+等待容器全部执行完，访问网址：
+
+- 客户端：http://www.think-tank.cn/
+
+- 后台端：http://192.168.88.150:8888/#/login?redirect=%2Fdashboard
