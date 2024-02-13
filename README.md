@@ -77,7 +77,7 @@ think-tank
 ├── think-tank-message                          // 消息模块	[60108]
 ├── think-tank-api                              // 将feign的client抽取为独立模块
 ├── think-tank-generator                        // mybatis-plus-generator代码生成器
-└── thinktank-common                            // 工具类以及通用代码
+└── think-tank-common                           // 工具类以及通用代码
 ```
 
 
