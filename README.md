@@ -421,6 +421,10 @@ http {
 
     #gzip  on;
 
+    upstream front {
+        server localhost:60100;
+    }
+
     server {
         listen       80;
         server_name  www.think-tank.cn localhost;
@@ -439,7 +443,7 @@ http {
 
         location /api {
             rewrite /api/(.*) /$1 break;
-            proxy_pass   http://localhost:60100;    
+            proxy_pass   http://front;    
         }     
 
         error_page   500 502 503 504  /50x.html;
