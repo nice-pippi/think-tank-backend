@@ -25,7 +25,31 @@ think-tank是一个类似于贴吧的交流平台，包括客户端和后台管�
 - 帖子管理：管理员可以对帖子并对其进行查看、管理帖子标签、删除等操作。
 - 用户管理：管理员可以对平台上的用户进行信息编辑、禁言、限制登录、删除等操作。
 
+## 前端地址
 
+### 前台端
+
+仓库地址：[nice-pippi/think-tank-front-portal (github.com)](https://github.com/nice-pippi/think-tank-front-portal)
+
+**首页**
+
+https://github.com/nice-pippi/think-tank-backend/blob/264840987f207afcbe13c87ad25d35cda9abe16c/document/image/%E9%A6%96%E9%A1%B5.png
+
+**帖子页面**
+
+https://github.com/nice-pippi/think-tank-backend/blob/264840987f207afcbe13c87ad25d35cda9abe16c/document/image/%E5%B8%96%E5%AD%90.png
+
+**评论区**
+
+https://github.com/nice-pippi/think-tank-backend/blob/264840987f207afcbe13c87ad25d35cda9abe16c/document/image/%E8%AF%84%E8%AE%BA%E5%8C%BA.png
+
+### 后台管理端
+
+仓库地址：[nice-pippi/think-tank-front-admin (github.com)](https://github.com/nice-pippi/think-tank-front-admin)
+
+**首页**
+
+https://github.com/nice-pippi/think-tank-backend/blob/264840987f207afcbe13c87ad25d35cda9abe16c/document/image/%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E9%A6%96%E9%A1%B5.png
 
 ## 技术选型
 
@@ -363,11 +387,9 @@ curl -X DELETE http://localhost:9200/.kibana*
 
 **XXL-JOB**
 
-无法登录xxl-job控制台时，需要到GitHub下载sql文件，并且在数据库里执行该sql文件。
+无法登录xxl-job控制台时，将提供的sql文件在数据库里执行即可。
 
-https://github.com/xuxueli/xxl-job/blob/master/doc/db/tables_xxl_job.sql
-
-
+（sql文件在`/document/resource/document/resource/tables_xxl_job.sql`路径下）
 
 ### 4.项目部署
 
