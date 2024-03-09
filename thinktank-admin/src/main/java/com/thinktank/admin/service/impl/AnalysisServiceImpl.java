@@ -80,7 +80,7 @@ public class AnalysisServiceImpl implements AnalysisService {
             int month = date.getMonthValue();
             int day = date.getDayOfMonth();
             UserLoginCountBySevenDayVo userLoginCountBySevenDayVo = new UserLoginCountBySevenDayVo();
-            userLoginCountBySevenDayVo.setLoginDate(month + "-" + day);
+            userLoginCountBySevenDayVo.setLoginDate(String.format("%d-%02d", month, day));
             userLoginCountBySevenDayVo.setUserCount(0);
             list.add(userLoginCountBySevenDayVo);
         }
