@@ -33,15 +33,15 @@ think-tank是一个类似于贴吧的交流平台，包括客户端和后台管�
 
 **首页**
 
-https://github.com/nice-pippi/think-tank-backend/blob/264840987f207afcbe13c87ad25d35cda9abe16c/document/image/%E9%A6%96%E9%A1%B5.png
+![首页](https://github.com/nice-pippi/think-tank-backend/blob/28f17c4259b147d5b87a62e689a4b1fe2bf63bdb/document/image/%E9%A6%96%E9%A1%B5.png)
 
 **帖子页面**
 
-https://github.com/nice-pippi/think-tank-backend/blob/264840987f207afcbe13c87ad25d35cda9abe16c/document/image/%E5%B8%96%E5%AD%90.png
+![帖子页面](https://github.com/nice-pippi/think-tank-backend/blob/28f17c4259b147d5b87a62e689a4b1fe2bf63bdb/document/image/%E5%B8%96%E5%AD%90.png)
 
 **评论区**
 
-https://github.com/nice-pippi/think-tank-backend/blob/264840987f207afcbe13c87ad25d35cda9abe16c/document/image/%E8%AF%84%E8%AE%BA%E5%8C%BA.png
+![评论区](https://github.com/nice-pippi/think-tank-backend/blob/28f17c4259b147d5b87a62e689a4b1fe2bf63bdb/document/image/%E8%AF%84%E8%AE%BA%E5%8C%BA.png)
 
 ### 后台管理端
 
@@ -49,7 +49,7 @@ https://github.com/nice-pippi/think-tank-backend/blob/264840987f207afcbe13c87ad2
 
 **首页**
 
-https://github.com/nice-pippi/think-tank-backend/blob/264840987f207afcbe13c87ad25d35cda9abe16c/document/image/%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E9%A6%96%E9%A1%B5.png
+![后台管理首页](https://github.com/nice-pippi/think-tank-backend/blob/28f17c4259b147d5b87a62e689a4b1fe2bf63bdb/document/image/%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E9%A6%96%E9%A1%B5.png)
 
 ## 技术选型
 
@@ -107,7 +107,7 @@ think-tank
 
 ## 系统架构图
 
-![](https://github.com/nice-pippi/think-tank-backend/blob/a8ffd8bbb960b54c5078194ddfc0497cf2510c33/document/image/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84.jpg)
+![系统架构图](https://github.com/nice-pippi/think-tank-backend/blob/a8ffd8bbb960b54c5078194ddfc0497cf2510c33/document/image/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84.jpg)
 
 ## 业务框架图
 
