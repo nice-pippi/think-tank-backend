@@ -78,10 +78,4 @@ public class BlockController {
     public R<List<BlockInfo>> getHotBlock() {
         return R.success(blockService.getHotBlock());
     }
-
-    @ApiOperation("验证当前登录是否指定板块的板主")
-    @GetMapping("/isMaster/{id}")
-    public R<Boolean> isMaster(@PathVariable("id") Long id) {
-        return R.success(blockService.isMaster(id));
-    }
 }

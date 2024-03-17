@@ -74,12 +74,4 @@ public interface BlockService {
      * @return 返回热门板块的列表
      */
     List<BlockInfo> getHotBlock();
-
-    /**
-     * 验证当前登录是否指定板块的板主
-     *
-     * @param id 板块ID
-     * @return true: 是 false: 否
-     */
-    Boolean isMaster(Long id);
 }

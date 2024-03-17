@@ -14,7 +14,6 @@ import com.thinktank.generator.dto.BlockClassifyDto;
 import com.thinktank.generator.entity.*;
 import com.thinktank.generator.mapper.*;
 import com.thinktank.generator.vo.BlockInfoVo;
-import com.thinktank.generator.vo.BlockMasterListVo;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -406,14 +405,5 @@ public class BlockServiceImpl implements BlockService {
         } finally {
             lock.unlock();
         }
-    }
-
-    @Override
-    public Boolean isMaster(Long blockId) {
-        // 验证当前登录是否指定板块的板主
-        Long loginId = StpUtil.getLoginIdAsLong();
-        BlockMasterListVo blockMasterListVo = masterService.getAllBlockMasterById(blockId);
-        List<SysUser> masterList = blockMasterListVo.getMasterList();
-        return masterList.stream().anyMatch(sysUser -> sysUser.getId().equals(loginId));
     }
 }

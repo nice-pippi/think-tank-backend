@@ -26,4 +26,11 @@ public interface MasterService {
      */
     BlockMasterListVo getAllBlockMasterById(Long id);
 
+    /**
+     * 验证当前登录是否指定板块的板主
+     *
+     * @param id 板块ID
+     * @return true: 是 false: 否
+     */
+    Boolean isMaster(Long id);
 }

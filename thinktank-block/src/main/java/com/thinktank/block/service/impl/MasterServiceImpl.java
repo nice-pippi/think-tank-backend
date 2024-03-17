@@ -168,4 +168,13 @@ public class MasterServiceImpl implements MasterService {
         }
         return blockMasterListVo;
     }
+
+    @Override
+    public Boolean isMaster(Long id) {
+        // 验证当前登录是否指定板块的板主
+        Long loginId = StpUtil.getLoginIdAsLong();
+        BlockMasterListVo blockMasterListVo = getAllBlockMasterById(id);
+        List<SysUser> masterList = blockMasterListVo.getMasterList();
+        return masterList.stream().anyMatch(sysUser -> sysUser.getId().equals(loginId));
+    }
 }
