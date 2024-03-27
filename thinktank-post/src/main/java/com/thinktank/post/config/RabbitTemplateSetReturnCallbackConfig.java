@@ -10,14 +10,14 @@ import org.springframework.context.annotation.Configuration;
 /**
  * @Author: 弘
  * @CreateTime: 2024年01⽉14⽇ 16:12
- * @Description: 通用配置
+ * @Description: 用于设置RabbitTemplate的ReturnCallback。
  * @Version: 1.0
  */
 @Slf4j
 @Configuration
-public class CommonConfig implements ApplicationContextAware {
+public class RabbitTemplateSetReturnCallbackConfig implements ApplicationContextAware {
     /**
-     * 设置应用上下文
+     * 由于每个RabbitTemplate只能配置一个ReturnCallback，因此需要在项目加载时配置：
      *
      * @param applicationContext 应用上下文
      * @throws BeansException Beans异常
