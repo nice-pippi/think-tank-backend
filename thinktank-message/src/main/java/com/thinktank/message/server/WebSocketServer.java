@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @Author: 弘
  * @CreateTime: 2023年12⽉05⽇ 18:00
- * @Description: 类描述
+ * @Description: 处理用户之间的私聊消息，包括接收、发送、处理存储等操作。
  * @Version: 1.0
  */
 
@@ -48,7 +48,7 @@ public class WebSocketServer {
      * 会话连接建立成功调用的方法
      *
      * @param session 会话对象
-     * @param userId  用户ID路径参数
+     * @param userId  用户ID
      */
     @OnOpen
     public void onOpen(Session session, @PathParam("userId") Long userId) {
@@ -61,6 +61,7 @@ public class WebSocketServer {
      * 接收到消息后处理消息的方法
      *
      * @param message 消息内容
+     * @param userId  用户ID
      */
     @OnMessage
     public void onMessage(String message, @PathParam("userId") Long userId) {
@@ -89,6 +90,8 @@ public class WebSocketServer {
 
     /**
      * 当连接关闭时被调用的方法
+     *
+     * @param userId 用户ID
      */
     @OnClose
     public void onClose(@PathParam("userId") Long userId) {
@@ -99,7 +102,8 @@ public class WebSocketServer {
     /**
      * 当发生错误时调用的方法
      *
-     * @param error 异常对象
+     * @param error  错误信息
+     * @param userId 用户ID
      */
     @OnError
     public void onError(Throwable error, @PathParam("userId") Long userId) {
@@ -107,7 +111,10 @@ public class WebSocketServer {
     }
 
     /**
-     * 推送消息给指定用户
+     * 发送消息给指定用户
+     *
+     * @param acceptUserId 接收消息的用户ID
+     * @param message      消息内容
      */
     private void sendMessage(Long acceptUserId, String message) {
         try {

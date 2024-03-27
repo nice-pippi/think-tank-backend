@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @Author: 弘
  * @CreateTime: 2023年12⽉09⽇ 15:26
- * @Description: 类描述
+ * @Description: 私信业务接口实现类
  * @Version: 1.0
  */
 @Slf4j

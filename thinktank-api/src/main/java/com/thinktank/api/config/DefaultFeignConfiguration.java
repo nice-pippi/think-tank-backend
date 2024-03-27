@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * @Author: 弘
  * @CreateTime: 2023年09⽉11⽇ 13:46
- * @Description: 类描述
+ * @Description: feign配置类
  * @Version: 1.0
  */
 @Configuration

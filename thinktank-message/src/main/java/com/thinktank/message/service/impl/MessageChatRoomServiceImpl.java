@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * @Author: 弘
  * @CreateTime: 2023年12⽉11⽇ 18:47
- * @Description: 类描述
+ * @Description: 私信聊天室业务接口实现类
  * @Version: 1.0
  */
 @Slf4j

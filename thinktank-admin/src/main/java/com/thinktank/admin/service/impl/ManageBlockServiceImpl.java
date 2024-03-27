@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * @Author: 弘
  * @CreateTime: 2023年12⽉18⽇ 17:45
- * @Description: 类描述
+ * @Description: 板块管理业务接口实现类
  * @Version: 1.0
  */
 @Slf4j

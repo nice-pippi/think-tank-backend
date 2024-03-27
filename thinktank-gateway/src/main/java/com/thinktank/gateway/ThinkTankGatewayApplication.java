@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * @Author: 弘
  * @CreateTime: 2023年08⽉14⽇ 23:07
- * @Description: 网关
+ * @Description: 网关服务
  * @Version: 1.0
  */
 @MapperScan("com.thinktank.generator.mapper")

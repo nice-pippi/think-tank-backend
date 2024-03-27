@@ -10,9 +10,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * @Author: 弘
+ * @CreateTime: 2023年09⽉07⽇ 17:21
+ * @Description: 注册 Sa-Token 全局过滤器
+ * @Version: 1.0
+ */
 @Configuration
 public class SaTokenConfig implements WebMvcConfigurer {
-    // 注册 Sa-Token全局过滤器
     @Bean
     public SaReactorFilter getSaReactorFilter() {
         return new SaReactorFilter()

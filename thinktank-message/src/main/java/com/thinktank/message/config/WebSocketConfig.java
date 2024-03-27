@@ -12,6 +12,11 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
  */
 @Configuration
 public class WebSocketConfig {
+    /**
+     * 创建并返回一个ServerEndpointExporter实例。
+     *
+     * @return ServerEndpointExporter实例，用于自动注册WebSocket端点。
+     */
     @Bean
     public ServerEndpointExporter serverEndpointExporter() {
         return new ServerEndpointExporter();

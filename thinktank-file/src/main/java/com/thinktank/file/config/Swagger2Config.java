@@ -13,7 +13,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 /**
  * @Author: 弘
  * @CreateTime: 2023年09⽉15⽇ 15:52
- * @Description: 类描述
+ * @Description: Swagger2配置类
  * @Version: 1.0
  */
 @EnableOpenApi
