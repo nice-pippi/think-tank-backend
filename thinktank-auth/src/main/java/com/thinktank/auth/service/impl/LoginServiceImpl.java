@@ -158,15 +158,23 @@ public class LoginServiceImpl implements LoginService {
         }
 
         // 将查询到的密码与用户提交的密码做匹配
+        // 1.密码原文直接匹配
+        if (user.getPassword().equals(sysUser.getPassword())) {
+            // 为该用户创建会话登录
+            StpUtil.login(user.getId().toString());
+            return user;
+        }
+        // 2.BCrypt加密匹配
         boolean result = BCrypt.checkpw(sysUser.getPassword(), user.getPassword());
 
-        // 如果为false，抛出异常提示用户账号或密码错误
+        // 如果BCrypt加密匹配为false，抛出异常提示用户账号或密码错误
         if (!result) {
             // 将用户登录记录发送到队列，由队列进行异步写入数据库操作
             sendLoginRecordToMQ(user.getId(), 0, 0, "账号或密码错误");
             throw new ThinkTankException("账号或密码错误！");
         }
 
+        // 检查用户是否被限制登录
         if (user.getStatus().equals(1)) {
             // 将用户登录记录发送到队列，由队列进行异步写入数据库操作
             sendLoginRecordToMQ(user.getId(), 0, 0, "已被限制登录");
@@ -176,7 +184,6 @@ public class LoginServiceImpl implements LoginService {
 
         // 为该用户创建会话登录
         StpUtil.login(user.getId().toString());
-
         return user;
     }
 
