@@ -365,14 +365,16 @@ public class PostServiceImpl implements PostService {
         postScoreLambdaQueryWrapper.in(PostScore::getUserId, similarUsers);
         postScoreLambdaQueryWrapper.ge(PostScore::getScore, threshold);
         postScoreLambdaQueryWrapper.select(PostScore::getPostId);
-        List<Long> postIdList = postScoreMapper.selectList(postScoreLambdaQueryWrapper).stream().map(PostScore::getPostId).collect(Collectors.toList());
+        List<Long> postIdList = postScoreMapper.selectList(postScoreLambdaQueryWrapper)
+                .stream().map(PostScore::getPostId).collect(Collectors.toList());
 
 
         // 获取当前登录用户已经点击过的帖子id列表
         LambdaQueryWrapper<PostClickRecords> postClickRecordsLambdaQueryWrapper = new LambdaQueryWrapper<>();
         postClickRecordsLambdaQueryWrapper.eq(PostClickRecords::getUserId, loginId);
         postClickRecordsLambdaQueryWrapper.select(PostClickRecords::getPostId);
-        List<Long> clickPostIdList = postClickRecordsMapper.selectList(postClickRecordsLambdaQueryWrapper).stream().map(PostClickRecords::getPostId).collect(Collectors.toList());
+        List<Long> clickPostIdList = postClickRecordsMapper.selectList(postClickRecordsLambdaQueryWrapper)
+                .stream().map(PostClickRecords::getPostId).collect(Collectors.toList());
 
         // 过滤出当前登录用户未点击过的帖子id
         List<Long> filteredPostIdList = postIdList.stream()
