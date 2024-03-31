@@ -348,7 +348,6 @@ public class PostServiceImpl implements PostService {
      * @return 推荐帖子列表
      */
     private List<PostInfoVo> getRecommendedPosts(List<Long> similarUsers) {
-
         // 判断当前相似用户集合是否为空
         if (similarUsers == null || similarUsers.isEmpty()) {
             return getLatestPosts();
@@ -367,7 +366,6 @@ public class PostServiceImpl implements PostService {
         postScoreLambdaQueryWrapper.select(PostScore::getPostId);
         List<Long> postIdList = postScoreMapper.selectList(postScoreLambdaQueryWrapper)
                 .stream().map(PostScore::getPostId).collect(Collectors.toList());
-
 
         // 获取当前登录用户已经点击过的帖子id列表
         LambdaQueryWrapper<PostClickRecords> postClickRecordsLambdaQueryWrapper = new LambdaQueryWrapper<>();
