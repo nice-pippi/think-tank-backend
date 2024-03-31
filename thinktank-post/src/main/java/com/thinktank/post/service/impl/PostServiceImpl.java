@@ -387,7 +387,6 @@ public class PostServiceImpl implements PostService {
 
             return postInfoList.stream().map(this::getPostInfo).collect(Collectors.toList());
         }
-
         return getLatestPosts();
     }
 
