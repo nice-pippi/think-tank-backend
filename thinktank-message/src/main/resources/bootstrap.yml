@@ -25,4 +25,9 @@ logging:
 sa-token:
   jwt-secret-key: ppnb
 
+langchain4j:
+  open-ai:
+    chat-model:
+      api-key: "demo" # 如果有api-key，可以替换成自己的api-key
+      model-name: gpt-3.5-turbo
 
