@@ -379,12 +379,11 @@ public class PostServiceImpl implements PostService {
                 .filter(postId -> !clickPostIdList.contains(postId))
                 .collect(Collectors.toList());
 
+        // 根据过滤后的帖子id集合，查询并获取对应的帖子信息
         if (!filteredPostIdList.isEmpty()) {
-            // 根据过滤后的帖子id集合，查询并获取对应的帖子信息
             LambdaQueryWrapper<PostInfo> postInfoLambdaQueryWrapper = new LambdaQueryWrapper<>();
             postInfoLambdaQueryWrapper.in(PostInfo::getId, filteredPostIdList);
             List<PostInfo> postInfoList = postInfoMapper.selectList(postInfoLambdaQueryWrapper);
-
             return postInfoList.stream().map(this::getPostInfo).collect(Collectors.toList());
         }
         return getLatestPosts();

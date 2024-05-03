@@ -71,19 +71,13 @@ public class UserServiceImpl implements UserService {
             }
 
             // 远程调用校验验证码服务
-            R<String> result = validateCodeClient.validate(sysUserDto.getEmail(), sysUserDto.getValidateCode());
-            if (result.getStatus() != 200) {
-                throw new ThinkTankException(result.getMsg());
-            }
+            validate(sysUserDto);
         }
 
         // 判断是否修改密码（密码不为空代表修改密码）
         if (StringUtils.isNotEmpty(sysUserDto.getPassword())) {
             // 远程调用校验验证码服务
-            R<String> result = validateCodeClient.validate(sysUserDto.getEmail(), sysUserDto.getValidateCode());
-            if (result.getStatus() != 200) {
-                throw new ThinkTankException(result.getMsg());
-            }
+            validate(sysUserDto);
             String password = sysUserDto.getPassword();
             sysUser.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
         }
@@ -91,5 +85,12 @@ public class UserServiceImpl implements UserService {
         // 更改用户信息
         sysUserMapper.updateById(sysUser);
         return sysUser;
+    }
+
+    private void validate(SysUserDto sysUserDto) {
+        R<String> result = validateCodeClient.validate(sysUserDto.getEmail(), sysUserDto.getValidateCode());
+        if (result.getStatus() != 200) {
+            throw new ThinkTankException(result.getMsg());
+        }
     }
 }

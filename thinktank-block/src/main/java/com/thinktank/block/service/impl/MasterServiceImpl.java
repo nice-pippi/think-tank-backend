@@ -64,10 +64,10 @@ public class MasterServiceImpl implements MasterService {
         long id = StpUtil.getLoginIdAsLong();
 
         // 获取当前板块用户身份
-        LambdaQueryWrapper<SysUserRole> sysUserRoleLambdaQueryWrapper1 = new LambdaQueryWrapper<>();
-        sysUserRoleLambdaQueryWrapper1.eq(SysUserRole::getBlockId, blockApplicationMaster.getBlockId());
-        sysUserRoleLambdaQueryWrapper1.eq(SysUserRole::getUserId, id);
-        SysUserRole sysUserRole = sysUserRoleMapper.selectOne(sysUserRoleLambdaQueryWrapper1);
+        LambdaQueryWrapper<SysUserRole> sysUserRoleLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        sysUserRoleLambdaQueryWrapper.eq(SysUserRole::getBlockId, blockApplicationMaster.getBlockId());
+        sysUserRoleLambdaQueryWrapper.eq(SysUserRole::getUserId, id);
+        SysUserRole sysUserRole = sysUserRoleMapper.selectOne(sysUserRoleLambdaQueryWrapper);
 
         if (sysUserRole != null) {
             if (sysUserRole.getRoleId().equals(102L) || sysUserRole.getRoleId().equals(103L)) {
