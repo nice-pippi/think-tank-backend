@@ -34,7 +34,7 @@ think-tank是一个类似于贴吧的交流平台，包括客户端和后台管�
 
 **首页**
 
-![首页](https://github.com/nice-pippi/think-tank-backend/blob/28f17c4259b147d5b87a62e689a4b1fe2bf63bdb/document/image/%E9%A6%96%E9%A1%B5.png)
+![首页](https://github.com/nice-pippi/think-tank-backend/blob/2b46afe8bbfd98a6cdfe04a0e2ff9048ad01365d/document/image/%E7%B3%BB%E7%BB%9F%E9%A6%96%E9%A1%B5.png)
 
 **帖子页面**
 
