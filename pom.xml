@@ -165,9 +165,15 @@
                 <artifactId>xxl-job-core</artifactId>
                 <version>${xxl-job-core.version}</version>
             </dependency>
+            <!--自然语言处理（NLP）框架-->
             <dependency>
                 <groupId>dev.langchain4j</groupId>
-                <artifactId>langchain4j-open-ai</artifactId>
+                <artifactId>langchain4j-spring-boot-starter</artifactId>
+                <version>${langchain4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.langchain4j</groupId>
+                <artifactId>langchain4j-open-ai-spring-boot-starter</artifactId>
                 <version>${langchain4j.version}</version>
             </dependency>
         </dependencies>
