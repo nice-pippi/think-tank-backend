@@ -78,7 +78,7 @@ public class LoginServiceImpl implements LoginService {
         // 添加到数据库
         SysUser sysUser = addUserService.addUser(userinfo);
 
-        if (sysUser.getStatus().equals(1)) {
+        if (Integer.valueOf(1).equals(sysUser.getStatus())) {
             log.error("用户{}已被限制登录", sysUser.getId());
             throw new ThinkTankException("您已被限制登录！");
         }
