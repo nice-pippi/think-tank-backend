@@ -25,4 +25,10 @@ public interface UserService {
      * @return 修改后的用户信息
      */
     SysUser update(SysUserDto sysUserDto);
+
+    /**
+     * 修改密码
+     * @param sysUserDto 用户信息Dto对象
+     */
+    void updatePassword(SysUserDto sysUserDto);
 }

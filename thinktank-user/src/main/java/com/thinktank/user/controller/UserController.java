@@ -34,4 +34,11 @@ public class UserController {
     public R<SysUser> updateUser(@RequestBody @Validated(UpdateValidation.class) SysUserDto sysUserDto) {
         return R.success(userService.update(sysUserDto));
     }
+
+    @ApiOperation("修改密码")
+    @PutMapping("updatePassword")
+    public R<String> updatePassword(@RequestBody SysUserDto sysUserDto) {
+        userService.updatePassword(sysUserDto);
+        return R.success("修改成功~");
+    }
 }

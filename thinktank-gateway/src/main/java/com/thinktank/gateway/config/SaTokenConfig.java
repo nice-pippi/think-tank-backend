@@ -62,6 +62,7 @@ public class SaTokenConfig implements WebMvcConfigurer {
                                     "/post/postAction/getHotPostByTop5", // 获取热门帖子top5
                                     "/post/postAction/getHotPostByTop30", // 获取热门帖子top30
                                     "/user/{id}", // 根据用户id获取用户信息
+                                    "/user/updatePassword", // 修改密码
                                     "/message/private_message/{userId}" // 消息服务模块接口
                             )
                             .check(r -> StpUtil.checkLogin());
