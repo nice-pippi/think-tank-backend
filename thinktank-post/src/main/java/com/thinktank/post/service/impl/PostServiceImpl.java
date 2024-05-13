@@ -556,9 +556,8 @@ public class PostServiceImpl implements PostService {
         // 获取当前登录用户id
         long loginId = StpUtil.getLoginIdAsLong();
 
-
+        // 判断用户是否已收藏该帖子
         PostLikes postLikes = getPostLikes(postId, loginId);
-
         if (postLikes == null) {
             log.warn("用户'{}'取消收藏帖子'{}'失败，该帖子不存在或未收藏！", loginId, postId);
             throw new ThinkTankException("取消收藏失败，该帖子不存在或未收藏！");
@@ -571,7 +570,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public IPage<PostInfo> getFavoritePage(Long userId, Integer currentPage) {
-        // 验证用户id
+        // 验证用户是否存在
         SysUser sysUser = sysUserMapper.selectById(userId);
         if (sysUser == null) {
             log.warn("用户'{}'不存在", userId);
