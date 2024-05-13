@@ -98,7 +98,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public R<String> passwordLogin(SysUser sysUser) {
-        // 查询该邮箱是否已存在
+        // 查询账号密码是否无误
         LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SysUser::getEmail, sysUser.getEmail());
         SysUser user = validateUser(sysUser, wrapper);
