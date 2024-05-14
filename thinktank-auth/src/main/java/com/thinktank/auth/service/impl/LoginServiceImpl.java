@@ -73,7 +73,7 @@ public class LoginServiceImpl implements LoginService {
         // 获取用户信息
         String accessToken = map.get("access_token");
         String openid = map.get("openid");
-        Map<String, String> userinfo = getUserinfo(accessToken, openid);
+        Map<String, String> userinfo = getUserInfo(accessToken, openid);
 
         // 添加到数据库
         SysUser sysUser = addUserService.addUser(userinfo);
@@ -225,7 +225,7 @@ public class LoginServiceImpl implements LoginService {
      * @param openid       用户的openid
      * @return 用户信息的Map集合
      */
-    private Map<String, String> getUserinfo(String access_token, String openid) {
+    private Map<String, String> getUserInfo(String access_token, String openid) {
         // 请求微信地址
         String wxUrlTemplate = "https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s";
         String wxUrl = String.format(wxUrlTemplate, access_token, openid);
