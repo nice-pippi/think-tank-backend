@@ -34,15 +34,15 @@ think-tank是一个类似于贴吧的交流平台，包括客户端和后台管�
 
 **首页**
 
-![首页](https://github.com/nice-pippi/think-tank-backend/blob/2b46afe8bbfd98a6cdfe04a0e2ff9048ad01365d/document/image/%E7%B3%BB%E7%BB%9F%E9%A6%96%E9%A1%B5.png)
+![首页](./document/image/系统首页.png)
 
 **帖子页面**
 
-![帖子页面](https://github.com/nice-pippi/think-tank-backend/blob/28f17c4259b147d5b87a62e689a4b1fe2bf63bdb/document/image/%E5%B8%96%E5%AD%90.png)
+![帖子页面](./document/image/帖子.png)
 
 **评论区**
 
-![评论区](https://github.com/nice-pippi/think-tank-backend/blob/28f17c4259b147d5b87a62e689a4b1fe2bf63bdb/document/image/%E8%AF%84%E8%AE%BA%E5%8C%BA.png)
+![评论区](./document/image/评论区.png)
 
 ### 后台管理端
 
@@ -50,7 +50,7 @@ think-tank是一个类似于贴吧的交流平台，包括客户端和后台管�
 
 **首页**
 
-![后台管理首页](https://github.com/nice-pippi/think-tank-backend/blob/28f17c4259b147d5b87a62e689a4b1fe2bf63bdb/document/image/%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E9%A6%96%E9%A1%B5.png)
+![后台管理首页](./document/image/后台管理首页.png)
 
 ## 技术选型
 
@@ -108,11 +108,11 @@ think-tank
 
 ## 系统架构图
 
-![系统架构图](https://github.com/nice-pippi/think-tank-backend/blob/a8ffd8bbb960b54c5078194ddfc0497cf2510c33/document/image/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84.jpg)
+![系统架构图](./document/image/微服务架构.jpg)
 
 ## 业务框架图
 
-![业务框架图](https://github.com/nice-pippi/think-tank-backend/blob/3c574e9f2b2c67f5b27c5aac5a844610706463e5/document/image/%E4%B8%9A%E5%8A%A1%E6%A1%86%E6%9E%B6%E5%9B%BE.jpg)
+![业务框架图](./document/image/业务框架图.jpg)
 
 
 
